@@ -38,6 +38,8 @@ public abstract class Killer extends DbcPlayer {
     }
 
     public void setPower(Power power) {
+        if(this.power != null)
+            this.power.reset();
         this.power = power;
     }
 
