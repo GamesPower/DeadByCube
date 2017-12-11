@@ -1,7 +1,7 @@
 package deadbycube.player.killer.power;
 
-import deadbycube.util.DBDSounds;
 import deadbycube.player.killer.Killer;
+import deadbycube.util.DBDSounds;
 import org.bukkit.Particle;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -45,7 +45,8 @@ public class PowerBell extends Power {
         Player player = killer.getPlayer();
         World playerWorld = player.getWorld();
 
-        playerWorld.spawnParticle(Particle.SMOKE_LARGE, player.getLocation(), 5, .05, .25, .05, 0.015);
+        if (cloakProgress >= (cloakTime * 0.10))
+            playerWorld.spawnParticle(Particle.SMOKE_LARGE, player.getLocation(), 5, .05, .25, .05, 0.015);
 
         if (++cloakProgress >= cloakTime) {
             this.toggleStatus();
