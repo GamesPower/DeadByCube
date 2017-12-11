@@ -1,5 +1,9 @@
 package deadbycube.player.killer.power;
 
+import deadbycube.player.killer.power.evilwithin.PowerEvilWithin1;
+import deadbycube.player.killer.power.evilwithin.PowerEvilWithin2;
+import deadbycube.player.killer.power.evilwithin.PowerEvilWithin3;
+
 public enum Powers {
 
     BUBBAS_CHAINSAW(PowerBubbasChainsaw.class),
