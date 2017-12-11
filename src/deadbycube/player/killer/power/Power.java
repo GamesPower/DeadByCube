@@ -41,7 +41,7 @@ public abstract class Power {
         this.tickable.startTask();
     }
 
-    void stopUsing() {
+    protected void stopUsing() {
         this.tickable.stopTask();
         this.onStopUse();
     }
