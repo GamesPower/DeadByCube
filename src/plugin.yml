@@ -4,18 +4,9 @@ main: deadbycube.DeadByCube
 version: 0.1
 author: Fabien
 commands:
-  entity-world:
-    description: Teleport to entity world
-    usage: /entity-world
   gui:
     description: Open a GUI
     usage: /gui <name>
-  generator:
-    description: Spawn a generator
-    usage: /generator
   role:
     description: Set your role
     usage: /role <survivor|killer|list>
-  disable-jump:
-    description: Disable jump
-    usage: /disable-jump
