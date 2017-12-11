@@ -1,7 +1,9 @@
 package deadbycube.player.killer.power;
 
+import deadbycube.util.DBDSounds;
 import deadbycube.player.killer.Killer;
 import org.bukkit.Particle;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -41,15 +43,19 @@ public class PowerBell extends Power {
     @Override
     public void onUpdate() {
         Player player = killer.getPlayer();
-        player.getWorld().spawnParticle(Particle.SMOKE_LARGE, player.getLocation(), 5, .05, .25, .05, 0.015);
+        World playerWorld = player.getWorld();
+
+        playerWorld.spawnParticle(Particle.SMOKE_LARGE, player.getLocation(), 5, .05, .25, .05, 0.015);
 
         if (++cloakProgress >= cloakTime) {
             this.toggleStatus();
 
             if (status == CloakStatus.CLOAKED) {
+                playerWorld.playSound(player.getLocation(), DBDSounds.KILLER_WRAITH_INVISIBILITY_ON, 200, 1);
                 player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 999999, 0, false, false));
                 player.setWalkSpeed(CLOAKED_WALK_SPEED);
             } else {
+                playerWorld.playSound(player.getLocation(), DBDSounds.KILLER_WRAITH_INVISIBILITY_OFF, 200, 1);
                 player.removePotionEffect(PotionEffectType.INVISIBILITY);
                 player.setWalkSpeed(UNCLOAKED_WALK_SPEED);
             }
