@@ -33,6 +33,7 @@ public class DBDSounds {
             KILLER_SHAPE_STALK_LEVEL_2 = "killer.shape.stalk.level.2",
             KILLER_SHAPE_STALK_LEVEL_3 = "killer.shape.stalk.level.3",
             KILLER_SHAPE_STUN = "killer.shape.stun",
+            KILLER_WRAITH_BELL_SINGLE = "killer.wraith.bell.single",
             KILLER_WRAITH_INVISIBILITY_ON = "killer.wraith.invisibility.on",
             KILLER_WRAITH_INVISIBILITY_OFF = "killer.wraith.invisibility.off",
             KILLER_WRAITH_STUN = "killer.wraith.stun";
