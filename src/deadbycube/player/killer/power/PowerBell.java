@@ -8,6 +8,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import static deadbycube.util.DBDSounds.KILLER_WRAITH_BELL_SINGLE;
+
 public class PowerBell extends Power {
 
     private static final float CLOAKED_WALK_SPEED = 0.3f;
@@ -20,7 +22,9 @@ public class PowerBell extends Power {
     public PowerBell(Killer killer) {
         super(killer);
 
-        killer.getPlayer().setWalkSpeed(CLOAKED_WALK_SPEED);
+        Player player = killer.getPlayer();
+        player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 999999, 0, false, false));
+        player.setWalkSpeed(CLOAKED_WALK_SPEED);
     }
 
     @Override
@@ -38,25 +42,33 @@ public class PowerBell extends Power {
     public void onUse() {
         this.cloakProgress = 0;
         this.cloakTime = status.cloakTime;
+
+        Player player = killer.getPlayer();
+        World world = player.getWorld();
+        world.playSound(player.getLocation(), KILLER_WRAITH_BELL_SINGLE, 1, 1);
     }
 
     @Override
     public void onUpdate() {
         Player player = killer.getPlayer();
-        World playerWorld = player.getWorld();
+        World world = player.getWorld();
 
         if (cloakProgress >= (cloakTime * 0.10))
-            playerWorld.spawnParticle(Particle.SMOKE_LARGE, player.getLocation(), 5, .05, .25, .05, 0.015);
+            world.spawnParticle(Particle.SMOKE_LARGE, player.getLocation(), 5, .05, .25, .05, 0.015);
+
+        if (cloakProgress == (int) (cloakTime * 0.08) || cloakProgress == (int) (cloakTime * 0.60)) {
+            world.playSound(player.getLocation(), KILLER_WRAITH_BELL_SINGLE, 1, 1);
+        }
 
         if (++cloakProgress >= cloakTime) {
             this.toggleStatus();
 
             if (status == CloakStatus.CLOAKED) {
-                playerWorld.playSound(player.getLocation(), DBDSounds.KILLER_WRAITH_INVISIBILITY_ON, 200, 1);
+                world.playSound(player.getLocation(), DBDSounds.KILLER_WRAITH_INVISIBILITY_ON, 200, 1);
                 player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 999999, 0, false, false));
                 player.setWalkSpeed(CLOAKED_WALK_SPEED);
             } else {
-                playerWorld.playSound(player.getLocation(), DBDSounds.KILLER_WRAITH_INVISIBILITY_OFF, 200, 1);
+                world.playSound(player.getLocation(), DBDSounds.KILLER_WRAITH_INVISIBILITY_OFF, 200, 1);
                 player.removePotionEffect(PotionEffectType.INVISIBILITY);
                 player.setWalkSpeed(UNCLOAKED_WALK_SPEED);
             }
