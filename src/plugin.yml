@@ -2,7 +2,7 @@ name: DeadByCube
 description: Dead by Daylight like in Minecraft
 main: deadbycube.DeadByCube
 version: 0.1
-author: Fabien
+authors: [Fabien, Akanlyfe]
 commands:
   gui:
     description: Open a GUI
