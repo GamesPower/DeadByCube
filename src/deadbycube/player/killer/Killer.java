@@ -4,10 +4,8 @@ import deadbycube.DeadByCube;
 import deadbycube.player.DbcPlayer;
 import deadbycube.player.PlayerType;
 import deadbycube.player.killer.power.Power;
-import deadbycube.util.Tickable;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -16,16 +14,18 @@ public abstract class Killer extends DbcPlayer {
 
     private static final int DEFAULT_STUN_TIME = 30;
     private static final float STUN_WALK_SPEED = 0.0F;
-    private static final float DEFAULT_WALK_SPEED = 0.2f;
+    private static final float DEFAULT_WALK_SPEED = 0.248f;
+    private static final int DEFAULT_FOOD_LEVEL = 2;
 
+    private final String name;
     private Power power;
-    //private final LivingEntity entity;
 
-    Killer(DeadByCube plugin, Player player, EntityType entityType) {
+    Killer(DeadByCube plugin, Player player, String name) {
         super(plugin, player);
 
-        /*this.entity = (LivingEntity) plugin.getMap().getWorld().spawnEntity(getEntityLocation(), entityType);
-        this.initEntity();*/
+        this.name = name;
+
+        player.setFoodLevel(DEFAULT_FOOD_LEVEL);
     }
 
     @Override
@@ -52,6 +52,8 @@ public abstract class Killer extends DbcPlayer {
         playerLocation.setPitch(80);
         player.teleport(playerLocation);
 
+        player.getWorld().playSound(playerLocation, "killer." + name + ".stun", 1, 1);
+
         player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, stunTime + 20, 0, false, false));
         Bukkit.getScheduler().runTaskLater(plugin, () -> player.setWalkSpeed(DEFAULT_WALK_SPEED), stunTime);
     }
@@ -65,21 +67,5 @@ public abstract class Killer extends DbcPlayer {
     public PlayerType getType() {
         return PlayerType.KILLER;
     }
-
-
-    /*private void initEntity() {
-        this.entity.setGravity(false);
-        this.entity.setInvulnerable(true);
-        this.entity.setSilent(true);
-        this.entity.setAI(false);
-        this.entity.setCanPickupItems(false);
-        this.entity.setCollidable(false);
-    }
-
-    private Location getEntityLocation() {
-        Location playerLocation = player.getLocation();
-        Vector playerDirection = playerLocation.getDirection().setY(0);
-        return playerLocation.subtract(playerDirection);
-    }*/
 
 }
