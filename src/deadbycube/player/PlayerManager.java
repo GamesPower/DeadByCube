@@ -15,7 +15,7 @@ public class PlayerManager implements Listener {
 
     private static final ArrayList<DbcPlayer> PLAYER_LIST = new ArrayList<>();
 
-    private static DbcPlayer getPlayer(Player player) {
+    public static DbcPlayer getPlayer(Player player) {
         for (DbcPlayer dbcPlayer : PLAYER_LIST) {
             if (dbcPlayer.getPlayer().equals(player))
                 return dbcPlayer;
