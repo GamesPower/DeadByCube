@@ -2,10 +2,7 @@ package deadbycube.command;
 
 import deadbycube.DeadByCube;
 import deadbycube.player.PlayerManager;
-import deadbycube.player.killer.KillerDebug;
-import deadbycube.player.killer.KillerNurse;
-import deadbycube.player.killer.KillerShape;
-import deadbycube.player.killer.KillerWraith;
+import deadbycube.player.killer.*;
 import deadbycube.player.survivor.Survivor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -52,6 +49,9 @@ public class CommandRole extends AbstractCommand {
                         player.sendMessage("Killer set to shape");
                         PlayerManager.setPlayer(player, new KillerShape(plugin, player));
                         break;
+                    case "doctor":
+                        player.sendMessage("Killer set to doctor");
+                        PlayerManager.setPlayer(player, new KillerDoctor(plugin, player));
                     default:
                         player.sendMessage("Invalid killer");
                         break;
