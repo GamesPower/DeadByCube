@@ -8,12 +8,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import static deadbycube.util.DBDSounds.KILLER_WRAITH_BELL_SINGLE;
-
 public class PowerBell extends Power {
 
-    private static final float CLOAKED_WALK_SPEED = 0.3f;
-    private static final float UNCLOAKED_WALK_SPEED = 0.2f;
+    private static final float CLOAKED_WALK_SPEED = Killer.DEFAULT_WALK_SPEED + 0.1f;
+    private static final float UNCLOAKED_WALK_SPEED = Killer.DEFAULT_WALK_SPEED;
 
     private CloakStatus status = CloakStatus.CLOAKED;
     private int cloakTime;
@@ -42,10 +40,6 @@ public class PowerBell extends Power {
     public void onUse() {
         this.cloakProgress = 0;
         this.cloakTime = status.cloakTime;
-
-        Player player = killer.getPlayer();
-        World world = player.getWorld();
-        world.playSound(player.getLocation(), KILLER_WRAITH_BELL_SINGLE, 1, 1);
     }
 
     @Override
@@ -57,7 +51,7 @@ public class PowerBell extends Power {
             world.spawnParticle(Particle.SMOKE_LARGE, player.getLocation(), 5, .05, .25, .05, 0.015);
 
         if (cloakProgress == (int) (cloakTime * 0.08) || cloakProgress == (int) (cloakTime * 0.60)) {
-            world.playSound(player.getLocation(), KILLER_WRAITH_BELL_SINGLE, 1, 1);
+            world.playSound(player.getLocation(), DBDSounds.KILLER_WRAITH_BELL_SINGLE, .5f, 1);
         }
 
         if (++cloakProgress >= cloakTime) {
