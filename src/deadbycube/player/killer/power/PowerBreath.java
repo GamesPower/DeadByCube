@@ -16,8 +16,9 @@ public class PowerBreath extends Power {
     private static final float DISTANCE_FULL_BLINK = 24.0f;
     private static final int MAX_CHARGE_TIME = 50;
 
-    private static final float NORMAL_WALK_SPEED = 0.23f;
-    private static final float STUN_WALK_SPEED = 0.04f;
+    private static final float WALK_SPEED = Killer.DEFAULT_WALK_SPEED - 0.08f;
+    private static final float STUN_MOVEMENT_SPEED = 0.04f;
+    private static final float POST_BLINK_MOVEMENT_SPEED = 0.14f;
 
     private static final int STUN_BASE_TIME = 40;
     private static final int STUN_TIME_MULTIPLIER = 10;
@@ -27,7 +28,7 @@ public class PowerBreath extends Power {
     public PowerBreath(Killer killer) {
         super(killer);
 
-        killer.getPlayer().setWalkSpeed(NORMAL_WALK_SPEED);
+        killer.getPlayer().setWalkSpeed(WALK_SPEED);
     }
 
     @Override
@@ -73,6 +74,7 @@ public class PowerBreath extends Power {
         Location playerLocation = player.getLocation();
         Vector direction = MathUtils.getDirection(playerLocation.getYaw(), 0);
 
+        player.setWalkSpeed(POST_BLINK_MOVEMENT_SPEED);
         player.teleport(playerLocation.add(
                 direction.getX() * distance,
                 0,
@@ -98,8 +100,8 @@ public class PowerBreath extends Power {
             player.sendMessage("- Stun Time: " + stunTime);
 
             player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, stunTime + 20, 0, false, false));
-            player.setWalkSpeed(STUN_WALK_SPEED);
-            Bukkit.getScheduler().runTaskLater(killer.getPlugin(), () -> player.setWalkSpeed(NORMAL_WALK_SPEED), stunTime);
+            player.setWalkSpeed(STUN_MOVEMENT_SPEED);
+            Bukkit.getScheduler().runTaskLater(killer.getPlugin(), () -> player.setWalkSpeed(WALK_SPEED), stunTime);
         }, 40);
     }
 
