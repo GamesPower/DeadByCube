@@ -4,12 +4,12 @@ import deadbycube.player.killer.Killer;
 
 public class PowerCartersSpark extends Power {
 
-    protected PowerCartersSpark(Killer killer) {
-        super(killer);
-    }
+    private static final int SHOCK_CHARGE_TIME = 40;
 
-    @Override
-    public void reset() {
+    private int chargeTime;
+
+    public PowerCartersSpark(Killer killer) {
+        super(killer);
     }
 
     @Override
@@ -19,10 +19,15 @@ public class PowerCartersSpark extends Power {
 
     @Override
     protected void onUse() {
+        this.chargeTime = 0;
     }
 
     @Override
     protected void onUpdate() {
+        if (++chargeTime >= SHOCK_CHARGE_TIME) {
+
+            this.stopUsing();
+        }
     }
 
     @Override
