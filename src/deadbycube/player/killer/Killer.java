@@ -14,7 +14,7 @@ public abstract class Killer extends DbcPlayer {
 
     private static final int DEFAULT_STUN_TIME = 30;
     private static final float STUN_WALK_SPEED = 0.0F;
-    private static final float DEFAULT_WALK_SPEED = 0.248f;
+    public static final float DEFAULT_WALK_SPEED = 0.255f; //0.248f
     private static final int DEFAULT_FOOD_LEVEL = 2;
 
     private final String name;
