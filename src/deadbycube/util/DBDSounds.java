@@ -20,6 +20,8 @@ public class DBDSounds {
             GENERATOR_SPARK_LONG = "generator.spark.long",
             GENERATOR_START_FAIL = "generator.start.fail",
             GENERATOR_START_MECHANIC = "generator.start.mechanic",
+            KILLER_DOCTOR_LAUGH = "killer.doctor.laugh",
+            KILLER_DOCTOR_STUN = "killer.doctor.stun",
             KILLER_NURSE_BLINK_APPEAR = "killer.nurse.blink.appear",
             KILLER_NURSE_BLINK_CHARGE = "killer.nurse.blink.charge",
             KILLER_NURSE_BLINK_CHARGE_FULL = "killer.nurse.blink.charge.full",
