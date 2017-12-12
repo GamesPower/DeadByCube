@@ -1,6 +1,5 @@
 package deadbycube;
 
-import deadbycube.command.CommandGui;
 import deadbycube.command.CommandKiller;
 import deadbycube.command.CommandManager;
 import deadbycube.command.CommandRole;
@@ -36,7 +35,6 @@ public class DeadByCube extends JavaPlugin {
     }
 
     private void registerCommands() {
-        commandManager.register(new CommandGui(this));
         commandManager.register(new CommandRole(this));
         commandManager.register(new CommandKiller(this));
     }
