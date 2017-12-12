@@ -52,6 +52,7 @@ public class CommandRole extends AbstractCommand {
                     case "doctor":
                         player.sendMessage("Killer set to doctor");
                         PlayerManager.setPlayer(player, new KillerDoctor(plugin, player));
+                        break;
                     default:
                         player.sendMessage("Invalid killer");
                         break;
