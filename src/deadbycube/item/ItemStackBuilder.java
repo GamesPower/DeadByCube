@@ -1,5 +1,6 @@
 package deadbycube.item;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -15,7 +16,7 @@ public class ItemStackBuilder {
     private String localizedName = null;
     private boolean unbreakable = false;
 
-    private ItemFlag[] itemFlags = {};
+    private ItemFlag[] flags = {};
 
     public ItemStackBuilder setMaterial(Material material) {
         this.material = material;
@@ -47,8 +48,13 @@ public class ItemStackBuilder {
         return this;
     }
 
-    public ItemStackBuilder setItemFlags(ItemFlag... itemFlags) {
-        this.itemFlags = itemFlags;
+    public ItemStackBuilder setFlags(ItemFlag... flags) {
+        this.flags = flags;
+        return this;
+    }
+
+    public ItemStackBuilder addFlags(ItemFlag flag) {
+        this.flags = (ItemFlag[]) ArrayUtils.add(flags, flag);
         return this;
     }
 
@@ -56,12 +62,15 @@ public class ItemStackBuilder {
         ItemStack itemStack = new ItemStack(material, amount, damage, data);
 
         ItemMeta itemMeta = itemStack.getItemMeta();
+
         if (localizedName != null)
             itemMeta.setLocalizedName(localizedName);
         itemMeta.setUnbreakable(unbreakable);
-        itemMeta.addItemFlags(itemFlags);
+        itemMeta.addItemFlags(flags);
+
         itemStack.setItemMeta(itemMeta);
 
         return itemStack;
     }
+
 }
