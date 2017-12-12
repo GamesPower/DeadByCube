@@ -4,9 +4,6 @@ main: deadbycube.DeadByCube
 version: 0.1
 authors: [Fabien, Akanlyfe]
 commands:
-  gui:
-    description: Open a GUI
-    usage: /gui <name>
   role:
     description: Set your role
     usage: /role <survivor|killer|list>
