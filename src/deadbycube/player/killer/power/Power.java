@@ -20,8 +20,10 @@ public abstract class Power {
     private void update() {
         if (isUsing())
             this.onUpdate();
-        else
-            this.stopUsing();
+        else {
+            this.stopUpdate();
+            this.onStopUse();
+        }
     }
 
     public abstract boolean canUse();
@@ -41,9 +43,8 @@ public abstract class Power {
         this.tickable.startTask();
     }
 
-    protected void stopUsing() {
+    protected void stopUpdate() {
         this.tickable.stopTask();
-        this.onStopUse();
     }
 
 }

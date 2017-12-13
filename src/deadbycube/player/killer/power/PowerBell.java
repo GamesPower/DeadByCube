@@ -67,7 +67,7 @@ public class PowerBell extends Power {
                 player.setWalkSpeed(UNCLOAKED_WALK_SPEED);
             }
 
-            this.stopUsing();
+            this.stopUpdate();
         }
     }
 

@@ -68,7 +68,7 @@ public class PowerCartersSpark extends Power {
                 }
             }
 
-            this.stopUsing();
+            this.stopUpdate();
         }
     }
 
