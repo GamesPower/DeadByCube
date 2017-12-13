@@ -9,27 +9,20 @@ public class PowerTrap extends Power {
     }
 
     @Override
-    public void reset() {
-
-    }
-
-    @Override
     public boolean canUse() {
         return true;
     }
 
     @Override
     protected void onUse() {
-
     }
 
     @Override
     protected void onUpdate() {
-
     }
 
     @Override
     protected void onStopUse() {
-
     }
+
 }

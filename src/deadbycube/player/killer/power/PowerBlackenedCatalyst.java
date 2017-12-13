@@ -9,10 +9,6 @@ public class PowerBlackenedCatalyst extends Power {
     }
 
     @Override
-    public void reset() {
-    }
-
-    @Override
     public boolean canUse() {
         return true;
     }
