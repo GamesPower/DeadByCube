@@ -21,6 +21,7 @@ public class DBDSounds {
             GENERATOR_START_FAIL = "generator.start.fail",
             GENERATOR_START_MECHANIC = "generator.start.mechanic",
             KILLER_DOCTOR_ATTACK = "killer.doctor.attack",
+            KILLER_DOCTOR_ATTACK_READY = "killer.doctor.attack.ready",
             KILLER_DOCTOR_CHARGE = "killer.doctor.charge",
             KILLER_DOCTOR_CHARGE_BASS = "killer.doctor.charge.bass",
             KILLER_DOCTOR_CHARGE_HIGH = "killer.doctor.charge.high",
