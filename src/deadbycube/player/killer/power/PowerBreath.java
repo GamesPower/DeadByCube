@@ -16,9 +16,9 @@ public class PowerBreath extends Power {
     private static final float DISTANCE_FULL_BLINK = 24.0f;
     private static final int MAX_CHARGE_TIME = 50;
 
-    private static final float WALK_SPEED = Killer.DEFAULT_WALK_SPEED - 0.08f;
+    private static final float WALK_SPEED = 0.245f;
     private static final float STUN_MOVEMENT_SPEED = 0.04f;
-    private static final float POST_BLINK_MOVEMENT_SPEED = 0.14f;
+    private static final float POST_BLINK_MOVEMENT_SPEED = 0.08f;
 
     private static final int STUN_BASE_TIME = 40;
     private static final int STUN_TIME_MULTIPLIER = 10;
@@ -48,13 +48,10 @@ public class PowerBreath extends Power {
 
     @Override
     protected void onUpdate() {
-        if (chargeTime < MAX_CHARGE_TIME) {
-            chargeTime++;
-            killer.getPlayer().sendTitle("Charge time", String.valueOf(chargeTime), 0, 10, 0);
-        } else if (chargeTime == MAX_CHARGE_TIME) {
+        if (++chargeTime == MAX_CHARGE_TIME) {
             Player player = killer.getPlayer();
             player.getWorld().playSound(player.getLocation(), DBDSounds.KILLER_NURSE_BLINK_CHARGE_FULL, 1, 1);
-            chargeTime++;
+            this.stopUpdate();
         }
     }
 
