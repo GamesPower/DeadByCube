@@ -14,7 +14,7 @@ public class PowerCartersSpark extends Power {
     private static final float CHARGING_WALK_SPEED = Killer.DEFAULT_WALK_SPEED + .5f;
 
     private static final int SHOCK_DISTANCE = 10;
-    private static final int SHOCK_CHARGE_TIME = 45;
+    private static final int SHOCK_CHARGE_TIME = 30;
     private static final int SHOCK_ANGLE = 35;
 
     private int chargeTime;
@@ -45,12 +45,14 @@ public class PowerCartersSpark extends Power {
         Player player = killer.getPlayer();
         World world = player.getWorld();
 
-        for (int i = 0; i < Math.max(4, chargeTime - (SHOCK_CHARGE_TIME * 0.80)); i++)
-            world.spawnParticle(Particle.SMOKE_NORMAL, player.getLocation(), 1, .2, .5, .2, 0);
+        for (int i = 0; i < (chargeTime / 2); i++)
+            world.spawnParticle(Particle.SMOKE_NORMAL, player.getLocation().add(0, .8, 0), 1, .2, .35, .2, 0);
 
         if (++chargeTime >= SHOCK_CHARGE_TIME) {
+            world.playSound(player.getLocation(), DBDSounds.KILLER_DOCTOR_ATTACK_READY, 1, 1);
+
             float distanceStep = .4f;
-            float angleStep = .8f;
+            float angleStep = 3.2f;
 
             player.setWalkSpeed(CHARGING_WALK_SPEED);
 
@@ -62,7 +64,7 @@ public class PowerCartersSpark extends Power {
                     Location location = baseLocation.clone().add(
                             MathUtils.getDirection(baseLocation.getYaw() + angle, 0).multiply(distance)
                     );
-                    world.spawnParticle(Particle.CLOUD, location, 0, .5, 0, .5, 0);
+                    world.spawnParticle(Particle.CLOUD, location, 0, 1, 0, 1, 0);
                 }
             }
 
