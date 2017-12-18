@@ -11,7 +11,7 @@ public class CommandManager {
         this.deadByCube = deadByCube;
     }
 
-    public void register(AbstractCommand command) {
+    public void register(Command command) {
         PluginCommand pluginCommand = deadByCube.getCommand(command.getName());
         pluginCommand.setExecutor(command);
         pluginCommand.setTabCompleter(command);
