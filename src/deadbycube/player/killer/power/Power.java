@@ -8,6 +8,8 @@ public abstract class Power {
     protected final Killer killer;
     private final Tickable tickable;
 
+    private boolean update = true;
+
     protected Power(Killer killer) {
         this.killer = killer;
         this.tickable = new Tickable(killer.getPlugin(), this::update);
@@ -18,12 +20,11 @@ public abstract class Power {
     }
 
     private void update() {
-        if (isUsing())
-            this.onUpdate();
-        else {
-            this.stopUpdate();
+        if (!isUsing()) {
+            this.tickable.stopTask();
             this.onStopUse();
-        }
+        } else if (update)
+            this.onUpdate();
     }
 
     public abstract boolean canUse();
@@ -40,11 +41,12 @@ public abstract class Power {
 
     public void use() {
         this.onUse();
+        this.update = true;
         this.tickable.startTask();
     }
 
     protected void stopUpdate() {
-        this.tickable.stopTask();
+        this.update = false;
     }
 
 }
