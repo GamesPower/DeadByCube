@@ -10,3 +10,6 @@ commands:
   killer:
     description: Killer
     usage: /killer <stun>
+  game:
+    description: Game
+    usage: /game <start|stop>
