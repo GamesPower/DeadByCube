@@ -66,11 +66,11 @@ public abstract class CommandNode {
         return name;
     }
 
-    public CommandNode[] getCommandNodes() {
+    public CommandNode[] getNodes() {
         return commandNodes;
     }
 
-    public ArrayList<CommandFunction> getCommandFunctions() {
+    public ArrayList<CommandFunction> getFunctions() {
         return commandFunctions;
     }
 
