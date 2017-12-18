@@ -11,7 +11,7 @@ public class KillerWraith extends Killer {
     }
 
     @Override
-    protected void init() {
+    public void init() {
         this.setPower(new PowerBell(this));
     }
 

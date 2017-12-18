@@ -11,7 +11,7 @@ public class KillerNurse extends Killer {
     }
 
     @Override
-    protected void init() {
+    public void init() {
         this.setPower(new PowerBreath(this));
     }
 

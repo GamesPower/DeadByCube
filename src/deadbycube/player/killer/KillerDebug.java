@@ -11,7 +11,7 @@ public class KillerDebug extends Killer {
     }
 
     @Override
-    protected void init() {
+    public void init() {
         this.setPower(new PowerDebug(this));
     }
 
