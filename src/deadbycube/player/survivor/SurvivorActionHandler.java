@@ -16,12 +16,4 @@ public class SurvivorActionHandler extends PlayerActionHandler<Survivor> {
     public void interact() {
     }
 
-    @Override
-    public void move() {
-    }
-
-    @Override
-    public void toggleSneak(boolean sneaking) {
-    }
-
 }

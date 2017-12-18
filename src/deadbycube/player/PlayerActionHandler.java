@@ -12,8 +12,4 @@ public abstract class PlayerActionHandler<T extends DbcPlayer> {
 
     public abstract void interact();
 
-    public abstract void move();
-
-    public abstract void toggleSneak(boolean sneaking);
-
 }

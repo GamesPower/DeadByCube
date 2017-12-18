@@ -2,6 +2,7 @@ package deadbycube.player.killer;
 
 import deadbycube.player.PlayerActionHandler;
 import deadbycube.player.killer.power.Power;
+import org.bukkit.event.player.PlayerToggleSneakEvent;
 
 public class KillerActionHandler extends PlayerActionHandler<Killer> {
 
@@ -18,18 +19,6 @@ public class KillerActionHandler extends PlayerActionHandler<Killer> {
         Power power = player.getPower();
         if (power != null && power.canUse())
             power.use();
-    }
-
-    @Override
-    public void move() {
-    }
-
-    @Override
-    public void toggleSneak(boolean sneaking) {
-        /*if (sneaking)
-            player.use();
-        else
-            player.stopUsing();*/
     }
 
 }
