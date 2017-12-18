@@ -4,7 +4,8 @@ import org.bukkit.util.Vector;
 
 public class MathUtils {
 
-    private MathUtils() {}
+    private MathUtils() {
+    }
 
     public static Vector getDirection(double yaw, double pitch) {
         double xz = Math.cos(Math.toRadians(pitch));
