@@ -1,34 +1,44 @@
 package deadbycube;
 
+import deadbycube.audio.AudioManager;
 import deadbycube.command.CommandManager;
 import deadbycube.command.game.CommandGame;
 import deadbycube.command.role.CommandRole;
-import deadbycube.game.DbcGame;
-import deadbycube.gui.GuiManager;
-import deadbycube.listener.DbcListener;
-import deadbycube.listener.InGameListener;
-import deadbycube.listener.LobbyListener;
+import deadbycube.command.structure.CommandStructure;
+import deadbycube.eventhandler.EventHandler;
+import deadbycube.eventhandler.InGameEventHandler;
+import deadbycube.eventhandler.LobbyEventHandler;
+import deadbycube.game.DeadByCubeGame;
+import deadbycube.listener.EntityListener;
+import deadbycube.listener.PlayerListener;
 import deadbycube.player.PlayerList;
-import org.bukkit.event.HandlerList;
+import deadbycube.structure.StructureManager;
+import deadbycube.util.GameStatus;
+import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class DeadByCube extends JavaPlugin {
 
-    private PlayerList playerList;
-    private GuiManager guiManager;
-    private CommandManager commandManager;
+    private final PlayerList playerList = new PlayerList();
+    private final CommandManager commandManager = new CommandManager(this);
+    private final StructureManager structureManager = new StructureManager(this);
+    private final AudioManager audioManager = new AudioManager(this);
 
-    private DbcListener listener;
-    private DbcGame game;
+    private World lobbyWorld;
+    private GameStatus status;
+    private DeadByCubeGame game;
+    private EventHandler eventHandler;
 
     @Override
     public void onEnable() {
-        this.playerList = new PlayerList();
-        this.guiManager = new GuiManager(this);
-        this.commandManager = new CommandManager(this);
+        this.saveDefaultConfig();
 
-        this.listener = new LobbyListener(this);
+        this.lobbyWorld = Bukkit.getWorld(getConfig().getString("world.lobby.name", Bukkit.getWorlds().get(0).getName()));
+
+        this.status = GameStatus.LOBBY;
+        this.eventHandler = new LobbyEventHandler(this);
 
         this.registerListeners();
         this.registerCommands();
@@ -36,46 +46,62 @@ public class DeadByCube extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        this.stopGame();
+        if (status == GameStatus.IN_GAME)
+            this.stopGame();
         this.saveConfig();
-    }
-
-    public void startGame() {
-        this.game = new DbcGame(this);
-        this.game.start();
-        this.setListener(new InGameListener(this));
-    }
-
-    public void stopGame() {
-        if (this.game != null) {
-            this.setListener(new LobbyListener(this));
-            this.game.stop();
-            this.game = null;
-        }
-    }
-
-    public boolean isInGame() {
-        return game != null && game.isStarted();
-    }
-
-    private void setListener(DbcListener listener) {
-        HandlerList.unregisterAll(this.listener);
-        getServer().getPluginManager().registerEvents(this.listener = listener, this);
     }
 
     private void registerListeners() {
         PluginManager pluginManager = getServer().getPluginManager();
-        pluginManager.registerEvents(guiManager, this);
-        pluginManager.registerEvents(listener, this);
+        pluginManager.registerEvents(new PlayerListener(this), this);
+        pluginManager.registerEvents(new EntityListener(this), this);
     }
 
     private void registerCommands() {
         commandManager.register(new CommandGame(this));
+        commandManager.register(new CommandStructure(this));
         commandManager.register(new CommandRole(this));
+    }
+
+    public void startGame() {
+        this.status = GameStatus.IN_GAME;
+        this.eventHandler = new InGameEventHandler(this);
+        this.game = new DeadByCubeGame(this);
+        this.game.start();
+    }
+
+    public void stopGame() {
+        this.status = GameStatus.LOBBY;
+        this.eventHandler = new LobbyEventHandler(this);
+        this.game.stop();
+        this.game = null;
+    }
+
+    public GameStatus getStatus() {
+        return status;
+    }
+
+    public EventHandler getEventHandler() {
+        return eventHandler;
+    }
+
+    public StructureManager getStructureManager() {
+        return structureManager;
+    }
+
+    public AudioManager getAudioManager() {
+        return audioManager;
+    }
+
+    public World getLobbyWorld() {
+        return lobbyWorld;
+    }
+
+    public DeadByCubeGame getGame() {
+        return game;
     }
 
     public PlayerList getPlayerList() {
         return playerList;
     }
-
 }

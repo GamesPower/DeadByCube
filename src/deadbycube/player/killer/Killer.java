@@ -1,79 +1,74 @@
 package deadbycube.player.killer;
 
 import deadbycube.DeadByCube;
-import deadbycube.player.DbcPlayer;
+import deadbycube.player.DeadByCubePlayer;
 import deadbycube.player.PlayerType;
+import deadbycube.player.actionhandler.KillerActionHandler;
 import deadbycube.player.killer.power.Power;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
+import deadbycube.player.killer.power.PowerRegistry;
+import deadbycube.util.Tickable;
+import deadbycube.util.attribute.Attribute;
 import org.bukkit.entity.Player;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 
-public abstract class Killer extends DbcPlayer {
-
-    public static final int DEFAULT_STUN_TIME = 30;
-    private static final float STUN_WALK_SPEED = 0.0F;
-    public static final float DEFAULT_WALK_SPEED = 0.26f; //0.248f
-    private static final int DEFAULT_FOOD_LEVEL = 2;
+public abstract class Killer extends DeadByCubePlayer {
 
     private final String name;
+    private final Tickable tickable;
+    private final Attribute terrorRadius = new Attribute();
 
     private Power power;
-    private float walkSpeed = DEFAULT_WALK_SPEED;
 
-    Killer(DeadByCube plugin, Player player, String name) {
+    protected Killer(DeadByCube plugin, Player player, String name, PowerRegistry power) {
         super(plugin, player);
-
         this.name = name;
+        this.tickable = new Tickable(plugin, this::update);
 
-        player.setFoodLevel(DEFAULT_FOOD_LEVEL);
-    }
-
-    public void setWalkSpeedModifier(float walkSpeedModifier) {
-        this.player.setWalkSpeed(walkSpeed * walkSpeedModifier);
-    }
-
-    public void stun(int stunTime) {
-        player.setWalkSpeed(STUN_WALK_SPEED);
-
-        Location playerLocation = player.getLocation();
-        playerLocation.setPitch(80);
-        player.teleport(playerLocation);
-
-        player.getWorld().playSound(playerLocation, "killer." + name + ".stun", 1, 1);
-
-        player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, stunTime + 20, 0, false, false));
-        Bukkit.getScheduler().runTaskLater(plugin, () -> player.setWalkSpeed(walkSpeed), stunTime);
+        this.power = power.create(this);
     }
 
     @Override
-    public void reset() {
+    public final void init() {
+        player.setFoodLevel(0); // prevent sprint
+
+        this.tickable.startTask();
+        this.terrorRadius.setBaseValue(32d);
+        this.power.init(false);
+    }
+
+    @Override
+    public final void reset() {
+        this.tickable.stopTask();
         power.reset();
     }
 
+    abstract void update();
+
     @Override
-    public KillerActionHandler createActionHandler() {
+    public final KillerActionHandler createActionHandler() {
         return new KillerActionHandler(this);
     }
 
     @Override
-    public PlayerType getType() {
+    public final PlayerType getType() {
         return PlayerType.KILLER;
+    }
+
+    public Attribute getTerrorRadius() {
+        return terrorRadius;
     }
 
     public Power getPower() {
         return power;
     }
 
-    public void setPower(Power power) {
-        if (this.power != null)
+    public void setPower(PowerRegistry power) {
+        boolean using = false;
+        if (this.power != null) {
+            using = this.power.isUsing();
             this.power.reset();
-        this.power = power;
-    }
-
-    public void setWalkSpeed(float walkSpeed) {
-        this.walkSpeed = walkSpeed;
+        }
+        this.power = power.create(this);
+        this.power.init(using);
     }
 
 }

@@ -1,18 +1,17 @@
 package deadbycube.player.killer;
 
 import deadbycube.DeadByCube;
-import deadbycube.player.killer.power.PowerBell;
+import deadbycube.player.killer.power.PowerRegistry;
 import org.bukkit.entity.Player;
 
 public class KillerWraith extends Killer {
 
     public KillerWraith(DeadByCube plugin, Player player) {
-        super(plugin, player, "wraith");
+        super(plugin, player, "wraith", PowerRegistry.INVISIBILITY_BELL);
     }
 
     @Override
-    public void init() {
-        this.setPower(new PowerBell(this));
-    }
+    void update() {
 
+    }
 }

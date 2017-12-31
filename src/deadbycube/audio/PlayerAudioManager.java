@@ -1,27 +1,32 @@
 package deadbycube.audio;
 
-import deadbycube.player.DbcPlayer;
+import deadbycube.player.DeadByCubePlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.SoundCategory;
 
 public class PlayerAudioManager {
 
-    private final DbcPlayer dbcPlayer;
+    private final DeadByCubePlayer deadByCubePlayer;
 
-    public PlayerAudioManager(DbcPlayer dbcPlayer) {
-        this.dbcPlayer = dbcPlayer;
+    public PlayerAudioManager(DeadByCubePlayer deadByCubePlayer) {
+        this.deadByCubePlayer = deadByCubePlayer;
     }
 
-    public void playSound(DbcSounds sound, Location location, float volume, float pitch) {
-        dbcPlayer.getPlayer().playSound(location, sound.getKey(), volume, pitch);
+    public void playSound(SoundRegistry sound, SoundCategory category, Location location, float volume, float pitch) {
+        deadByCubePlayer.getPlayer().playSound(location, sound.getKey(), category, volume, pitch);
     }
 
-    public void playSoundLater(DbcSounds sound, Location location, float volume, float pitch, long delay) {
+    public void playSoundLater(SoundRegistry sound, SoundCategory category, Location location, float volume, float pitch, long delay) {
         Bukkit.getScheduler().runTaskLater(
-                dbcPlayer.getPlugin(),
-                () -> playSound(sound, location, volume, pitch),
+                deadByCubePlayer.getPlugin(),
+                () -> playSound(sound, category, location, volume, pitch),
                 delay
         );
+    }
+
+    public void stopSound(SoundRegistry sound) {
+        deadByCubePlayer.getPlayer().stopSound(sound.getKey());
     }
 
 }

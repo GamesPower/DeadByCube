@@ -2,6 +2,6 @@ package deadbycube.player;
 
 public enum PlayerType {
 
-    LOBBY, SURVIVOR, KILLER, SPECTATOR
+    SURVIVOR, KILLER, SPECTATOR
 
 }

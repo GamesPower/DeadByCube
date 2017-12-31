@@ -31,7 +31,8 @@ public class CommandFunction {
             try {
                 objectList.add(valueTypes[i].newInstance(arguments[i]));
             } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException e) {
-                player.sendMessage("ERR_COMMAND_PROCESS");
+                player.sendMessage("ERR_COMMAND_PROCESS: " + e.getLocalizedMessage());
+                e.printStackTrace();
                 return true;
             }
         }
@@ -42,7 +43,8 @@ public class CommandFunction {
             method.invoke(commandNode, objectList.toArray(new Object[objectList.size()]));
             return true;
         } catch (IllegalAccessException | InvocationTargetException e) {
-            player.sendMessage("ERR_COMMAND_PROCESS");
+            player.sendMessage("ERR_COMMAND_PROCESS: " + e.getLocalizedMessage());
+            e.printStackTrace();
             return true;
         }
     }

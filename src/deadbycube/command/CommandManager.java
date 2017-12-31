@@ -5,14 +5,14 @@ import org.bukkit.command.PluginCommand;
 
 public class CommandManager {
 
-    private DeadByCube deadByCube;
+    private DeadByCube plugin;
 
-    public CommandManager(DeadByCube deadByCube) {
-        this.deadByCube = deadByCube;
+    public CommandManager(DeadByCube plugin) {
+        this.plugin = plugin;
     }
 
     public void register(Command command) {
-        PluginCommand pluginCommand = deadByCube.getCommand(command.getName());
+        PluginCommand pluginCommand = plugin.getCommand(command.getName());
         pluginCommand.setExecutor(command);
         pluginCommand.setTabCompleter(command);
     }

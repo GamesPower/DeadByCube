@@ -10,6 +10,8 @@ import deadbycube.player.killer.KillerNurse;
 import deadbycube.player.killer.KillerShape;
 import deadbycube.player.killer.KillerWraith;
 import deadbycube.player.survivor.Survivor;
+import deadbycube.util.GameStatus;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 public class CommandRole extends Command {
@@ -20,7 +22,7 @@ public class CommandRole extends Command {
 
     @FunctionInfo(name = "survivor")
     private void survivor(Player player) {
-        if(plugin.isInGame()) {
+        if (plugin.getStatus() == GameStatus.IN_GAME) {
             player.sendMessage("ERR_IN_GAME");
             return;
         }
@@ -31,7 +33,7 @@ public class CommandRole extends Command {
 
     @FunctionInfo(name = "killer")
     private void killer(Player player, CommandStringValue killer) {
-        if(plugin.isInGame()) {
+        if (plugin.getStatus() == GameStatus.IN_GAME) {
             player.sendMessage("ERR_IN_GAME");
             return;
         }
@@ -55,6 +57,17 @@ public class CommandRole extends Command {
                 return;
         }
         player.sendMessage("Player set to " + killerName);
+    }
+
+    @FunctionInfo(name = "yumyum")
+    private void yumyum(Player player) {
+        if (plugin.getStatus() == GameStatus.IN_GAME) {
+            player.sendMessage("ERR_IN_GAME");
+            return;
+        }
+
+        Player yumashine = Bukkit.getPlayer("Yumashine");
+        plugin.getPlayerList().setPlayer(yumashine, new KillerShape(plugin, yumashine));
     }
 
     @FunctionInfo(name = "list")

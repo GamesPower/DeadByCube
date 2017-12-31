@@ -1,17 +1,14 @@
 package deadbycube.player.spectator;
 
 import deadbycube.DeadByCube;
-import deadbycube.player.DbcPlayer;
-import deadbycube.player.PlayerActionHandler;
+import deadbycube.player.DeadByCubePlayer;
 import deadbycube.player.PlayerType;
-import deadbycube.player.killer.Killer;
+import deadbycube.player.actionhandler.PlayerActionHandler;
+import deadbycube.player.actionhandler.SpectatorActionHandler;
+import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-
-public class Spectator extends DbcPlayer {
-
-    private DbcPlayer spectated;
+public class Spectator extends DeadByCubePlayer {
 
     public Spectator(DeadByCube plugin, Player player) {
         super(plugin, player);
@@ -19,14 +16,12 @@ public class Spectator extends DbcPlayer {
 
     @Override
     public void init() {
-        ArrayList<Killer> killerList = plugin.getPlayerList().getKillers();
-        if (killerList.size() > 0) {
-            player.setSpectatorTarget(killerList.get(0).getPlayer());
-        }
+        player.setGameMode(GameMode.SPECTATOR);
     }
 
     @Override
     public void reset() {
+        player.setGameMode(GameMode.ADVENTURE);
     }
 
     @Override

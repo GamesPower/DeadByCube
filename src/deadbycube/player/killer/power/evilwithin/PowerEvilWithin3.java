@@ -4,13 +4,12 @@ import deadbycube.player.killer.Killer;
 
 public class PowerEvilWithin3 extends PowerEvilWithin {
 
-    PowerEvilWithin3(Killer killer) {
+    public PowerEvilWithin3(Killer killer) {
         super(killer);
     }
 
     @Override
     void onStalk() {
-        this.stopUpdate();
     }
 
 }

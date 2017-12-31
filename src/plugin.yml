@@ -2,14 +2,14 @@ name: DeadByCube
 description: Dead by Daylight like in Minecraft
 main: deadbycube.DeadByCube
 version: 0.1
-authors: [Fabien, Akanlyfe]
+author: Fabien
 commands:
   role:
     description: Set your role
     usage: /role <survivor|killer|list>
-  killer:
-    description: Killer
-    usage: /killer <stun>
   game:
     description: Game
     usage: /game <start|stop>
+  structure:
+    description: Description
+    usage: /structure

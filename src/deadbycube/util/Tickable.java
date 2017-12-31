@@ -1,15 +1,15 @@
 package deadbycube.util;
 
 import deadbycube.DeadByCube;
-import org.bukkit.Bukkit;
+import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scheduler.BukkitTask;
 
 public class Tickable {
 
     private final DeadByCube plugin;
+    private final Runnable runnable;
 
     private BukkitTask task;
-    private final Runnable runnable;
 
     public Tickable(DeadByCube plugin, Runnable runnable) {
         this.plugin = plugin;
@@ -18,7 +18,9 @@ public class Tickable {
 
     public void startTask() {
         this.stopTask();
-        this.task = Bukkit.getScheduler().runTaskTimer(plugin, runnable, 0L, 1L);
+
+        BukkitScheduler scheduler = plugin.getServer().getScheduler();
+        this.task = scheduler.runTaskTimer(plugin, runnable, 0L, 0L);
     }
 
     public void stopTask() {

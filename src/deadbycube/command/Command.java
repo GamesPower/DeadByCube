@@ -9,6 +9,7 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public abstract class Command extends CommandNode implements CommandExecutor, TabCompleter {
@@ -18,7 +19,7 @@ public abstract class Command extends CommandNode implements CommandExecutor, Ta
     }
 
     @Override
-    public boolean onCommand(CommandSender commandSender, org.bukkit.command.Command command, String s, String[] args) {
+    public boolean onCommand(CommandSender commandSender, org.bukkit.command.Command command, String commandName, String[] args) {
         if (!(commandSender instanceof Player))
             return false;
 
@@ -44,8 +45,11 @@ public abstract class Command extends CommandNode implements CommandExecutor, Ta
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender commandSender, org.bukkit.command.Command command, String s, String[] strings) {
-        return null;
+    public List<String> onTabComplete(CommandSender commandSender, org.bukkit.command.Command command, String commandName, String[] args) {
+
+
+
+        return Collections.singletonList("Soon™");
     }
 
 }

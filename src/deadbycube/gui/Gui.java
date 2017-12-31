@@ -6,7 +6,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
 
-public abstract class Gui {
+class Gui {
 
     private final String name;
     private final int size;
@@ -18,11 +18,7 @@ public abstract class Gui {
         this.name = name;
         this.size = size;
         this.buttons = new GuiButton[size];
-
-        this.build();
     }
-
-    public abstract void build();
 
     void set(int index, GuiButton button) {
         if (index < size)

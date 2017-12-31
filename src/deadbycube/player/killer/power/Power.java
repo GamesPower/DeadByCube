@@ -1,18 +1,42 @@
 package deadbycube.player.killer.power;
 
+import deadbycube.item.ItemStackBuilder;
 import deadbycube.player.killer.Killer;
 import deadbycube.util.Tickable;
+import org.bukkit.Material;
+import org.bukkit.inventory.ItemFlag;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 
 public abstract class Power {
 
     protected final Killer killer;
     private final Tickable tickable;
 
-    private boolean update = true;
-
     protected Power(Killer killer) {
         this.killer = killer;
         this.tickable = new Tickable(killer.getPlugin(), this::update);
+    }
+
+    public void init(boolean using) {
+        PlayerInventory inventory = killer.getPlayer().getInventory();
+        ItemStack itemInOffHand = inventory.getItemInOffHand();
+        if (itemInOffHand.getType() == Material.BOW) {
+            itemInOffHand.setDurability((short) PowerRegistry.getID(this));
+        } else {
+            inventory.setItemInOffHand(
+                    new ItemStackBuilder()
+                            .setMaterial(Material.BOW)
+                            .setData((byte) PowerRegistry.getID(this))
+                            .setFlags(ItemFlag.HIDE_UNBREAKABLE, ItemFlag.HIDE_ATTRIBUTES)
+                            .setUnbreakable(true)
+                            .build()
+            );
+        }
+        inventory.setItem(9, new ItemStackBuilder().setMaterial(Material.ARROW).build());
+
+        if (using)
+            this.tickable.startTask();
     }
 
     public void reset() {
@@ -23,7 +47,7 @@ public abstract class Power {
         if (!isUsing()) {
             this.tickable.stopTask();
             this.onStopUse();
-        } else if (update)
+        } else
             this.onUpdate();
     }
 
@@ -35,18 +59,18 @@ public abstract class Power {
 
     protected abstract void onStopUse();
 
-    private boolean isUsing() {
+    public boolean isUsing() {
         return killer.getPlayer().isHandRaised();
     }
 
     public void use() {
         this.onUse();
-        this.update = true;
         this.tickable.startTask();
     }
 
-    protected void stopUpdate() {
-        this.update = false;
+    void stopUse() {
+        this.tickable.stopTask();
+        this.onStopUse();
     }
 
 }
