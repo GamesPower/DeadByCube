@@ -59,15 +59,21 @@ public class CommandRole extends Command {
         player.sendMessage("Player set to " + killerName);
     }
 
-    @FunctionInfo(name = "yumyum")
-    private void yumyum(Player player) {
+    @FunctionInfo(name = "set")
+    private void set(Player player, CommandStringValue username) {
         if (plugin.getStatus() == GameStatus.IN_GAME) {
             player.sendMessage("ERR_IN_GAME");
             return;
         }
 
-        Player yumashine = Bukkit.getPlayer("Yumashine");
-        plugin.getPlayerList().setPlayer(yumashine, new KillerShape(plugin, yumashine));
+
+        Player player1 = Bukkit.getPlayer(username.getValue());
+        if (player1 == null) {
+            player.sendMessage("ERR_PLAYER_NOT_FOUND");
+            return;
+        }
+
+        plugin.getPlayerList().setPlayer(player1, new KillerShape(plugin, player1));
     }
 
     @FunctionInfo(name = "list")
