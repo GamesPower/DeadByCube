@@ -1,13 +1,14 @@
 package deadbycube.game.object.generator;
 
+import deadbycube.game.interaction.Interaction;
 import deadbycube.player.DeadByCubePlayer;
 import deadbycube.player.PlayerType;
-import deadbycube.game.interaction.Interaction;
+import org.bukkit.Location;
 
 public class RepairInteraction extends Interaction {
 
-    public RepairInteraction(GeneratorObject generatorObject) {
-        super("repair", generatorObject.getLocation(), 1.2f);
+    public RepairInteraction(Location location, GeneratorObject generatorObject) {
+        super("repair", location, 1.2f);
     }
 
     @Override

@@ -1,47 +1,33 @@
 package deadbycube.audio;
 
-import deadbycube.DeadByCube;
 import deadbycube.player.DeadByCubePlayer;
-import deadbycube.player.PlayerType;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Server;
 import org.bukkit.SoundCategory;
-import org.bukkit.scheduler.BukkitScheduler;
+import org.bukkit.entity.Player;
 
-public class AudioManager {
+import java.util.function.Function;
 
-    private final DeadByCube plugin;
+public interface AudioManager {
 
-    public AudioManager(DeadByCube plugin) {
-        this.plugin = plugin;
+    default void playSound(SoundRegistry sound, SoundCategory category, Location location) {
+        this.playSound(sound, category, location, 1, 1);
     }
 
-    public void stopSound(SoundRegistry sound) {
-        for (DeadByCubePlayer deadByCubePlayer : plugin.getPlayerList().getPlayers()) {
-            deadByCubePlayer.getAudioManager().stopSound(sound);
-        }
+    void playSound(SoundRegistry sound, SoundCategory category, Location location, float volume, float pitch);
+
+    void playSound(SoundRegistry sound, SoundCategory category, Location location, float volume, float pitch, Function<DeadByCubePlayer, Boolean> function);
+
+    default void playSound(SoundRegistry sound, SoundCategory category) {
+        this.playSound(sound, category, 1, 1);
     }
 
-    public void playGlobalSoundLater(SoundRegistry sound, SoundCategory category, Location location, float volume, float pitch, long delay) {
-        Server server = plugin.getServer();
-        BukkitScheduler scheduler = server.getScheduler();
-        scheduler.runTaskLater(plugin, () -> playGlobalSound(sound, category, location, volume, pitch), delay);
-    }
+    void playSound(SoundRegistry sound, SoundCategory category, float volume, float pitch);
 
-    public void playGlobalSound(SoundRegistry sound, SoundCategory category, Location location, float volume, float pitch) {
-        for (DeadByCubePlayer deadByCubePlayer : plugin.getPlayerList().getPlayers())
-            if (deadByCubePlayer.getType() != PlayerType.SPECTATOR)
-                deadByCubePlayer.getAudioManager().playSound(sound, category, location, volume, pitch);
-    }
+    void playSound(SoundRegistry sound, SoundCategory category, float volume, float pitch, Function<DeadByCubePlayer, Boolean> function);
 
-    public void playKillerSound(SoundRegistry sound, SoundCategory category, Location location, float volume, float pitch) {
-        for (DeadByCubePlayer deadByCubePlayer : plugin.getPlayerList().getKillers())
-            deadByCubePlayer.getAudioManager().playSound(sound, category, location, volume, pitch);
-    }
+    void playSoundLater(SoundRegistry sound, SoundCategory category, Location location, float volume, float pitch, long delay);
 
-    public void playSurvivorSound(SoundRegistry sound, SoundCategory category, Location location, float volume, float pitch) {
-        for (DeadByCubePlayer deadByCubePlayer : plugin.getPlayerList().getSurvivors())
-            deadByCubePlayer.getAudioManager().playSound(sound, category, location, volume, pitch);
-    }
+    void stopSound(SoundRegistry sound);
 
 }

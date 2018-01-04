@@ -1,8 +1,10 @@
 package deadbycube.player.killer.power;
 
-import deadbycube.audio.PlayerAudioManager;
+import deadbycube.audio.AudioManager;
 import deadbycube.audio.SoundRegistry;
+import deadbycube.audio.WorldAudioManager;
 import deadbycube.player.killer.Killer;
+import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.SoundCategory;
 import org.bukkit.World;
@@ -12,8 +14,13 @@ import org.bukkit.potion.PotionEffectType;
 
 public class PowerInvisibilityBell extends Power {
 
-    private CloakStatus status = CloakStatus.CLOAKED;
+    private static final int CLOAK_TIME = 30;
+    private static final int UNCLOAK_TIME = 40;
+    private static final int WHOOSH_DISTANCE = 40;
+
+    private CloakStatus status = CloakStatus.UNCLOAKED;
     private int cloakProgress;
+    private int cloakTime;
 
     public PowerInvisibilityBell(Killer killer) {
         super(killer);
@@ -23,8 +30,7 @@ public class PowerInvisibilityBell extends Power {
     public void init(boolean using) {
         super.init(using);
 
-        Player player = killer.getPlayer();
-        player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 999999, 0, false, false));
+        this.setStatus(CloakStatus.CLOAKED, killer.getAudioManager());
     }
 
     @Override
@@ -41,50 +47,73 @@ public class PowerInvisibilityBell extends Power {
     @Override
     public void onUse() {
         this.cloakProgress = 0;
+        this.cloakTime = status == CloakStatus.CLOAKED ? UNCLOAK_TIME : CLOAK_TIME;
+
+        WorldAudioManager audioManager = killer.getPlugin().getAudioManager();
+        audioManager.playSound(SoundRegistry.KILLER_WRAITH_WEAPON_ARM, SoundCategory.MASTER, killer.getPlayer().getLocation());
     }
 
     @Override
     public void onUpdate() {
-        Player player = killer.getPlayer();
-        World world = player.getWorld();
+        Player killerPlayer = killer.getPlayer();
+        World world = killerPlayer.getWorld();
+        WorldAudioManager audioManager = killer.getPlugin().getAudioManager();
 
-        if (cloakProgress >= (status.cloakTime * 0.12) && (cloakProgress % 4) == 0)
-            world.spawnParticle(Particle.SMOKE_LARGE, player.getLocation(), 5, .05, .25, .05, 0.015);
+        if (status == CloakStatus.CLOAKED) {
+            if (cloakProgress >= (cloakTime * 0.12) && (cloakProgress % 4) == 0)
+                world.spawnParticle(Particle.SMOKE_LARGE, killerPlayer.getLocation(), 5, .05, .25, .05, 0.015);
 
-        /*if (cloakProgress == (int) (cloakTime * 0.08) || cloakProgress == (int) (cloakTime * 0.60)) {
-            world.playSound(player.getLocation(), DBDSounds.KILLER_WRAITH_BELL_SINGLE, .5f, 1);
+        } else if (status == CloakStatus.UNCLOAKED) {
+            if (cloakProgress % 4 == 0)
+                world.spawnParticle(Particle.SMOKE_LARGE, killerPlayer.getLocation(), 5, .05, .25, .05, 0.015);
+
+            if (cloakProgress == (int) (cloakTime * .20)) {
+                audioManager.playSound(SoundRegistry.POWER_INVISIBILITY_BELL_BELL_SINGLE, SoundCategory.MASTER, killerPlayer.getLocation());
+                audioManager.playSound(SoundRegistry.POWER_INVISIBILITY_BELL_BELL_IRON, SoundCategory.MASTER, killerPlayer.getLocation());
+                audioManager.playSound(SoundRegistry.POWER_INVISIBILITY_BELL_BURN, SoundCategory.MASTER, killerPlayer.getLocation());
+                audioManager.playSound(SoundRegistry.POWER_INVISIBILITY_BELL_DISSOLVE, SoundCategory.MASTER, killerPlayer.getLocation());
+            }
+
+            if (cloakProgress == (int) (cloakTime * .65)) {
+                audioManager.playSound(SoundRegistry.POWER_INVISIBILITY_BELL_BELL_SINGLE, SoundCategory.MASTER, killerPlayer.getLocation());
+                audioManager.playSound(SoundRegistry.POWER_INVISIBILITY_BELL_BELL_IRON, SoundCategory.MASTER, killerPlayer.getLocation());
+            }
+        }
+
+        /*if (cloakProgress == (int) (status.cloakTime * 0.08) || cloakProgress == (int) (status.cloakTime * 0.60)) {
+            WorldAudioManager audioManager = killer.getPlugin().getAudioManager();
+            audioManager.playGlobalSound(SoundRegistry.POWER_INVISIBILITY_BELL_BELL_SINGLE, SoundCategory.MASTER, killerPlayer.getLocation(), .5f, 1f);
         }*/
 
-        if (++cloakProgress == status.cloakTime) this.stopUse();
+        if (++cloakProgress == cloakTime) this.stopUse();
     }
 
     @Override
     protected void onStopUse() {
-        if (cloakProgress != status.cloakTime)
-            return;
+        if (cloakProgress == cloakTime)
+            this.setStatus(status == CloakStatus.CLOAKED ? CloakStatus.UNCLOAKED : CloakStatus.CLOAKED, killer.getPlugin().getAudioManager());
+    }
 
-        this.status = status == CloakStatus.CLOAKED ? CloakStatus.UNCLOAKED : CloakStatus.CLOAKED;
+    private void setStatus(CloakStatus status, AudioManager audioManager) {
+        if (this.status != status) {
+            this.status = status;
 
-        Player player = killer.getPlayer();
-        PlayerAudioManager audioManager = killer.getAudioManager();
-        if (status == CloakStatus.CLOAKED) {
-            audioManager.playSound(SoundRegistry.KILLER_WRAITH_INVISIBILITY_ON, SoundCategory.MASTER, killer.getPlayer().getLocation(), 1000, 1);
-            player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 999999, 0, false, false));
-        } else if (status == CloakStatus.UNCLOAKED) {
-            audioManager.playSound(SoundRegistry.KILLER_WRAITH_INVISIBILITY_OFF, SoundCategory.MASTER, killer.getPlayer().getLocation(), 1000, 1);
-            player.removePotionEffect(PotionEffectType.INVISIBILITY);
+            Player killerPlayer = killer.getPlayer();
+            Location killerLocation = killerPlayer.getLocation();
+            if (status == CloakStatus.CLOAKED) {
+                audioManager.playSound(SoundRegistry.POWER_INVISIBILITY_BELL_VISIBLE, SoundCategory.MASTER, killerLocation, 10, 1, deadByCubePlayer -> deadByCubePlayer.getPlayer().getLocation().distance(killerLocation) < WHOOSH_DISTANCE);
+                killerPlayer.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 999999, 0, false, false));
+                killer.getTerrorRadius().forceValue(0d);
+            } else if (status == CloakStatus.UNCLOAKED) {
+                audioManager.playSound(SoundRegistry.POWER_INVISIBILITY_BELL_INVISIBLE, SoundCategory.MASTER, killerLocation, 10, 1, deadByCubePlayer -> deadByCubePlayer.getPlayer().getLocation().distance(killerLocation) < WHOOSH_DISTANCE);
+                killerPlayer.removePotionEffect(PotionEffectType.INVISIBILITY);
+                killer.getTerrorRadius().resetValue();
+            }
         }
     }
 
     private enum CloakStatus {
-        CLOAKED(40),
-        UNCLOAKED(20);
-
-        private final int cloakTime;
-
-        CloakStatus(int cloakTime) {
-            this.cloakTime = cloakTime;
-        }
+        CLOAKED, UNCLOAKED
     }
 
 }

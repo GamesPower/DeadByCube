@@ -43,7 +43,12 @@ public class InGameEventHandler extends EventHandler {
         event.setQuitMessage(null);
 
         PlayerList playerList = plugin.getPlayerList();
-        playerList.removePlayer(event.getPlayer());
+        Player player = event.getPlayer();
+        DeadByCubePlayer deadByCubePlayer = playerList.getPlayer(player);
+        if (deadByCubePlayer != null) {
+            deadByCubePlayer.reset();
+            playerList.removePlayer(player);
+        }
 
         // TODO Call the kill method if he was a survivor
         // TODO Check the game requirements (at least 1 killer and 1 survivor)
@@ -81,8 +86,8 @@ public class InGameEventHandler extends EventHandler {
     @Override
     public void onPlayerMove(PlayerMoveEvent event) {
         Player player = event.getPlayer();
-        DeadByCubePlayer deadByCubePlayer = plugin.getPlayerList().getPlayer(player);
 
+        DeadByCubePlayer deadByCubePlayer = plugin.getPlayerList().getPlayer(player);
         if (deadByCubePlayer != null) {
             DeadByCubeGame game = plugin.getGame();
             InteractionManager interactionManager = game.getInteractionManager();

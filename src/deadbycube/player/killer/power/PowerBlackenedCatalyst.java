@@ -4,8 +4,15 @@ import deadbycube.player.killer.Killer;
 
 public class PowerBlackenedCatalyst extends Power {
 
-    protected PowerBlackenedCatalyst(Killer killer) {
+    public PowerBlackenedCatalyst(Killer killer) {
         super(killer);
+    }
+
+    @Override
+    public void init(boolean using) {
+        super.init(using);
+
+        killer.getTerrorRadius().setBaseValue(28);
     }
 
     @Override

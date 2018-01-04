@@ -6,10 +6,16 @@ author: Fabien
 commands:
   role:
     description: Set your role
-    usage: /role <survivor|killer|list>
+    usage: /role <set|survivor|killer|list>
   game:
-    description: Game
-    usage: /game <start|stop>
+    description: Manage game
+    usage: /game <start|stop|option>
   structure:
-    description: Description
+    description: Manage structure
     usage: /structure
+  interaction:
+    description: Manage game interaction
+    usage: /interaction <create|list>
+  debug:
+    description: Debug stuff
+    usage: /debug <direction>

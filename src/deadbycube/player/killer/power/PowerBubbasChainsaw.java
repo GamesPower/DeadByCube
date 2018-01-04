@@ -4,7 +4,7 @@ import deadbycube.player.killer.Killer;
 
 public class PowerBubbasChainsaw extends Power {
 
-    protected PowerBubbasChainsaw(Killer killer) {
+    public PowerBubbasChainsaw(Killer killer) {
         super(killer);
     }
 

@@ -19,12 +19,13 @@ public class InteractionManager {
 
     public void update(DeadByCubePlayer deadByCubePlayer) {
         PlayerInteractionManager interactionManager = deadByCubePlayer.getInteractionManager();
-        interactionManager.update();
+        interactionManager.clearInteractions();
+
         Player player = deadByCubePlayer.getPlayer();
         Location playerLocation = player.getLocation();
         for (Interaction interaction : interactions) {
             if (interaction.canInteract(deadByCubePlayer) && playerLocation.distance(interaction.getLocation()) <= interaction.getDistance()) {
-                interactionManager.addInteraction(interaction);
+                interactionManager.registerInteraction(interaction);
             }
         }
     }

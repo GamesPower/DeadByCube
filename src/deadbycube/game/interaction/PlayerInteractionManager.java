@@ -1,7 +1,6 @@
 package deadbycube.game.interaction;
 
 import deadbycube.player.DeadByCubePlayer;
-import org.bukkit.Location;
 
 import java.util.ArrayList;
 
@@ -14,17 +13,18 @@ public class PlayerInteractionManager {
         this.player = deadByCubePlayer;
     }
 
-    public void onInteract() {
-        
-    }
-
     public void update() {
-        Location playerLocation = player.getPlayer().getLocation();
-        interactions.removeIf(interaction -> !interaction.canInteract(player) || playerLocation.distance(interaction.getLocation()) > interaction.getDistance());
+
+
+
     }
 
-    public void addInteraction(Interaction interaction) {
+    public void registerInteraction(Interaction interaction) {
         this.interactions.add(interaction);
+    }
+
+    public void clearInteractions() {
+        this.interactions.clear();
     }
 
 }

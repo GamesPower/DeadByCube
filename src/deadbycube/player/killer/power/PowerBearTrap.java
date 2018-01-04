@@ -4,7 +4,7 @@ import deadbycube.player.killer.Killer;
 
 public class PowerBearTrap extends Power {
 
-    PowerBearTrap(Killer killer) {
+    public PowerBearTrap(Killer killer) {
         super(killer);
     }
 

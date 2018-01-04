@@ -3,7 +3,7 @@ package deadbycube.command.game;
 import deadbycube.DeadByCube;
 import deadbycube.command.function.FunctionInfo;
 import deadbycube.command.node.CommandNode;
-import deadbycube.command.value.CommandIntValue;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 class CommandGameOption extends CommandNode {
@@ -13,7 +13,7 @@ class CommandGameOption extends CommandNode {
     }
 
     @FunctionInfo(name = "generator")
-    private void generator(Player player, CommandIntValue generator) {
+    private void generator(CommandSender commandSender, Integer generator) {
     }
 
 }

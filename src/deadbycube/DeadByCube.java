@@ -1,8 +1,9 @@
 package deadbycube;
 
-import deadbycube.audio.AudioManager;
+import deadbycube.audio.WorldAudioManager;
 import deadbycube.command.CommandManager;
 import deadbycube.command.game.CommandGame;
+import deadbycube.command.interaction.CommandInteraction;
 import deadbycube.command.role.CommandRole;
 import deadbycube.command.structure.CommandStructure;
 import deadbycube.eventhandler.EventHandler;
@@ -24,7 +25,7 @@ public class DeadByCube extends JavaPlugin {
     private final PlayerList playerList = new PlayerList();
     private final CommandManager commandManager = new CommandManager(this);
     private final StructureManager structureManager = new StructureManager(this);
-    private final AudioManager audioManager = new AudioManager(this);
+    private final WorldAudioManager audioManager = new WorldAudioManager(this);
 
     private World lobbyWorld;
     private GameStatus status;
@@ -42,6 +43,26 @@ public class DeadByCube extends JavaPlugin {
 
         this.registerListeners();
         this.registerCommands();
+
+        /*Random random = new Random();
+        getServer().getScheduler().runTaskTimer(this, () -> {
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                for (int i = 0; i < 25; i++) {
+                    int x = random.nextInt(40) - 20;
+                    int y = random.nextInt(18) + 2;
+                    int z = random.nextInt(40) - 20;
+                    Location location = player.getLocation();
+
+                    player.spawnParticle(
+                            Particle.FALLING_DUST,
+                            location.getX() + x, player.getWorld().getHighestBlockYAt(x, z) + y, location.getZ() + z, 1,
+                            0, 0, 0,
+                            1, new MaterialData(Material.SNOW)
+                    );
+                }
+
+            }
+        }, 0L, 0L);*/
     }
 
     @Override
@@ -61,6 +82,7 @@ public class DeadByCube extends JavaPlugin {
         commandManager.register(new CommandGame(this));
         commandManager.register(new CommandStructure(this));
         commandManager.register(new CommandRole(this));
+        commandManager.register(new CommandInteraction(this));
     }
 
     public void startGame() {
@@ -89,7 +111,7 @@ public class DeadByCube extends JavaPlugin {
         return structureManager;
     }
 
-    public AudioManager getAudioManager() {
+    public WorldAudioManager getAudioManager() {
         return audioManager;
     }
 

@@ -1,6 +1,6 @@
 package deadbycube.gui;
 
-import deadbycube.item.ItemStackBuilder;
+import deadbycube.util.ItemStackBuilder;
 import deadbycube.player.killer.power.PowerRegistry;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemFlag;

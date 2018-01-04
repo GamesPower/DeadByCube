@@ -4,6 +4,7 @@ import deadbycube.DeadByCube;
 import deadbycube.audio.PlayerAudioManager;
 import deadbycube.game.interaction.PlayerInteractionManager;
 import deadbycube.player.actionhandler.PlayerActionHandler;
+import deadbycube.util.EditableValue;
 import org.bukkit.entity.Player;
 
 public abstract class DeadByCubePlayer {
@@ -14,6 +15,8 @@ public abstract class DeadByCubePlayer {
     private final PlayerActionHandler actionHandler;
     private final PlayerAudioManager audioManager;
     private final PlayerInteractionManager interactionManager;
+
+    private final EditableValue walkSpeed = new EditableValue(0.2);
 
     protected DeadByCubePlayer(DeadByCube plugin, Player player) {
         this.plugin = plugin;
@@ -31,6 +34,10 @@ public abstract class DeadByCubePlayer {
     public abstract PlayerActionHandler createActionHandler();
 
     public abstract PlayerType getType();
+
+    public EditableValue getWalkSpeed() {
+        return walkSpeed;
+    }
 
     public PlayerActionHandler getActionHandler() {
         return actionHandler;

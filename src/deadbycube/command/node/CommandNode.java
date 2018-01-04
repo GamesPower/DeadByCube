@@ -1,13 +1,17 @@
 package deadbycube.command.node;
 
 import deadbycube.DeadByCube;
+import deadbycube.command.exception.CommandExecutionException;
 import deadbycube.command.function.CommandFunction;
 import deadbycube.command.function.FunctionInfo;
-import deadbycube.command.value.CommandValueType;
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public abstract class CommandNode {
 
@@ -25,25 +29,41 @@ public abstract class CommandNode {
             if (method.isAnnotationPresent(FunctionInfo.class)) {
                 method.setAccessible(true);
 
-                Class<?>[] parameterClasses = method.getParameterTypes();
-                if (parameterClasses.length == 0)
+                Class<?>[] parameterTypes = method.getParameterTypes();
+                if (parameterTypes.length == 0)
                     throw new IllegalArgumentException("Missing parameters");
-                if (parameterClasses[0] != Player.class)
+                if (parameterTypes[0] != CommandSender.class)
                     throw new IllegalArgumentException("Invalid command function player parameter");
 
-                CommandValueType[] valueTypes = new CommandValueType[method.getParameterCount() - 1];
-                for (int i = 1; i < parameterClasses.length; i++)
-                    valueTypes[i - 1] = CommandValueType.fromValue(parameterClasses[i]);
+                for (int i = 1; i < parameterTypes.length; i++) {
+                    try {
+                        parameterTypes[i].getConstructor(String.class);
+                    } catch (NoSuchMethodException e) {
+                        throw new IllegalArgumentException("Invalid command parameter");
+                    }
+                }
 
                 FunctionInfo functionInfo = method.getAnnotation(FunctionInfo.class);
                 commandFunctions.add(new CommandFunction(
                         this,
                         functionInfo.name(),
-                        valueTypes,
+                        Arrays.copyOfRange(parameterTypes, 1, parameterTypes.length),
                         method
                 ));
             }
         }
+    }
+
+    protected Player getPlayer(CommandSender commandSender) throws CommandExecutionException {
+        if (!(commandSender instanceof Player))
+            throw new CommandExecutionException("The command executor need to be player");
+        return (Player) commandSender;
+    }
+
+    protected void sendMessage(CommandSender commandSender, String message, ChatColor chatColor) {
+        TextComponent textComponent = new TextComponent(message);
+        textComponent.setColor(chatColor);
+        commandSender.spigot().sendMessage(textComponent);
     }
 
     public CommandNode getNode(String name) {

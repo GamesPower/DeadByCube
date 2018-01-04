@@ -3,7 +3,7 @@ package deadbycube.gui;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import deadbycube.item.ItemStackBuilder;
+import deadbycube.util.ItemStackBuilder;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;

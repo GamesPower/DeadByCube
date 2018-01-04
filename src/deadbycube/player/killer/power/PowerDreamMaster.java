@@ -4,8 +4,15 @@ import deadbycube.player.killer.Killer;
 
 public class PowerDreamMaster extends Power {
 
-    protected PowerDreamMaster(Killer killer) {
+    public PowerDreamMaster(Killer killer) {
         super(killer);
+    }
+
+    @Override
+    public void init(boolean using) {
+        super.init(using);
+
+        killer.getTerrorRadius().setBaseValue(24);
     }
 
     @Override

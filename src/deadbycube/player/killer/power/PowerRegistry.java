@@ -36,7 +36,7 @@ public enum PowerRegistry {
         try {
             return powerClass.getConstructor(Killer.class).newInstance(killer);
         } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
-            return new PowerBearTrap(killer);
+            throw new IllegalStateException("Unable to create an instance of " + powerClass.getSimpleName());
         }
     }
 

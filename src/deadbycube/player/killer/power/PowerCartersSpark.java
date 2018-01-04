@@ -1,12 +1,10 @@
 package deadbycube.player.killer.power;
 
-import deadbycube.audio.AudioManager;
-import deadbycube.audio.SoundRegistry;
+import deadbycube.audio.WorldAudioManager;
 import deadbycube.player.killer.Killer;
 import deadbycube.util.MathUtils;
 import org.bukkit.Location;
 import org.bukkit.Particle;
-import org.bukkit.SoundCategory;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
@@ -30,12 +28,12 @@ public class PowerCartersSpark extends Power {
     @Override
     protected void onUse() {
         Player player = killer.getPlayer();
-        AudioManager audioManager = killer.getPlugin().getAudioManager();
+        WorldAudioManager audioManager = killer.getPlugin().getAudioManager();
         Location soundLocation = player.getLocation();
 
-        audioManager.playGlobalSound(SoundRegistry.KILLER_DOCTOR_CHARGE, SoundCategory.MASTER, soundLocation, 1, 1);
+        /*audioManager.playGlobalSound(SoundRegistry.KILLER_DOCTOR_CHARGE, SoundCategory.MASTER, soundLocation, 1, 1);
         audioManager.playGlobalSound(SoundRegistry.KILLER_DOCTOR_CHARGE_BASS, SoundCategory.MASTER, soundLocation, 1, 1);
-        audioManager.playGlobalSound(SoundRegistry.KILLER_DOCTOR_CHARGE_HIGH, SoundCategory.MASTER, soundLocation, 1, 1);
+        audioManager.playGlobalSound(SoundRegistry.KILLER_DOCTOR_CHARGE_HIGH, SoundCategory.MASTER, soundLocation, 1, 1);*/
     }
 
     @Override
@@ -54,7 +52,7 @@ public class PowerCartersSpark extends Power {
 
     @Override
     protected void onStopUse() {
-        AudioManager audioManager = killer.getPlugin().getAudioManager();
+        WorldAudioManager audioManager = killer.getPlugin().getAudioManager();
         if (chargeTime == SHOCK_CHARGE_TIME) {
             Player player = killer.getPlayer();
             World world = player.getWorld();
@@ -62,9 +60,9 @@ public class PowerCartersSpark extends Power {
             float distanceStep = .5f;
             float angleStep = 3.2f;
 
-            Location soundLocation = player.getLocation();
+            /*Location soundLocation = player.getLocation();
             audioManager.playGlobalSound(SoundRegistry.KILLER_DOCTOR_ATTACK, SoundCategory.MASTER, soundLocation, 1, 1);
-            audioManager.playGlobalSound(SoundRegistry.KILLER_DOCTOR_ATTACK_READY, SoundCategory.MASTER, soundLocation, 1, 1);
+            audioManager.playGlobalSound(SoundRegistry.KILLER_DOCTOR_ATTACK_READY, SoundCategory.MASTER, soundLocation, 1, 1);*/
 
             for (float distance = 1.5f; distance < SHOCK_DISTANCE; distance += distanceStep) {
                 for (double angle = -SHOCK_ANGLE; angle <= SHOCK_ANGLE; angle += angleStep) {
@@ -76,12 +74,12 @@ public class PowerCartersSpark extends Power {
                 }
             }
 
-            audioManager.playGlobalSoundLater(SoundRegistry.KILLER_DOCTOR_LAUGH, SoundCategory.MASTER, player.getLocation(), 1, 1, 10);
+            //audioManager.playGlobalSoundLater(SoundRegistry.KILLER_DOCTOR_LAUGH, SoundCategory.MASTER, player.getLocation(), 1, 1, 10);
 
         } else {
-            audioManager.stopSound(SoundRegistry.KILLER_DOCTOR_CHARGE);
+            /*audioManager.stopSound(SoundRegistry.KILLER_DOCTOR_CHARGE);
             audioManager.stopSound(SoundRegistry.KILLER_DOCTOR_CHARGE_BASS);
-            audioManager.stopSound(SoundRegistry.KILLER_DOCTOR_CHARGE_HIGH);
+            audioManager.stopSound(SoundRegistry.KILLER_DOCTOR_CHARGE_HIGH);*/
         }
 
         this.chargeTime = 0;

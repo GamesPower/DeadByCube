@@ -7,14 +7,14 @@ import deadbycube.player.actionhandler.KillerActionHandler;
 import deadbycube.player.killer.power.Power;
 import deadbycube.player.killer.power.PowerRegistry;
 import deadbycube.util.Tickable;
-import deadbycube.util.attribute.Attribute;
+import deadbycube.util.EditableValue;
 import org.bukkit.entity.Player;
 
 public abstract class Killer extends DeadByCubePlayer {
 
     private final String name;
     private final Tickable tickable;
-    private final Attribute terrorRadius = new Attribute();
+    private final EditableValue terrorRadius = new EditableValue(32d);
 
     private Power power;
 
@@ -31,7 +31,6 @@ public abstract class Killer extends DeadByCubePlayer {
         player.setFoodLevel(0); // prevent sprint
 
         this.tickable.startTask();
-        this.terrorRadius.setBaseValue(32d);
         this.power.init(false);
     }
 
@@ -53,7 +52,7 @@ public abstract class Killer extends DeadByCubePlayer {
         return PlayerType.KILLER;
     }
 
-    public Attribute getTerrorRadius() {
+    public EditableValue getTerrorRadius() {
         return terrorRadius;
     }
 

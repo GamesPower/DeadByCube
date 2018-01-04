@@ -1,6 +1,6 @@
 package deadbycube.player.killer.power;
 
-import deadbycube.audio.AudioManager;
+import deadbycube.audio.WorldAudioManager;
 import deadbycube.audio.SoundRegistry;
 import deadbycube.player.killer.Killer;
 import deadbycube.util.MathUtils;
@@ -41,21 +41,21 @@ public class PowerSpencersLastBreath extends Power {
     protected void onUse() {
         this.chargeTime = 0;
 
-        Player player = killer.getPlayer();
-        AudioManager audioManager = killer.getPlugin().getAudioManager();
-        audioManager.playGlobalSound(SoundRegistry.KILLER_NURSE_BLINK_CHARGE, SoundCategory.MASTER, player.getLocation(), 1, 1);
-        audioManager.playGlobalSound(SoundRegistry.KILLER_NURSE_TELEPORT_CHARGING, SoundCategory.MASTER, player.getLocation(), 1, 1);
+        /*Player player = killer.getPlayer();
+        WorldAudioManager audioManager = killer.getPlugin().getAudioManager();
+        audioManager.playGlobalSound(SoundRegistry.KILLER_NURSE_BLINK_CHARGE, SoundCategory.MASTER, player.getLocation(), .2f, 1);
+        audioManager.playGlobalSound(SoundRegistry.KILLER_NURSE_TELEPORT_CHARGING, SoundCategory.MASTER, player.getLocation(), .2f, 1);*/
     }
 
     @Override
     protected void onUpdate() {
         if (chargeTime <= MAX_CHARGE_TIME) {
 
-            if (chargeTime == MAX_CHARGE_TIME) {
+            /*if (chargeTime == MAX_CHARGE_TIME) {
                 Player player = killer.getPlayer();
-                AudioManager audioManager = killer.getPlugin().getAudioManager();
-                audioManager.playGlobalSound(SoundRegistry.KILLER_NURSE_BLINK_CHARGE_FULL, SoundCategory.MASTER, player.getLocation(), 1, 1);
-            }
+                WorldAudioManager audioManager = killer.getPlugin().getAudioManager();
+                audioManager.playGlobalSound(SoundRegistry.KILLER_NURSE_BLINK_CHARGE_FULL, SoundCategory.MASTER, player.getLocation(), .2f, 1);
+            }*/
 
             chargeTime++;
         }
@@ -84,15 +84,15 @@ public class PowerSpencersLastBreath extends Power {
                 direction.getZ() * distance
         ));
 
-        AudioManager audioManager = killer.getPlugin().getAudioManager();
+        /*WorldAudioManager audioManager = killer.getPlugin().getAudioManager();
         audioManager.stopSound(SoundRegistry.KILLER_NURSE_BLINK_CHARGE);
-        audioManager.playGlobalSound(SoundRegistry.KILLER_NURSE_BLINK_APPEAR, SoundCategory.MASTER, player.getLocation(), 1, 1);
-        audioManager.playGlobalSound(SoundRegistry.KILLER_NURSE_TELEPORT_APPEAR, SoundCategory.MASTER, player.getLocation(), 100, 1);
+        audioManager.playGlobalSound(SoundRegistry.KILLER_NURSE_BLINK_APPEAR, SoundCategory.MASTER, player.getLocation(), .2f, 1);
+        audioManager.playGlobalSound(SoundRegistry.KILLER_NURSE_TELEPORT_APPEAR, SoundCategory.MASTER, player.getLocation(), 15, 1);*/
 
         player.sendMessage("- Real Distance: " + oldLocation.distance(player.getLocation()));
 
         Bukkit.getScheduler().runTaskLater(killer.getPlugin(), () -> {
-            audioManager.playGlobalSound(SoundRegistry.KILLER_NURSE_TELEPORT_DISAPPEAR, SoundCategory.MASTER, player.getLocation(), 1, 1);
+           // audioManager.playGlobalSound(SoundRegistry.KILLER_NURSE_TELEPORT_DISAPPEAR, SoundCategory.MASTER, player.getLocation(), 1, 1);
 
             // Stun the nurse post tp
             int additionalStunTime = Math.round(distanceMultiplier * (float) STUN_TIME_MULTIPLIER);

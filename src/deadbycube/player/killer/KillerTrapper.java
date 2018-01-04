@@ -7,20 +7,20 @@ import deadbycube.player.killer.power.PowerRegistry;
 import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
 
-public class KillerShape extends Killer {
+public class KillerTrapper extends Killer {
 
     private byte breathTick = 0;
 
-    public KillerShape(DeadByCube plugin, Player player) {
-        super(plugin, player, "shape", PowerRegistry.EVIL_WITHIN_1);
+    public KillerTrapper(DeadByCube plugin, Player player) {
+        super(plugin, player, "trapper", PowerRegistry.BEAR_TRAP);
     }
 
     @Override
     void update() {
-        if (++breathTick == 65) {
+        if (++breathTick == 35) {
             breathTick = 0;
             WorldAudioManager audioManager = plugin.getAudioManager();
-            audioManager.playSound(SoundRegistry.KILLER_SHAPE_BREATH, SoundCategory.VOICE, player.getLocation(), .05f, 1);
+            audioManager.playSound(SoundRegistry.KILLER_TRAPPER_BREATH, SoundCategory.VOICE, player.getLocation(), .1f, 1);
         }
     }
 

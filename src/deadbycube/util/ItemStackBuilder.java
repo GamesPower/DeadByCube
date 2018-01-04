@@ -1,4 +1,4 @@
-package deadbycube.item;
+package deadbycube.util;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.Material;
@@ -10,8 +10,8 @@ public class ItemStackBuilder {
 
     private Material material = Material.STONE;
     private int amount = 1;
-    private short damage = 0;
     private byte data = 0;
+    private short damage = 0;
 
     private String localizedName = null;
     private boolean unbreakable = false;
@@ -28,13 +28,13 @@ public class ItemStackBuilder {
         return this;
     }
 
-    public ItemStackBuilder setDamage(short damage) {
-        this.damage = damage;
+    public ItemStackBuilder setData(byte data) {
+        this.data = data;
         return this;
     }
 
-    public ItemStackBuilder setData(byte data) {
-        this.data = data;
+    public ItemStackBuilder setDamage(short damage) {
+        this.damage = damage;
         return this;
     }
 
@@ -53,21 +53,14 @@ public class ItemStackBuilder {
         return this;
     }
 
-    public ItemStackBuilder addFlags(ItemFlag flag) {
-        this.flags = (ItemFlag[]) ArrayUtils.add(flags, flag);
-        return this;
-    }
-
     public ItemStack build() {
         ItemStack itemStack = new ItemStack(material, amount, damage, data);
 
         ItemMeta itemMeta = itemStack.getItemMeta();
-
         if (localizedName != null)
             itemMeta.setLocalizedName(localizedName);
         itemMeta.setUnbreakable(unbreakable);
         itemMeta.addItemFlags(flags);
-
         itemStack.setItemMeta(itemMeta);
 
         return itemStack;

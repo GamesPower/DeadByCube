@@ -29,6 +29,8 @@ public class DeadByCubeGame {
         World world = this.world.getWorld();
         for (Player player : Bukkit.getOnlinePlayers()) {
             player.teleport(world.getSpawnLocation());
+            player.setSprinting(false);
+            player.setSneaking(false);
 
             PlayerList playerList = plugin.getPlayerList();
             DeadByCubePlayer deadByCubePlayer = playerList.getPlayer(player);
