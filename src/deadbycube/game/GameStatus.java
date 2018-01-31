@@ -1,4 +1,4 @@
-package deadbycube.util;
+package deadbycube.game;
 
 public enum GameStatus {
 

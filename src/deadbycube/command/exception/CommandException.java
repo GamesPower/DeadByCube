@@ -24,7 +24,6 @@ public class CommandException extends Exception {
     }
 
     public BaseComponent getError() {
-        System.out.println(error.toString());
         return error;
     }
 

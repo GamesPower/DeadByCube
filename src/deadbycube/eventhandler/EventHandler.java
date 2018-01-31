@@ -18,12 +18,16 @@ public abstract class EventHandler {
 
     public abstract void onPlayerQuit(PlayerQuitEvent player);
 
-    public abstract void onPlayerInteract(PlayerInteractEvent event);
+    public abstract void onPlayerMove(PlayerMoveEvent event);
 
     public abstract void onPlayerToggleSprint(PlayerToggleSprintEvent event);
 
+    public abstract void onPlayerToggleSneak(PlayerToggleSneakEvent event);
+
+    public abstract void onPlayerInteract(PlayerInteractEvent event);
+
     public abstract void onPlayerSwapHandItems(PlayerSwapHandItemsEvent event);
 
-    public abstract void onPlayerMove(PlayerMoveEvent event);
+    public abstract void onPlayerDropItem(PlayerDropItemEvent event);
 
 }

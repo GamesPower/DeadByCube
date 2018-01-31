@@ -1,6 +1,6 @@
 package deadbycube.player.killer.power;
 
-import deadbycube.player.killer.Killer;
+import deadbycube.player.killer.KillerPlayer;
 import deadbycube.util.ItemStackBuilder;
 import deadbycube.util.Tickable;
 import org.bukkit.Material;
@@ -10,12 +10,12 @@ import org.bukkit.inventory.PlayerInventory;
 
 public abstract class Power {
 
-    protected final Killer killer;
+    protected final KillerPlayer killer;
     private final Tickable tickable;
 
-    protected Power(Killer killer) {
+    protected Power(KillerPlayer killer) {
         this.killer = killer;
-        this.tickable = new Tickable(killer.getPlugin(), this::update);
+        this.tickable = new Tickable(this::update);
     }
 
     public void init(boolean using) {
@@ -68,7 +68,7 @@ public abstract class Power {
         this.tickable.startTask();
     }
 
-    void stopUse() {
+    protected void stopUse() {
         this.tickable.stopTask();
         this.onStopUse();
     }

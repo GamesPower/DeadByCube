@@ -1,6 +1,7 @@
 package deadbycube.player.killer.power;
 
-import deadbycube.player.killer.Killer;
+import deadbycube.player.killer.KillerPlayer;
+import deadbycube.player.killer.power.cartersspark.PowerCartersSpark;
 import deadbycube.player.killer.power.evilwithin.PowerEvilWithin1;
 import deadbycube.player.killer.power.evilwithin.PowerEvilWithin2;
 import deadbycube.player.killer.power.evilwithin.PowerEvilWithin3;
@@ -32,9 +33,9 @@ public enum PowerRegistry {
         return name().toLowerCase();
     }
 
-    public Power create(Killer killer) {
+    public Power create(KillerPlayer killer) {
         try {
-            return powerClass.getConstructor(Killer.class).newInstance(killer);
+            return powerClass.getConstructor(KillerPlayer.class).newInstance(killer);
         } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
             throw new IllegalStateException("Unable to create an instance of " + powerClass.getSimpleName());
         }

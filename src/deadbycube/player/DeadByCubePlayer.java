@@ -3,8 +3,7 @@ package deadbycube.player;
 import deadbycube.DeadByCube;
 import deadbycube.audio.PlayerAudioManager;
 import deadbycube.game.interaction.PlayerInteractionManager;
-import deadbycube.player.actionhandler.PlayerActionHandler;
-import deadbycube.util.EditableValue;
+import deadbycube.util.MagicalValue;
 import org.bukkit.entity.Player;
 
 public abstract class DeadByCubePlayer {
@@ -16,7 +15,8 @@ public abstract class DeadByCubePlayer {
     private final PlayerAudioManager audioManager;
     private final PlayerInteractionManager interactionManager;
 
-    private final EditableValue walkSpeed = new EditableValue(0.2);
+    private final MagicalValue walkSpeed;
+    private final MagicalValue repairSpeed;
 
     protected DeadByCubePlayer(DeadByCube plugin, Player player) {
         this.plugin = plugin;
@@ -25,18 +25,42 @@ public abstract class DeadByCubePlayer {
         this.actionHandler = createActionHandler();
         this.audioManager = new PlayerAudioManager(this);
         this.interactionManager = new PlayerInteractionManager(this);
+
+        this.walkSpeed = new MagicalValue(0.2) {
+            @Override
+            protected void updateValue() {
+                super.updateValue();
+                player.setWalkSpeed((float) getValue());
+            }
+        };
+        this.repairSpeed = new MagicalValue(1);
     }
 
     public abstract void init();
 
-    public abstract void reset();
+    public void reset() {
+        this.audioManager.getMusicManager().stopPlaying();
+    }
 
     public abstract PlayerActionHandler createActionHandler();
 
     public abstract PlayerType getType();
 
-    public EditableValue getWalkSpeed() {
+    public void setHidden(boolean hidden) {
+        for (DeadByCubePlayer deadByCubePlayer : plugin.getPlayerList().getPlayers()) {
+            if (hidden)
+                deadByCubePlayer.getPlayer().hidePlayer(plugin, player);
+            else
+                deadByCubePlayer.getPlayer().showPlayer(plugin, player);
+        }
+    }
+
+    public MagicalValue walkSpeed() {
         return walkSpeed;
+    }
+
+    public MagicalValue repairSpeed() {
+        return repairSpeed;
     }
 
     public PlayerActionHandler getActionHandler() {

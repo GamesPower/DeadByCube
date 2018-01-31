@@ -17,40 +17,35 @@ public class WorldAudioManager implements AudioManager {
     }
 
     @Override
-    public void playSound(SoundRegistry sound, SoundCategory category, Location location, float volume, float pitch) {
+    public void playSound(String sound, SoundCategory category, Location location, float volume, float pitch) {
         for (DeadByCubePlayer deadByCubePlayer : plugin.getPlayerList().getPlayers())
             if (deadByCubePlayer.getType() != PlayerType.SPECTATOR)
                 deadByCubePlayer.getAudioManager().playSound(sound, category, location, volume, pitch);
     }
 
     @Override
-    public void playSound(SoundRegistry sound, SoundCategory category, Location location, float volume, float pitch, Function<DeadByCubePlayer, Boolean> function) {
+    public void playSound(String sound, SoundCategory category, Location location, float volume, float pitch, Function<DeadByCubePlayer, Boolean> function) {
         for (DeadByCubePlayer deadByCubePlayer : plugin.getPlayerList().getPlayers())
             if (function.apply(deadByCubePlayer) && deadByCubePlayer.getType() != PlayerType.SPECTATOR)
                 deadByCubePlayer.getAudioManager().playSound(sound, category, location, volume, pitch);
     }
 
     @Override
-    public void playSound(SoundRegistry sound, SoundCategory category, float volume, float pitch) {
+    public void playSound(String sound, SoundCategory category, float volume, float pitch) {
         for (DeadByCubePlayer deadByCubePlayer : plugin.getPlayerList().getPlayers())
             if (deadByCubePlayer.getType() != PlayerType.SPECTATOR)
                 deadByCubePlayer.getAudioManager().playSound(sound, category, deadByCubePlayer.getPlayer().getLocation(), volume, pitch);
     }
 
     @Override
-    public void playSound(SoundRegistry sound, SoundCategory category, float volume, float pitch, Function<DeadByCubePlayer, Boolean> function) {
+    public void playSound(String sound, SoundCategory category, float volume, float pitch, Function<DeadByCubePlayer, Boolean> function) {
         for (DeadByCubePlayer deadByCubePlayer : plugin.getPlayerList().getPlayers())
             if (function.apply(deadByCubePlayer) && deadByCubePlayer.getType() != PlayerType.SPECTATOR)
                 deadByCubePlayer.getAudioManager().playSound(sound, category, deadByCubePlayer.getPlayer().getLocation(), volume, pitch);
     }
 
     @Override
-    public void playSoundLater(SoundRegistry sound, SoundCategory category, Location location, float volume, float pitch, long delay) {
-        plugin.getServer().getScheduler().runTaskLater(plugin, () -> this.playSound(sound, category, location, volume, pitch), delay);
-    }
-
-    @Override
-    public void stopSound(SoundRegistry sound) {
+    public void stopSound(String sound) {
         for (DeadByCubePlayer deadByCubePlayer : plugin.getPlayerList().getPlayers()) {
             deadByCubePlayer.getAudioManager().stopSound(sound);
         }

@@ -1,9 +1,13 @@
 package deadbycube.eventhandler;
 
 import deadbycube.DeadByCube;
+import deadbycube.audio.PlayerAudioManager;
+import deadbycube.audio.music.MusicManager;
+import deadbycube.audio.music.MusicRegistry;
 import deadbycube.player.PlayerList;
-import deadbycube.player.spectator.Spectator;
+import deadbycube.player.spectator.SpectatorPlayer;
 import org.bukkit.GameMode;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.*;
@@ -16,7 +20,8 @@ public class LobbyEventHandler extends EventHandler {
 
     @Override
     public void onEntityDamage(EntityDamageEvent event) {
-        event.setCancelled(true);
+        if (event.getEntityType() == EntityType.PLAYER)
+            event.setCancelled(true);
     }
 
     @Override
@@ -27,12 +32,24 @@ public class LobbyEventHandler extends EventHandler {
         player.setGameMode(GameMode.ADVENTURE);
 
         PlayerList playerList = plugin.getPlayerList();
-        playerList.setPlayer(player, new Spectator(plugin, player));
+        SpectatorPlayer spectator = new SpectatorPlayer(plugin, player);
+        playerList.setPlayer(player, spectator);
+
+        PlayerAudioManager audioManager = spectator.getAudioManager();
+        MusicManager musicManager = audioManager.getMusicManager();
+        musicManager.setMusics(MusicRegistry.LOBBY_WINTER);
     }
 
     @Override
     public void onPlayerQuit(PlayerQuitEvent event) {
         event.setQuitMessage(null);
+
+        PlayerList playerList = plugin.getPlayerList();
+        playerList.removePlayer(event.getPlayer());
+    }
+
+    @Override
+    public void onPlayerMove(PlayerMoveEvent event) {
     }
 
     @Override
@@ -44,12 +61,15 @@ public class LobbyEventHandler extends EventHandler {
     }
 
     @Override
-    public void onPlayerSwapHandItems(PlayerSwapHandItemsEvent event) {
-        event.setCancelled(true);
+    public void onPlayerToggleSneak(PlayerToggleSneakEvent event) {
     }
 
     @Override
-    public void onPlayerMove(PlayerMoveEvent event) {
+    public void onPlayerSwapHandItems(PlayerSwapHandItemsEvent event) {
+    }
+
+    @Override
+    public void onPlayerDropItem(PlayerDropItemEvent event) {
     }
 
 }

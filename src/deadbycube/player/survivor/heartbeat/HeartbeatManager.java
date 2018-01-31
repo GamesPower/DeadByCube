@@ -1,51 +1,48 @@
-package deadbycube.player.survivor;
+package deadbycube.player.survivor.heartbeat;
 
-import deadbycube.DeadByCube;
 import deadbycube.audio.PlayerAudioManager;
 import deadbycube.audio.SoundRegistry;
-import deadbycube.player.killer.Killer;
+import deadbycube.player.survivor.SurvivorPlayer;
 import deadbycube.util.Tickable;
 import org.bukkit.Location;
 import org.bukkit.SoundCategory;
 
+import java.util.ArrayList;
+
 public class HeartbeatManager {
 
-    private final Survivor survivor;
+    private final SurvivorPlayer survivor;
     private final Tickable tickable;
+    private final ArrayList<HeartbeatEmitter> heartbeatEmitterList = new ArrayList<>();
 
-    private boolean heartbeat = false;
     private int delay = 0;
     private float volume = 0;
 
-    HeartbeatManager(Survivor survivor) {
+    public HeartbeatManager(SurvivorPlayer survivor) {
         this.survivor = survivor;
-        this.tickable = new Tickable(survivor.getPlugin(), this::update);
+        this.tickable = new Tickable(this::update);
     }
 
     private void update() {
         if (delay-- == 0) {
-            DeadByCube plugin = survivor.getPlugin();
             Location survivorLocation = survivor.getPlayer().getLocation();
 
-            for (Killer killer : plugin.getPlayerList().getKillers()) {
-                Location killerLocation = killer.getPlayer().getLocation();
-
-                double terrorRadius = killer.getTerrorRadius().getValue();
-                double distance = Math.max(2, killerLocation.distance(survivorLocation));
+            for (HeartbeatEmitter heartbeatEmitter : heartbeatEmitterList) {
+                Location heartbeatLocation = heartbeatEmitter.getLocation();
+                double terrorRadius = heartbeatEmitter.getTerrorRadius().getValue();
+                double distance = Math.max(2, heartbeatLocation.distance(survivorLocation));
 
                 if (distance > terrorRadius)
                     continue;
 
                 int delay = (int) ((distance / terrorRadius) * 10) + 8;
                 if (this.delay == -1 || this.delay > delay) {
-                    this.heartbeat = true;
                     this.delay = delay;
                     this.volume = (float) Math.min(1, ((terrorRadius / distance) / terrorRadius) + .75);
                 }
             }
 
-            if (heartbeat) {
-                this.heartbeat = false;
+            if (delay > -1) {
                 PlayerAudioManager audioManager = survivor.getAudioManager();
                 audioManager.playSound(SoundRegistry.SURVIVOR_HEARTBEAT, SoundCategory.MASTER, survivorLocation, volume, 1);
             } else
@@ -59,6 +56,14 @@ public class HeartbeatManager {
 
     public void reset() {
         this.tickable.stopTask();
+    }
+
+    public void registerHeartbeatEmitter(HeartbeatEmitter heartbeatEmitter) {
+        this.heartbeatEmitterList.add(heartbeatEmitter);
+    }
+
+    public void unregisterHeartbeatEmitter(HeartbeatEmitter heartbeatEmitter) {
+        this.heartbeatEmitterList.remove(heartbeatEmitter);
     }
 
 }

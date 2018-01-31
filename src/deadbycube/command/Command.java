@@ -1,12 +1,12 @@
 package deadbycube.command;
 
-import deadbycube.DeadByCube;
 import deadbycube.command.exception.CommandException;
-import deadbycube.command.exception.CommandExecutionException;
 import deadbycube.command.exception.CommandSyntaxException;
 import deadbycube.command.function.CommandFunction;
 import deadbycube.command.node.CommandNode;
-import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
 import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -15,15 +15,14 @@ import org.bukkit.command.TabCompleter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Level;
 
 public abstract class Command extends CommandNode implements CommandExecutor, TabCompleter {
 
-    public Command(DeadByCube plugin, String name, CommandNode... commandNodes) {
-        super(plugin, name, commandNodes);
+    public Command(CommandManager commandManager, String name, CommandNode... commandNodes) {
+        super(commandManager, name, commandNodes);
     }
 
-    private TextComponent generateSyntax(CommandSender commandSender, org.bukkit.command.Command command, String commandName, String[] args) {
+    private BaseComponent[] generateSyntax(CommandSender commandSender, org.bukkit.command.Command command, String commandName, String[] args) {
         // TODO Create a real syntax generator system
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < args.length - 1; i++)
@@ -41,7 +40,19 @@ public abstract class Command extends CommandNode implements CommandExecutor, Ta
         if (arguments.size() > 1)
             builder.append('>');
 
-        return new TextComponent("Syntax error: /" + commandName + builder.toString());
+        return new ComponentBuilder("✖ ")
+                .color(ChatColor.DARK_RED)
+                .append(
+                        new ComponentBuilder("Syntax error ")
+                                .color(ChatColor.RED)
+                                .create()
+                )
+                .append(
+                        new ComponentBuilder('/' + commandName + builder.toString())
+                                .color(ChatColor.WHITE)
+                                .create()
+                )
+                .create();
     }
 
     @Override
@@ -64,12 +75,8 @@ public abstract class Command extends CommandNode implements CommandExecutor, Ta
             } catch (CommandSyntaxException e) {
                 commandSender.spigot().sendMessage(generateSyntax(commandSender, command, commandName, args));
                 return true;
-            } catch (CommandExecutionException e) {
-                commandSender.spigot().sendMessage(e.getError());
-                return true;
             } catch (CommandException e) {
                 commandSender.spigot().sendMessage(e.getError());
-                plugin.getLogger().log(Level.WARNING, e.getMessage(), e);
                 return true;
             }
         }
@@ -82,11 +89,14 @@ public abstract class Command extends CommandNode implements CommandExecutor, Ta
     public List<String> onTabComplete(CommandSender commandSender, org.bukkit.command.Command command, String commandName, String[] args) {
         ArrayList<String> arrayList = new ArrayList<>();
 
+        int argIndex = 0;
         CommandNode commandNode = this;
         boolean updated = true;
-        for (String arg : args) {
-            arrayList.clear();
 
+        for (; argIndex < args.length; argIndex++) {
+            String arg = args[argIndex];
+
+            arrayList.clear();
             if (!updated)
                 break;
             updated = false;
@@ -103,8 +113,7 @@ public abstract class Command extends CommandNode implements CommandExecutor, Ta
 
             for (CommandFunction function : commandNode.getFunctions()) {
                 String functionName = function.getName();
-                if (functionName.startsWith(arg))
-                    arrayList.add(functionName);
+                if (functionName.startsWith(arg)) arrayList.add(functionName);
             }
         }
 

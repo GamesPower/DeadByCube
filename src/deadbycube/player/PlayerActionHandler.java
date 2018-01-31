@@ -1,12 +1,10 @@
-package deadbycube.player.actionhandler;
-
-import deadbycube.player.DeadByCubePlayer;
+package deadbycube.player;
 
 public abstract class PlayerActionHandler<T extends DeadByCubePlayer> {
 
     protected T player;
 
-    PlayerActionHandler(T player) {
+    protected PlayerActionHandler(T player) {
         this.player = player;
     }
 

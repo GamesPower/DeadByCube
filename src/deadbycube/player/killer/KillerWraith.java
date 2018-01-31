@@ -1,13 +1,10 @@
 package deadbycube.player.killer;
 
 import deadbycube.DeadByCube;
-import deadbycube.audio.WorldAudioManager;
-import deadbycube.audio.SoundRegistry;
 import deadbycube.player.killer.power.PowerRegistry;
-import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
 
-public class KillerWraith extends Killer {
+public class KillerWraith extends KillerPlayer {
 
     private byte breathTick = 0;
 
@@ -18,9 +15,8 @@ public class KillerWraith extends Killer {
     @Override
     void update() {
         if (++breathTick == 15) {
-            breathTick = 0;
-            WorldAudioManager audioManager = plugin.getAudioManager();
-            audioManager.playSound(SoundRegistry.KILLER_WRAITH_BREATH, SoundCategory.VOICE, player.getLocation(), .1f, 1);
+            this.breathTick = 0;
+            this.playBreathSound();
         }
     }
 }

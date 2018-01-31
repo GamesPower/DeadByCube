@@ -3,14 +3,13 @@ package deadbycube.player.spectator;
 import deadbycube.DeadByCube;
 import deadbycube.player.DeadByCubePlayer;
 import deadbycube.player.PlayerType;
-import deadbycube.player.actionhandler.PlayerActionHandler;
-import deadbycube.player.actionhandler.SpectatorActionHandler;
+import deadbycube.player.PlayerActionHandler;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 
-public class Spectator extends DeadByCubePlayer {
+public class SpectatorPlayer extends DeadByCubePlayer {
 
-    public Spectator(DeadByCube plugin, Player player) {
+    public SpectatorPlayer(DeadByCube plugin, Player player) {
         super(plugin, player);
     }
 

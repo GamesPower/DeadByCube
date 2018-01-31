@@ -13,9 +13,6 @@ commands:
   structure:
     description: Manage structure
     usage: /structure
-  interaction:
-    description: Manage game interaction
-    usage: /interaction <create|list>
-  debug:
-    description: Debug stuff
-    usage: /debug <direction>
+  heartbeat:
+    description: Manage survivor heartbeat
+    usage: /heartbeat

@@ -1,10 +1,10 @@
 package deadbycube.player.killer.power;
 
-import deadbycube.player.killer.Killer;
+import deadbycube.player.killer.KillerPlayer;
 
 public class PowerBubbasChainsaw extends Power {
 
-    public PowerBubbasChainsaw(Killer killer) {
+    public PowerBubbasChainsaw(KillerPlayer killer) {
         super(killer);
     }
 

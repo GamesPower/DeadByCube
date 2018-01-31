@@ -1,10 +1,10 @@
 package deadbycube.player.killer.power;
 
-import deadbycube.player.killer.Killer;
+import deadbycube.player.killer.KillerPlayer;
 
 public class PowerBlackenedCatalyst extends Power {
 
-    public PowerBlackenedCatalyst(Killer killer) {
+    public PowerBlackenedCatalyst(KillerPlayer killer) {
         super(killer);
     }
 

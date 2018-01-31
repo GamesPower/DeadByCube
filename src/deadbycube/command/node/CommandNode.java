@@ -1,6 +1,7 @@
 package deadbycube.command.node;
 
 import deadbycube.DeadByCube;
+import deadbycube.command.CommandManager;
 import deadbycube.command.exception.CommandExecutionException;
 import deadbycube.command.function.CommandFunction;
 import deadbycube.command.function.FunctionInfo;
@@ -20,8 +21,8 @@ public abstract class CommandNode {
     private final CommandNode[] commandNodes;
     private final ArrayList<CommandFunction> commandFunctions = new ArrayList<>();
 
-    public CommandNode(DeadByCube plugin, String name, CommandNode... commandNodes) {
-        this.plugin = plugin;
+    public CommandNode(CommandManager commandManager, String name, CommandNode... commandNodes) {
+        this.plugin = commandManager.getPlugin();
         this.name = name;
         this.commandNodes = commandNodes;
 
@@ -36,16 +37,13 @@ public abstract class CommandNode {
                     throw new IllegalArgumentException("Invalid command function player parameter");
 
                 for (int i = 1; i < parameterTypes.length; i++) {
-                    try {
-                        parameterTypes[i].getConstructor(String.class);
-                    } catch (NoSuchMethodException e) {
-                        throw new IllegalArgumentException("Invalid command parameter");
-                    }
+                    if(!commandManager.isValidValue(parameterTypes[i]))
+                        throw new IllegalArgumentException("Invalid command parameter: " + parameterTypes[i].getName());
                 }
 
                 FunctionInfo functionInfo = method.getAnnotation(FunctionInfo.class);
                 commandFunctions.add(new CommandFunction(
-                        this,
+                        commandManager, this,
                         functionInfo.name(),
                         Arrays.copyOfRange(parameterTypes, 1, parameterTypes.length),
                         method

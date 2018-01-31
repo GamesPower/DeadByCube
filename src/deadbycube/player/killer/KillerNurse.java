@@ -1,16 +1,13 @@
 package deadbycube.player.killer;
 
 import deadbycube.DeadByCube;
-import deadbycube.audio.WorldAudioManager;
-import deadbycube.audio.SoundRegistry;
 import deadbycube.player.killer.power.PowerRegistry;
 import org.bukkit.Material;
 import org.bukkit.Particle;
-import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
 import org.bukkit.material.MaterialData;
 
-public class KillerNurse extends Killer {
+public class KillerNurse extends KillerPlayer {
 
     private byte breathTick = 0;
     private byte particleTick = 0;
@@ -20,18 +17,24 @@ public class KillerNurse extends Killer {
     }
 
     @Override
+    public void init() {
+        super.init();
+
+        this.getBreathVolume().setBaseValue(.05f);
+    }
+
+    @Override
     void update() {
         if (++breathTick == 40) {
-            breathTick = 0;
-            WorldAudioManager audioManager = plugin.getAudioManager();
-            audioManager.playSound(SoundRegistry.KILLER_NURSE_BREATH, SoundCategory.VOICE, player.getLocation(), .05f, 1);
+            this.breathTick = 0;
+            this.playBreathSound();
         }
 
         if (++particleTick == 4) {
             this.particleTick = 0;
             player.getWorld().spawnParticle(
                     Particle.FALLING_DUST,
-                    player.getLocation().add(0, .4, 0), 10,
+                    player.getLocation().add(0, .4, 0), 5,
                     .3, .1, .3,
                     1, new MaterialData(Material.COAL_BLOCK)
             );

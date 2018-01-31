@@ -10,5 +10,6 @@ import java.lang.annotation.Target;
 public @interface FunctionInfo {
 
     String name();
+    int requiredArgs();
 
 }

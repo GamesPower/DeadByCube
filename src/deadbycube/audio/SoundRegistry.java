@@ -2,15 +2,28 @@ package deadbycube.audio;
 
 public enum SoundRegistry {
 
-    KILLER_NURSE_BREATH("killer.nurse.breath"),
-    KILLER_SHAPE_BREATH("killer.shape.breath"),
-    KILLER_TRAPPER_BREATH("killer.trapper.breath"),
-    KILLER_WRAITH_BREATH("killer.wraith.breath"),
+    KILLER_DOCTOR_BREATH_TEETH("killer.doctor.breath.teeth"),
+    KILLER_DOCTOR_LAUGH("killer.doctor.laugh"),
+
     KILLER_WRAITH_WEAPON_ARM("killer.wraith.weapon.arm"),
 
-    POWER_EVIL_WITHIN_LEVEL_1("power.evil_within.level.1"),
-    POWER_EVIL_WITHIN_LEVEL_2("power.evil_within.level.2"),
-    POWER_EVIL_WITHIN_LEVEL_3("power.evil_within.level.3"),
+    POWER_CARTERS_SPARK_EXPLOSION("power.carters_spark.explosion"),
+
+    POWER_CARTERS_SPARK_ATTACK("power.carters_spark.attack"),
+    POWER_CARTERS_SPARK_ATTACK_DIRT("power.carters_spark.attack.dirt"),
+    POWER_CARTERS_SPARK_ATTACK_ELECTRIC("power.carters_spark.attack.electric"),
+    POWER_CARTERS_SPARK_ATTACK_GROUND("power.carters_spark.attack.ground"),
+    POWER_CARTERS_SPARK_ATTACK_READY("power.carters_spark.attack.ready"),
+    POWER_CARTERS_SPARK_ATTACK_BASS("power.carters_spark.attack.bass"),
+
+    POWER_CARTERS_SPARK_CHARGE("power.carters_spark.charge"),
+    POWER_CARTERS_SPARK_CHARGE_BASS("power.carters_spark.charge.bass"),
+    POWER_CARTERS_SPARK_CHARGE_ELECTRIC("power.carters_spark.charge.electric"),
+    POWER_CARTERS_SPARK_CHARGE_HIGH("power.carters_spark.charge.high"),
+
+    POWER_EVIL_WITHIN_LEVEL_1("power.evil_within.level_1"),
+    POWER_EVIL_WITHIN_LEVEL_2("power.evil_within.level_2"),
+    POWER_EVIL_WITHIN_LEVEL_3("power.evil_within.level_3"),
     POWER_EVIL_WITHIN_STALK_OFF("power.evil_within.stalk.off"),
     POWER_EVIL_WITHIN_STALK_ON("power.evil_within.stalk.on"),
     POWER_EVIL_WITHIN_STALK_WARNING("power.evil_within.stalk.warning"),

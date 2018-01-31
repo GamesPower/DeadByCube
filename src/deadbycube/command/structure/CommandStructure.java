@@ -1,11 +1,10 @@
 package deadbycube.command.structure;
 
-import deadbycube.DeadByCube;
 import deadbycube.command.Command;
+import deadbycube.command.CommandManager;
 import deadbycube.command.exception.CommandExecutionException;
 import deadbycube.command.function.FunctionInfo;
 import deadbycube.structure.StructureManager;
-import deadbycube.util.MathUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -13,17 +12,17 @@ import java.io.IOException;
 
 public class CommandStructure extends Command {
 
-    public CommandStructure(DeadByCube plugin) {
-        super(plugin, "structure");
+    public CommandStructure(CommandManager commandManager) {
+        super(commandManager, "structure");
     }
 
-    @FunctionInfo(name = "load")
-    private void load(CommandSender commandSender, String structureName) throws IOException, CommandExecutionException {
+    @FunctionInfo(name = "load", requiredArgs = 2)
+    private void load(CommandSender commandSender, String structureName, Double angle) throws IOException, CommandExecutionException {
         Player player = getPlayer(commandSender);
-        plugin.getStructureManager().load(structureName).spawn(player.getLocation(), MathUtils.Rotation.NONE);
+        plugin.getStructureManager().load(structureName).spawn(player.getLocation(), Math.toRadians(angle));
     }
 
-    @FunctionInfo(name = "create")
+    @FunctionInfo(name = "create", requiredArgs = 4)
     private void create(CommandSender commandSender, String structureName, Byte sizeX, Byte sizeY, Byte sizeZ) throws IOException, CommandExecutionException {
         Player player = getPlayer(commandSender);
         StructureManager structureManager = plugin.getStructureManager();

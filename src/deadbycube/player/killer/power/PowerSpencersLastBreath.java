@@ -1,12 +1,9 @@
 package deadbycube.player.killer.power;
 
-import deadbycube.audio.WorldAudioManager;
-import deadbycube.audio.SoundRegistry;
-import deadbycube.player.killer.Killer;
+import deadbycube.player.killer.KillerPlayer;
 import deadbycube.util.MathUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -26,7 +23,7 @@ public class PowerSpencersLastBreath extends Power {
 
     private int chargeTime;
 
-    public PowerSpencersLastBreath(Killer killer) {
+    public PowerSpencersLastBreath(KillerPlayer killer) {
         super(killer);
 
         killer.getPlayer().setWalkSpeed(WALK_SPEED);
@@ -75,7 +72,7 @@ public class PowerSpencersLastBreath extends Power {
 
         Location oldLocation = player.getLocation();
         Location playerLocation = player.getLocation();
-        Vector direction = MathUtils.getDirection(playerLocation.getYaw(), 0);
+        Vector direction = MathUtils.direction(playerLocation.getYaw(), 0);
 
         player.setWalkSpeed(POST_BLINK_MOVEMENT_SPEED);
         player.teleport(playerLocation.add(

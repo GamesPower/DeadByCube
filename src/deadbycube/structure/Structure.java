@@ -5,7 +5,6 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.material.MaterialData;
 import org.bukkit.util.Vector;
 
@@ -25,7 +24,7 @@ public class Structure {
         this.sizeY = sizeY;
     }
 
-    public void spawn(Location location, MathUtils.Rotation rotation) {
+    public void spawn(Location location, double angle) {
         int offsetX = location.getBlockX();
         int offsetY = location.getBlockY();
         int offsetZ = location.getBlockZ();
@@ -35,7 +34,7 @@ public class Structure {
             final int z = i / (sizeX * sizeY);
             final int y = (i - (z * sizeX * sizeY)) / sizeX;
             final int x = (i - (z * sizeX * sizeY)) % sizeX;
-            Vector vector = MathUtils.rotate(rotation, new Vector(x, y, z));
+            Vector vector = MathUtils.rotate(x, y, z, angle);
             Block block = world.getBlockAt(
                     offsetX + vector.getBlockX(),
                     offsetY + vector.getBlockY(),
@@ -43,7 +42,7 @@ public class Structure {
             );
             MaterialData data = this.materialData[i];
             if (!data.getItemType().equals(Material.STRUCTURE_VOID)) {
-                System.out.println("Block at " + x + " " + y + " " + z + " is now " + data.toString());
+                System.out.println("Block at " + block.getX() + " " + block.getY() + " " + block.getZ() + " is now " + data.toString());
                 block.setType(data.getItemType());
                 block.setData(data.getData());
             } else {

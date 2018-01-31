@@ -1,27 +1,53 @@
 package deadbycube.player.killer.power.evilwithin;
 
+import deadbycube.DeadByCube;
 import deadbycube.audio.PlayerAudioManager;
 import deadbycube.audio.SoundRegistry;
-import deadbycube.player.killer.Killer;
+import deadbycube.player.killer.KillerPlayer;
 import deadbycube.player.killer.power.Power;
-import deadbycube.player.survivor.Survivor;
+import deadbycube.player.survivor.SurvivorPlayer;
+import deadbycube.util.EntityUtils;
+import deadbycube.util.Progression;
 import org.bukkit.Location;
 import org.bukkit.SoundCategory;
+import org.bukkit.boss.BarColor;
 import org.bukkit.entity.Player;
-import org.bukkit.util.Vector;
 
 abstract class PowerEvilWithin extends Power {
 
-    private static final double MAX_STALK_DISTANCE = 40;
-    private static final double MAX_STALK_ANGLE = Math.toRadians(30);
+    private static final double MIN_DISTANCE = 0;
+    private static final double MAX_DISTANCE = 40;
+    private static final double FIELD_OF_VIEW = 80;
 
-    int stalked = 0;
+    final Progression progression;
 
-    PowerEvilWithin(Killer killer) {
+    private final int required;
+    private int stalked = 0;
+    private int soundTick = 0;
+
+    PowerEvilWithin(KillerPlayer killer, int required) {
         super(killer);
+        this.required = required;
+
+        this.progression = new Progression("power.evil_within.action", BarColor.WHITE);
+        this.progression.setMaxValue(required);
     }
 
-    abstract void onStalk();
+    @Override
+    public void init(boolean using) {
+        super.init(using);
+
+        this.progression.display(killer);
+    }
+
+    @Override
+    public void reset() {
+        this.progression.reset();
+
+        super.reset();
+    }
+
+    abstract void onNextLevel();
 
     @Override
     public boolean canUse() {
@@ -32,30 +58,33 @@ abstract class PowerEvilWithin extends Power {
     protected void onUse() {
         PlayerAudioManager audioManager = killer.getAudioManager();
         Player player = killer.getPlayer();
+
+        int currentTick = DeadByCube.getCurrentTick();
+        if (currentTick - soundTick < 30)
+            audioManager.stopSound(SoundRegistry.POWER_EVIL_WITHIN_STALK_OFF);
+        this.soundTick = currentTick;
+
         audioManager.playSound(SoundRegistry.POWER_EVIL_WITHIN_STALK_ON, SoundCategory.PLAYERS, player.getLocation(), .2f, 1);
-        audioManager.playSoundLater(SoundRegistry.POWER_EVIL_WITHIN_STALK_ON, SoundCategory.PLAYERS, player.getLocation(), .2f, 1, 15);
     }
 
     @Override
     protected void onUpdate() {
         Player killerPlayer = killer.getPlayer();
-        for (Survivor survivor : killer.getPlugin().getPlayerList().getSurvivors()) {
+        for (SurvivorPlayer survivor : killer.getPlugin().getPlayerList().getSurvivors()) {
             Player survivorPlayer = survivor.getPlayer();
 
             Location survivorEyeLocation = survivorPlayer.getEyeLocation();
             Location killerEyeLocation = killerPlayer.getEyeLocation();
 
-            double distance = survivorEyeLocation.distance(killerEyeLocation);
-            if (distance < MAX_STALK_DISTANCE) {
-                Vector dirToDestination = survivorEyeLocation.toVector().subtract(killerEyeLocation.toVector());
-                Vector playerDirection = killerEyeLocation.getDirection();
+            if (EntityUtils.inFieldOfView(killerEyeLocation, survivorEyeLocation, FIELD_OF_VIEW, MIN_DISTANCE, MAX_DISTANCE) && killerPlayer.hasLineOfSight(survivorPlayer)) {
 
-                if (dirToDestination.angle(playerDirection) < MAX_STALK_ANGLE) {
-                    if (killerPlayer.hasLineOfSight(survivorPlayer)) {
-                        stalked++;
-                        onStalk();
-                    }
+                if (++stalked == required) {
+                    this.onNextLevel();
+                    this.stopUse();
                 }
+                this.progression.setValue(stalked);
+
+                return;
             }
         }
     }
@@ -65,8 +94,12 @@ abstract class PowerEvilWithin extends Power {
         PlayerAudioManager audioManager = killer.getAudioManager();
         Player player = killer.getPlayer();
 
+        int currentTick = DeadByCube.getCurrentTick();
+        if (currentTick - soundTick < 30)
+            audioManager.stopSound(SoundRegistry.POWER_EVIL_WITHIN_STALK_ON);
+        this.soundTick = currentTick;
+
         audioManager.playSound(SoundRegistry.POWER_EVIL_WITHIN_STALK_OFF, SoundCategory.PLAYERS, player.getLocation(), .2f, 1);
-        audioManager.playSoundLater(SoundRegistry.POWER_EVIL_WITHIN_STALK_OFF, SoundCategory.PLAYERS, player.getLocation(), .2f, 1, 15);
     }
 
 }

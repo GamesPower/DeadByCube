@@ -1,24 +1,35 @@
 package deadbycube.game.object.generator;
 
-import deadbycube.game.interaction.Interaction;
+import deadbycube.DeadByCube;
+import deadbycube.game.interaction.InteractionType;
+import deadbycube.game.interaction.ProgressableInteraction;
 import deadbycube.player.DeadByCubePlayer;
-import deadbycube.player.PlayerType;
-import org.bukkit.Location;
 
-public class RepairInteraction extends Interaction {
+public class RepairInteraction extends ProgressableInteraction {
 
-    public RepairInteraction(Location location, GeneratorObject generatorObject) {
-        super("repair", location, 1.2f);
+    public RepairInteraction(DeadByCube plugin, GeneratorObject generatorObject) {
+        super(InteractionType.SNEAK, "repair", generatorObject.getLocation(), 1.2f, GeneratorObject.CHARGE);
+    }
+
+    @Override
+    public void onUpdate() {
+    }
+
+    @Override
+    protected void onPlayerStartInteract(DeadByCubePlayer deadByCubePlayer) {
+    }
+
+    @Override
+    protected void onPlayerStopInteract(DeadByCubePlayer deadByCubePlayer) {
     }
 
     @Override
     public boolean canInteract(DeadByCubePlayer deadByCubePlayer) {
-        return deadByCubePlayer.getType().equals(PlayerType.SURVIVOR);
+        return false;
     }
 
     @Override
-    protected void interact(DeadByCubePlayer deadByCubePlayer) {
-
+    protected void onInteractionCompleted() {
     }
 
 }

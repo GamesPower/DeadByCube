@@ -2,21 +2,19 @@ package deadbycube;
 
 import deadbycube.audio.WorldAudioManager;
 import deadbycube.command.CommandManager;
-import deadbycube.command.game.CommandGame;
-import deadbycube.command.interaction.CommandInteraction;
-import deadbycube.command.role.CommandRole;
-import deadbycube.command.structure.CommandStructure;
 import deadbycube.eventhandler.EventHandler;
 import deadbycube.eventhandler.InGameEventHandler;
 import deadbycube.eventhandler.LobbyEventHandler;
 import deadbycube.game.DeadByCubeGame;
+import deadbycube.game.GameStatus;
 import deadbycube.listener.EntityListener;
 import deadbycube.listener.PlayerListener;
 import deadbycube.player.PlayerList;
 import deadbycube.structure.StructureManager;
-import deadbycube.util.GameStatus;
+import deadbycube.util.ReflectionUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
+import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -26,11 +24,14 @@ public class DeadByCube extends JavaPlugin {
     private final CommandManager commandManager = new CommandManager(this);
     private final StructureManager structureManager = new StructureManager(this);
     private final WorldAudioManager audioManager = new WorldAudioManager(this);
-
     private World lobbyWorld;
     private GameStatus status;
     private DeadByCubeGame game;
     private EventHandler eventHandler;
+
+    public static int getCurrentTick() {
+        return (int) ReflectionUtils.getStaticField("MinecraftServer", "currentTick");
+    }
 
     @Override
     public void onEnable() {
@@ -42,17 +43,19 @@ public class DeadByCube extends JavaPlugin {
         this.eventHandler = new LobbyEventHandler(this);
 
         this.registerListeners();
-        this.registerCommands();
+        this.commandManager.registerCommands();
 
-        /*Random random = new Random();
+        /* LOBBY SNOW GENERATOR
+
+        Random random = new Random();
         getServer().getScheduler().runTaskTimer(this, () -> {
             for (Player player : Bukkit.getOnlinePlayers()) {
                 for (int i = 0; i < 25; i++) {
                     int x = random.nextInt(40) - 20;
                     int y = random.nextInt(18) + 2;
                     int z = random.nextInt(40) - 20;
-                    Location location = player.getLocation();
 
+                    Location location = player.getLocation();
                     player.spawnParticle(
                             Particle.FALLING_DUST,
                             location.getX() + x, player.getWorld().getHighestBlockYAt(x, z) + y, location.getZ() + z, 1,
@@ -78,18 +81,13 @@ public class DeadByCube extends JavaPlugin {
         pluginManager.registerEvents(new EntityListener(this), this);
     }
 
-    private void registerCommands() {
-        commandManager.register(new CommandGame(this));
-        commandManager.register(new CommandStructure(this));
-        commandManager.register(new CommandRole(this));
-        commandManager.register(new CommandInteraction(this));
-    }
-
     public void startGame() {
         this.status = GameStatus.IN_GAME;
         this.eventHandler = new InGameEventHandler(this);
         this.game = new DeadByCubeGame(this);
         this.game.start();
+
+        HandlerList.unregisterAll(this);
     }
 
     public void stopGame() {

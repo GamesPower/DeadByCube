@@ -3,39 +3,49 @@ package deadbycube.player.killer.power;
 import deadbycube.audio.AudioManager;
 import deadbycube.audio.SoundRegistry;
 import deadbycube.audio.WorldAudioManager;
-import deadbycube.player.killer.Killer;
+import deadbycube.player.killer.KillerPlayer;
+import deadbycube.util.MagicalValue;
+import deadbycube.util.Progression;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.SoundCategory;
 import org.bukkit.World;
+import org.bukkit.boss.BarColor;
 import org.bukkit.entity.Player;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 
 public class PowerInvisibilityBell extends Power {
 
+    private static final String CLOAKED_MODIFIER = "power.invisibility_bell.cloaked";
+
     private static final int CLOAK_TIME = 30;
-    private static final int UNCLOAK_TIME = 40;
+    private static final double CLOAK_SPEED_BONUS = 0.12;
+    private static final double CLOAK_BREATH_REDUCTION = .07;
+    private static final int UNCLOAK_TIME = 50;
     private static final int WHOOSH_DISTANCE = 40;
+
+    private final Progression progression;
 
     private CloakStatus status = CloakStatus.UNCLOAKED;
     private int cloakProgress;
     private int cloakTime;
 
-    public PowerInvisibilityBell(Killer killer) {
+    public PowerInvisibilityBell(KillerPlayer killer) {
         super(killer);
+
+        this.progression = new Progression("power.invisibility_bell.action", BarColor.WHITE);
     }
 
     @Override
     public void init(boolean using) {
         super.init(using);
 
-        this.setStatus(CloakStatus.CLOAKED, killer.getAudioManager());
+        this.progression.display(killer);
     }
 
     @Override
     public void reset() {
-        killer.getPlayer().removePotionEffect(PotionEffectType.INVISIBILITY);
+        this.progression.reset();
+
         super.reset();
     }
 
@@ -48,30 +58,50 @@ public class PowerInvisibilityBell extends Power {
     public void onUse() {
         this.cloakProgress = 0;
         this.cloakTime = status == CloakStatus.CLOAKED ? UNCLOAK_TIME : CLOAK_TIME;
-
-        WorldAudioManager audioManager = killer.getPlugin().getAudioManager();
-        audioManager.playSound(SoundRegistry.KILLER_WRAITH_WEAPON_ARM, SoundCategory.MASTER, killer.getPlayer().getLocation());
+        this.progression.setMaxValue(cloakTime);
     }
 
     @Override
     public void onUpdate() {
+        if (cloakProgress % 2 == 0)
+            this.progression.setValue(cloakProgress);
+
         Player killerPlayer = killer.getPlayer();
         World world = killerPlayer.getWorld();
         WorldAudioManager audioManager = killer.getPlugin().getAudioManager();
+        Location particleLocation = killerPlayer.getLocation().add(0, .5, 0);
 
         if (status == CloakStatus.CLOAKED) {
-            if (cloakProgress >= (cloakTime * 0.12) && (cloakProgress % 4) == 0)
-                world.spawnParticle(Particle.SMOKE_LARGE, killerPlayer.getLocation(), 5, .05, .25, .05, 0.015);
+            if ((cloakProgress % 4) == 0)
+                world.spawnParticle(Particle.SMOKE_LARGE, particleLocation, 5, .05, .25, .05, 0.015);
+
+            if (cloakProgress == 0)
+                audioManager.playSound(SoundRegistry.POWER_INVISIBILITY_BELL_BURN, SoundCategory.MASTER, killer.getPlayer().getLocation());
+
+            if (cloakProgress == (int) (cloakTime * .08))
+                audioManager.playSound(SoundRegistry.KILLER_WRAITH_WEAPON_ARM, SoundCategory.MASTER, killer.getPlayer().getLocation());
+
+            if (cloakProgress == (int) (cloakTime * .55)) {
+                audioManager.playSound(SoundRegistry.POWER_INVISIBILITY_BELL_BELL_SINGLE, SoundCategory.MASTER, killerPlayer.getLocation());
+                audioManager.playSound(SoundRegistry.POWER_INVISIBILITY_BELL_BELL_IRON, SoundCategory.MASTER, killerPlayer.getLocation());
+            }
+
+            if (cloakProgress == (int) (cloakTime * .90)) {
+                audioManager.playSound(SoundRegistry.POWER_INVISIBILITY_BELL_BELL_SINGLE, SoundCategory.MASTER, killerPlayer.getLocation());
+                audioManager.playSound(SoundRegistry.POWER_INVISIBILITY_BELL_BELL_IRON, SoundCategory.MASTER, killerPlayer.getLocation());
+            }
 
         } else if (status == CloakStatus.UNCLOAKED) {
-            if (cloakProgress % 4 == 0)
-                world.spawnParticle(Particle.SMOKE_LARGE, killerPlayer.getLocation(), 5, .05, .25, .05, 0.015);
+            if (cloakProgress >= (int) (cloakTime * .20) && cloakProgress % 4 == 0)
+                world.spawnParticle(Particle.SMOKE_LARGE, particleLocation, 5, .05, .25, .05, 0.015);
+
+            if (cloakProgress == 0)
+                audioManager.playSound(SoundRegistry.KILLER_WRAITH_WEAPON_ARM, SoundCategory.MASTER, killer.getPlayer().getLocation());
 
             if (cloakProgress == (int) (cloakTime * .20)) {
                 audioManager.playSound(SoundRegistry.POWER_INVISIBILITY_BELL_BELL_SINGLE, SoundCategory.MASTER, killerPlayer.getLocation());
                 audioManager.playSound(SoundRegistry.POWER_INVISIBILITY_BELL_BELL_IRON, SoundCategory.MASTER, killerPlayer.getLocation());
                 audioManager.playSound(SoundRegistry.POWER_INVISIBILITY_BELL_BURN, SoundCategory.MASTER, killerPlayer.getLocation());
-                audioManager.playSound(SoundRegistry.POWER_INVISIBILITY_BELL_DISSOLVE, SoundCategory.MASTER, killerPlayer.getLocation());
             }
 
             if (cloakProgress == (int) (cloakTime * .65)) {
@@ -92,6 +122,7 @@ public class PowerInvisibilityBell extends Power {
     protected void onStopUse() {
         if (cloakProgress == cloakTime)
             this.setStatus(status == CloakStatus.CLOAKED ? CloakStatus.UNCLOAKED : CloakStatus.CLOAKED, killer.getPlugin().getAudioManager());
+        this.progression.setValue(0);
     }
 
     private void setStatus(CloakStatus status, AudioManager audioManager) {
@@ -101,13 +132,17 @@ public class PowerInvisibilityBell extends Power {
             Player killerPlayer = killer.getPlayer();
             Location killerLocation = killerPlayer.getLocation();
             if (status == CloakStatus.CLOAKED) {
-                audioManager.playSound(SoundRegistry.POWER_INVISIBILITY_BELL_VISIBLE, SoundCategory.MASTER, killerLocation, 10, 1, deadByCubePlayer -> deadByCubePlayer.getPlayer().getLocation().distance(killerLocation) < WHOOSH_DISTANCE);
-                killerPlayer.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 999999, 0, false, false));
+                audioManager.playSound(SoundRegistry.POWER_INVISIBILITY_BELL_VISIBLE, SoundCategory.MASTER, killerLocation, 15, 1, deadByCubePlayer -> deadByCubePlayer.getPlayer().getLocation().distance(killerLocation) < WHOOSH_DISTANCE);
+                killer.setHidden(true);
                 killer.getTerrorRadius().forceValue(0d);
+                killer.getBreathVolume().addModifier(CLOAKED_MODIFIER, CLOAK_BREATH_REDUCTION, MagicalValue.Operation.SUBTRACT);
+                killer.walkSpeed().addModifier(CLOAKED_MODIFIER, CLOAK_SPEED_BONUS, MagicalValue.Operation.MULTIPLY);
             } else if (status == CloakStatus.UNCLOAKED) {
-                audioManager.playSound(SoundRegistry.POWER_INVISIBILITY_BELL_INVISIBLE, SoundCategory.MASTER, killerLocation, 10, 1, deadByCubePlayer -> deadByCubePlayer.getPlayer().getLocation().distance(killerLocation) < WHOOSH_DISTANCE);
-                killerPlayer.removePotionEffect(PotionEffectType.INVISIBILITY);
+                audioManager.playSound(SoundRegistry.POWER_INVISIBILITY_BELL_INVISIBLE, SoundCategory.MASTER, killerLocation, 15, 1, deadByCubePlayer -> deadByCubePlayer.getPlayer().getLocation().distance(killerLocation) < WHOOSH_DISTANCE);
+                killer.setHidden(false);
                 killer.getTerrorRadius().resetValue();
+                killer.getBreathVolume().removeModifier(CLOAKED_MODIFIER);
+                killer.walkSpeed().removeModifier(CLOAKED_MODIFIER);
             }
         }
     }

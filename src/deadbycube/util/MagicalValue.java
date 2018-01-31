@@ -2,28 +2,29 @@ package deadbycube.util;
 
 import java.util.ArrayList;
 
-public class EditableValue {
+public class MagicalValue {
 
     private final ArrayList<Modifier> modifiers = new ArrayList<>();
     private double baseValue;
     private double value;
 
-    private Double forcedValue = null;
+    private boolean forced = false;
 
-    public EditableValue(double baseValue) {
+    public MagicalValue(double baseValue) {
         this.baseValue = baseValue;
         this.value = baseValue;
     }
 
-    private void updateValue() {
-        if (forcedValue != null) {
-            this.value = forcedValue;
-        } else {
+    protected void updateValue() {
+        if (!forced) {
             this.value = baseValue;
             for (Modifier modifier : modifiers) {
                 switch (modifier.operation) {
                     case ADD:
                         this.value += modifier.value;
+                        break;
+                    case SUBTRACT:
+                        this.value -= modifier.value;
                         break;
                     case MULTIPLY:
                         this.value += (baseValue * modifier.value);
@@ -46,12 +47,12 @@ public class EditableValue {
     }
 
     public void forceValue(double forcedValue) {
-        this.forcedValue = forcedValue;
-        this.updateValue();
+        this.value = forcedValue;
+        this.forced = true;
     }
 
     public void resetValue() {
-        this.forcedValue = null;
+        this.forced = false;
         this.updateValue();
     }
 
@@ -83,7 +84,7 @@ public class EditableValue {
     }
 
     public enum Operation {
-        ADD, MULTIPLY
+        ADD, SUBTRACT, MULTIPLY
     }
 
 }

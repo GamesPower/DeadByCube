@@ -1,10 +1,10 @@
 package deadbycube.player.killer.power;
 
-import deadbycube.player.killer.Killer;
+import deadbycube.player.killer.KillerPlayer;
 
 public class PowerHuntingHatchets extends Power {
 
-    public PowerHuntingHatchets(Killer killer) {
+    public PowerHuntingHatchets(KillerPlayer killer) {
         super(killer);
     }
 

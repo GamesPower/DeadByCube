@@ -1,10 +1,10 @@
 package deadbycube.player.killer.power;
 
-import deadbycube.player.killer.Killer;
+import deadbycube.player.killer.KillerPlayer;
 
 public class PowerDreamMaster extends Power {
 
-    public PowerDreamMaster(Killer killer) {
+    public PowerDreamMaster(KillerPlayer killer) {
         super(killer);
     }
 

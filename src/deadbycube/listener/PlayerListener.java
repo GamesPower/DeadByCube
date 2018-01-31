@@ -2,6 +2,7 @@ package deadbycube.listener;
 
 import deadbycube.DeadByCube;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.*;
 
 public class PlayerListener extends DeadByCubeListener {
@@ -31,18 +32,28 @@ public class PlayerListener extends DeadByCubeListener {
     }
 
     @EventHandler
+    private void onPlayerToggleSneak(PlayerToggleSneakEvent event) {
+        plugin.getEventHandler().onPlayerToggleSneak(event);
+    }
+
+    @EventHandler
     private void onPlayerSwapHandItems(PlayerSwapHandItemsEvent event) {
         plugin.getEventHandler().onPlayerSwapHandItems(event);
     }
 
     @EventHandler
     private void onPlayerDropItem(PlayerDropItemEvent event) {
-        event.setCancelled(true);
+        plugin.getEventHandler().onPlayerDropItem(event);
     }
 
     @EventHandler
     private void onPlayerMove(PlayerMoveEvent event) {
         plugin.getEventHandler().onPlayerMove(event);
+    }
+
+    @EventHandler
+    private void onFoodLevelChange(FoodLevelChangeEvent event) {
+        event.setCancelled(true);
     }
 
 }

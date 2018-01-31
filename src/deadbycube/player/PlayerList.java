@@ -1,14 +1,16 @@
 package deadbycube.player;
 
-import deadbycube.player.killer.Killer;
-import deadbycube.player.survivor.Survivor;
+import deadbycube.player.killer.KillerPlayer;
+import deadbycube.player.survivor.SurvivorPlayer;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 public class PlayerList {
 
-    private final ArrayList<DeadByCubePlayer> playerList = new ArrayList<>();
+    private final List<DeadByCubePlayer> playerList = new ArrayList<>();
 
     public DeadByCubePlayer getPlayer(Player player) {
         for (DeadByCubePlayer deadByCubePlayer : playerList) {
@@ -23,28 +25,39 @@ public class PlayerList {
         this.playerList.add(deadByCubePlayer);
     }
 
+    public void resetPlayer(Player player) {
+        Iterator<DeadByCubePlayer> iterator = playerList.iterator();
+        while (iterator.hasNext()) {
+            DeadByCubePlayer deadByCubePlayer = iterator.next();
+            if (deadByCubePlayer.getPlayer().equals(player)) {
+                deadByCubePlayer.reset();
+                iterator.remove();
+            }
+        }
+    }
+
     public void removePlayer(Player player) {
         playerList.removeIf(dbcPlayer -> dbcPlayer.player.equals(player));
     }
 
-    public ArrayList<DeadByCubePlayer> getPlayers() {
+    public List<DeadByCubePlayer> getPlayers() {
         return playerList;
     }
 
-    public ArrayList<Survivor> getSurvivors() {
-        ArrayList<Survivor> survivorList = new ArrayList<>();
+    public List<SurvivorPlayer> getSurvivors() {
+        ArrayList<SurvivorPlayer> survivorList = new ArrayList<>();
         for (DeadByCubePlayer player : playerList) {
             if (player.getType().equals(PlayerType.SURVIVOR))
-                survivorList.add((Survivor) player);
+                survivorList.add((SurvivorPlayer) player);
         }
         return survivorList;
     }
 
-    public ArrayList<Killer> getKillers() {
-        ArrayList<Killer> killerList = new ArrayList<>();
+    public List<KillerPlayer> getKillers() {
+        ArrayList<KillerPlayer> killerList = new ArrayList<>();
         for (DeadByCubePlayer player : playerList) {
             if (player.getType().equals(PlayerType.KILLER))
-                killerList.add((Killer) player);
+                killerList.add((KillerPlayer) player);
         }
         return killerList;
     }

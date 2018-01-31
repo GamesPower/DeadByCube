@@ -2,8 +2,6 @@ package deadbycube.game.interaction;
 
 import deadbycube.game.DeadByCubeGame;
 import deadbycube.player.DeadByCubePlayer;
-import org.bukkit.Location;
-import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,16 +15,11 @@ public class InteractionManager {
         this.game = game;
     }
 
-    public void update(DeadByCubePlayer deadByCubePlayer) {
-        PlayerInteractionManager interactionManager = deadByCubePlayer.getInteractionManager();
-        interactionManager.clearInteractions();
-
-        Player player = deadByCubePlayer.getPlayer();
-        Location playerLocation = player.getLocation();
+    public void init(DeadByCubePlayer deadByCubePlayer) {
+        PlayerInteractionManager playerInteractionManager = deadByCubePlayer.getInteractionManager();
         for (Interaction interaction : interactions) {
-            if (interaction.canInteract(deadByCubePlayer) && playerLocation.distance(interaction.getLocation()) <= interaction.getDistance()) {
-                interactionManager.registerInteraction(interaction);
-            }
+            if (interaction.canInteract(deadByCubePlayer))
+                playerInteractionManager.registerInteraction(interaction);
         }
     }
 
@@ -40,6 +33,10 @@ public class InteractionManager {
 
     public List<Interaction> getInteractions() {
         return interactions;
+    }
+
+    public void reset() {
+        interactions.forEach(Interaction::reset);
     }
 
 }

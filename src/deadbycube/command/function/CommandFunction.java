@@ -1,25 +1,26 @@
 package deadbycube.command.function;
 
+import deadbycube.command.CommandManager;
 import deadbycube.command.exception.CommandException;
 import deadbycube.command.exception.CommandExecutionException;
-import deadbycube.command.exception.CommandParseException;
 import deadbycube.command.exception.CommandSyntaxException;
 import deadbycube.command.node.CommandNode;
 import org.bukkit.command.CommandSender;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 
 public class CommandFunction {
 
+    private final CommandManager commandManager;
     private final CommandNode commandNode;
     private final String name;
     private final Class<?>[] parametersClass;
     private final Method method;
 
-    public CommandFunction(CommandNode commandNode, String name, Class<?>[] parametersClass, Method method) {
+    public CommandFunction(CommandManager commandManager, CommandNode commandNode, String name, Class<?>[] parametersClass, Method method) {
+        this.commandManager = commandManager;
         this.commandNode = commandNode;
         this.name = name;
         this.parametersClass = parametersClass;
@@ -32,14 +33,8 @@ public class CommandFunction {
 
         ArrayList<Object> objectList = new ArrayList<>();
         objectList.add(commandSender);
-        for (int i = 0; i < parametersClass.length; i++) {
-            try {
-                Constructor<?> constructor = parametersClass[i].getConstructor(String.class);
-                objectList.add(constructor.newInstance(arguments[i]));
-            } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException e) {
-                throw new CommandParseException(e);
-            }
-        }
+        for (int i = 0; i < parametersClass.length; i++)
+            objectList.add(commandManager.parseValue(parametersClass[i], arguments[i]));
 
         try {
             method.invoke(commandNode, objectList.toArray(new Object[objectList.size()]));

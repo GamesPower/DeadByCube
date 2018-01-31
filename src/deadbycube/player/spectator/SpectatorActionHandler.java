@@ -1,10 +1,10 @@
-package deadbycube.player.actionhandler;
+package deadbycube.player.spectator;
 
-import deadbycube.player.spectator.Spectator;
+import deadbycube.player.PlayerActionHandler;
 
-public class SpectatorActionHandler extends PlayerActionHandler<Spectator> {
+public class SpectatorActionHandler extends PlayerActionHandler<SpectatorPlayer> {
 
-    public SpectatorActionHandler(Spectator spectator) {
+    SpectatorActionHandler(SpectatorPlayer spectator) {
         super(spectator);
     }
 
