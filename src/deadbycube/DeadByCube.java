@@ -11,35 +11,43 @@ import deadbycube.listener.EntityListener;
 import deadbycube.listener.PlayerListener;
 import deadbycube.player.PlayerList;
 import deadbycube.structure.StructureManager;
-import deadbycube.util.ReflectionUtils;
+import deadbycube.util.NMSUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.event.HandlerList;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class DeadByCube extends JavaPlugin {
+
+    private static DeadByCube instance;
+
+    public static Plugin getInstance() {
+        return instance;
+    }
+
+    public static int getCurrentTick() {
+        return (int) NMSUtils.getStaticField("MinecraftServer", "currentTick");
+    }
 
     private final PlayerList playerList = new PlayerList();
     private final CommandManager commandManager = new CommandManager(this);
     private final StructureManager structureManager = new StructureManager(this);
     private final WorldAudioManager audioManager = new WorldAudioManager(this);
     private World lobbyWorld;
-    private GameStatus status;
+
     private DeadByCubeGame game;
     private EventHandler eventHandler;
 
-    public static int getCurrentTick() {
-        return (int) ReflectionUtils.getStaticField("MinecraftServer", "currentTick");
-    }
-
     @Override
     public void onEnable() {
+        DeadByCube.instance = this;
+
         this.saveDefaultConfig();
 
         this.lobbyWorld = Bukkit.getWorld(getConfig().getString("world.lobby.name", Bukkit.getWorlds().get(0).getName()));
 
-        this.status = GameStatus.LOBBY;
         this.eventHandler = new LobbyEventHandler(this);
 
         this.registerListeners();
@@ -70,7 +78,7 @@ public class DeadByCube extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        if (status == GameStatus.IN_GAME)
+        if (getStatus() == GameStatus.IN_GAME)
             this.stopGame();
         this.saveConfig();
     }
@@ -82,23 +90,19 @@ public class DeadByCube extends JavaPlugin {
     }
 
     public void startGame() {
-        this.status = GameStatus.IN_GAME;
         this.eventHandler = new InGameEventHandler(this);
         this.game = new DeadByCubeGame(this);
         this.game.start();
-
-        HandlerList.unregisterAll(this);
     }
 
     public void stopGame() {
-        this.status = GameStatus.LOBBY;
         this.eventHandler = new LobbyEventHandler(this);
         this.game.stop();
         this.game = null;
     }
 
     public GameStatus getStatus() {
-        return status;
+        return game == null ? GameStatus.LOBBY : GameStatus.IN_GAME;
     }
 
     public EventHandler getEventHandler() {

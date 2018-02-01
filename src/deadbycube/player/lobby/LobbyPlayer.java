@@ -13,10 +13,6 @@ public class LobbyPlayer extends DeadByCubePlayer {
     }
 
     @Override
-    public void init() {
-    }
-
-    @Override
     public PlayerActionHandler createActionHandler() {
         return null;
     }

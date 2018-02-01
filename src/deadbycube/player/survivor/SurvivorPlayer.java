@@ -23,6 +23,8 @@ public class SurvivorPlayer extends DeadByCubePlayer {
 
     @Override
     public void init() {
+        super.init();
+
         this.walkSpeed().setBaseValue(WALK_SPEED);
         player.setFoodLevel(FOOD_LEVEL);
 
@@ -31,11 +33,6 @@ public class SurvivorPlayer extends DeadByCubePlayer {
         musicManager.setMusics(MusicRegistry.SURVIVOR_NORMAL);
 
         this.heartbeatManager.init();
-    }
-
-    @Override
-    public void reset() {
-        this.heartbeatManager.reset();
     }
 
     @Override

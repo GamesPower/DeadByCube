@@ -6,6 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.SoundCategory;
 import org.bukkit.scheduler.BukkitTask;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
@@ -28,7 +29,7 @@ public class MusicManager {
         this.currentMusic = availableMusicList.get(RANDOM.nextInt(availableMusicList.size()));
         PlayerAudioManager audioManager = deadByCubePlayer.getAudioManager();
         audioManager.playSound(currentMusic.getKey(), SoundCategory.MUSIC, 1000f, 1f);
-        this.bukkitTask = Bukkit.getScheduler().runTaskLater(deadByCubePlayer.getPlugin(), this::onMusicStop, currentMusic.getDuration());
+        this.bukkitTask = Bukkit.getScheduler().runTaskLater(deadByCubePlayer.getPlugin(), this::startPlaying, currentMusic.getDuration());
     }
 
     public void stopPlaying() {
@@ -37,10 +38,6 @@ public class MusicManager {
             audioManager.stopSound(currentMusic.getKey());
             this.bukkitTask.cancel();
         }
-    }
-
-    private void onMusicStop() {
-        this.startPlaying();
     }
 
     public void setMusics(MusicRegistry... musics) {

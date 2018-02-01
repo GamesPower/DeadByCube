@@ -4,7 +4,7 @@ import org.bukkit.Bukkit;
 
 import java.lang.reflect.Field;
 
-public class ReflectionUtils {
+public class NMSUtils {
 
     private static final String VERSION = getVersion();
     private static final String NMS_PACKAGE = "net.minecraft.server." + VERSION + '.';
@@ -17,7 +17,7 @@ public class ReflectionUtils {
         try {
             Field field = nmsObject.getClass().getField(fieldName);
             field.setAccessible(true);
-            return field.get(null);
+            return field.get(nmsObject);
         } catch (NoSuchFieldException | IllegalAccessException e) {
             throw new IllegalStateException("Unable to get the field from " + nmsObject.getClass().getName());
         }
@@ -33,7 +33,7 @@ public class ReflectionUtils {
         }
     }
 
-    private static Class<?> getNMSClass(String nmsClassName) {
+    public static Class<?> getNMSClass(String nmsClassName) {
         try {
             return Class.forName(NMS_PACKAGE + nmsClassName);
         } catch (ClassNotFoundException e) {

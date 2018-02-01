@@ -45,6 +45,8 @@ public abstract class KillerPlayer extends DeadByCubePlayer implements Heartbeat
 
     @Override
     public void init() {
+        super.init();
+
         walkSpeed().setBaseValue(WALK_SPEED);
         player.setFoodLevel(FOOD_LEVEL);
 
@@ -54,12 +56,6 @@ public abstract class KillerPlayer extends DeadByCubePlayer implements Heartbeat
 
         this.tickable.startTask();
         this.power.init(false);
-    }
-
-    @Override
-    public final void reset() {
-        this.tickable.stopTask();
-        power.reset();
     }
 
     @Override

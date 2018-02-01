@@ -1,8 +1,8 @@
 package deadbycube.eventhandler;
 
 import deadbycube.DeadByCube;
-import deadbycube.game.interaction.InteractionType;
-import deadbycube.game.interaction.PlayerInteractionManager;
+import deadbycube.interaction.InteractionActionBinding;
+import deadbycube.interaction.PlayerInteractionManager;
 import deadbycube.player.DeadByCubePlayer;
 import deadbycube.player.PlayerList;
 import deadbycube.player.PlayerType;
@@ -59,19 +59,30 @@ public class InGameEventHandler extends EventHandler {
         PlayerInteractionManager interactionManager = deadByCubePlayer.getInteractionManager();
         interactionManager.update();
 
-        if (!player.isOnGround() && player.getVelocity().getY() < -0.0785) {
-            World world = player.getWorld();
-            Location playerLocation = event.getTo();
-            for (int y = 0; y < world.getMaxHeight(); y++) {
-                Block block = world.getBlockAt(playerLocation.getBlockX(), y, playerLocation.getBlockZ());
-                if (!block.isEmpty()) {
-                    if (playerLocation.getY() < y)
-                        player.teleport(world.getSpawnLocation());
-                    return;
+        Location from = event.getFrom();
+        Location to = event.getTo();
+        if (!player.isOnGround()) {
+            if (from.getY() < to.getY()) { // on jump
+
+                event.setCancelled(true);
+                interactionManager.dispatch(InteractionActionBinding.JUMP);
+
+            } else if (player.getVelocity().getY() < -0.0785) { // on fall
+
+                World world = player.getWorld();
+                for (int y = 0; y < world.getMaxHeight(); y++) {
+                    Block block = world.getBlockAt(to.getBlockX(), y, to.getBlockZ());
+                    if (!block.isEmpty()) {
+                        if (to.getY() < y)
+                            player.teleport(world.getSpawnLocation());
+                        return;
+                    }
                 }
+                player.teleport(world.getSpawnLocation());
+
             }
-            player.teleport(world.getSpawnLocation());
         }
+
     }
 
     @Override
@@ -83,7 +94,7 @@ public class InGameEventHandler extends EventHandler {
     @Override
     public void onPlayerToggleSneak(PlayerToggleSneakEvent event) {
         DeadByCubePlayer deadByCubePlayer = plugin.getPlayerList().getPlayer(event.getPlayer());
-        deadByCubePlayer.getInteractionManager().dispatch(InteractionType.SNEAK);
+        deadByCubePlayer.getInteractionManager().dispatch(InteractionActionBinding.SNEAK);
         event.setCancelled(true);
     }
 
@@ -97,12 +108,12 @@ public class InGameEventHandler extends EventHandler {
             case LEFT_CLICK_AIR:
             case LEFT_CLICK_BLOCK:
                 deadByCubePlayer.getActionHandler().attack();
-                deadByCubePlayer.getInteractionManager().dispatch(InteractionType.LEFT_CLICK);
+                deadByCubePlayer.getInteractionManager().dispatch(InteractionActionBinding.ATTACK);
                 break;
             case RIGHT_CLICK_AIR:
             case RIGHT_CLICK_BLOCK:
                 deadByCubePlayer.getActionHandler().interact();
-                deadByCubePlayer.getInteractionManager().dispatch(InteractionType.RIGHT_CLICK);
+                deadByCubePlayer.getInteractionManager().dispatch(InteractionActionBinding.USE);
                 break;
         }
     }
@@ -110,14 +121,14 @@ public class InGameEventHandler extends EventHandler {
     @Override
     public void onPlayerSwapHandItems(PlayerSwapHandItemsEvent event) {
         DeadByCubePlayer deadByCubePlayer = plugin.getPlayerList().getPlayer(event.getPlayer());
-        deadByCubePlayer.getInteractionManager().dispatch(InteractionType.SWAP_HAND_ITEMS);
+        deadByCubePlayer.getInteractionManager().dispatch(InteractionActionBinding.SWAP_HANDS);
         event.setCancelled(true);
     }
 
     @Override
     public void onPlayerDropItem(PlayerDropItemEvent event) {
         DeadByCubePlayer deadByCubePlayer = plugin.getPlayerList().getPlayer(event.getPlayer());
-        deadByCubePlayer.getInteractionManager().dispatch(InteractionType.DROP_ITEM);
+        deadByCubePlayer.getInteractionManager().dispatch(InteractionActionBinding.DROP);
         event.setCancelled(true);
     }
 

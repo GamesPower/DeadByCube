@@ -54,10 +54,6 @@ public class HeartbeatManager {
         this.tickable.startTask();
     }
 
-    public void reset() {
-        this.tickable.stopTask();
-    }
-
     public void registerHeartbeatEmitter(HeartbeatEmitter heartbeatEmitter) {
         this.heartbeatEmitterList.add(heartbeatEmitter);
     }

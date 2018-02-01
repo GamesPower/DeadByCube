@@ -1,9 +1,11 @@
-package deadbycube.player.killer.power;
+package deadbycube.player.killer.power.invisibilitybell;
 
 import deadbycube.audio.AudioManager;
 import deadbycube.audio.SoundRegistry;
 import deadbycube.audio.WorldAudioManager;
+import deadbycube.interaction.PlayerInteractionManager;
 import deadbycube.player.killer.KillerPlayer;
+import deadbycube.player.killer.power.Power;
 import deadbycube.util.MagicalValue;
 import deadbycube.util.Progression;
 import org.bukkit.Location;
@@ -40,6 +42,8 @@ public class PowerInvisibilityBell extends Power {
         super.init(using);
 
         this.progression.display(killer);
+        PlayerInteractionManager interactionManager = killer.getInteractionManager();
+
     }
 
     @Override

@@ -2,7 +2,7 @@ package deadbycube.player;
 
 import deadbycube.DeadByCube;
 import deadbycube.audio.PlayerAudioManager;
-import deadbycube.game.interaction.PlayerInteractionManager;
+import deadbycube.interaction.PlayerInteractionManager;
 import deadbycube.util.MagicalValue;
 import org.bukkit.entity.Player;
 
@@ -16,7 +16,6 @@ public abstract class DeadByCubePlayer {
     private final PlayerInteractionManager interactionManager;
 
     private final MagicalValue walkSpeed;
-    private final MagicalValue repairSpeed;
 
     protected DeadByCubePlayer(DeadByCube plugin, Player player) {
         this.plugin = plugin;
@@ -33,10 +32,10 @@ public abstract class DeadByCubePlayer {
                 player.setWalkSpeed((float) getValue());
             }
         };
-        this.repairSpeed = new MagicalValue(1);
     }
 
-    public abstract void init();
+    public void init() {
+    }
 
     public void reset() {
         this.audioManager.getMusicManager().stopPlaying();
@@ -57,10 +56,6 @@ public abstract class DeadByCubePlayer {
 
     public MagicalValue walkSpeed() {
         return walkSpeed;
-    }
-
-    public MagicalValue repairSpeed() {
-        return repairSpeed;
     }
 
     public PlayerActionHandler getActionHandler() {

@@ -4,6 +4,9 @@ main: deadbycube.DeadByCube
 version: 0.1
 author: Fabien
 commands:
+  debug:
+    description: debug
+    usage: /debug
   role:
     description: Set your role
     usage: /role <set|survivor|killer|list>
@@ -16,3 +19,6 @@ commands:
   heartbeat:
     description: Manage survivor heartbeat
     usage: /heartbeat
+  interaction:
+    description: Manager interaction
+    usage: /interaction

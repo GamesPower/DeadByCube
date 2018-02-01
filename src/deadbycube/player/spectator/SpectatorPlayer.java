@@ -15,11 +15,13 @@ public class SpectatorPlayer extends DeadByCubePlayer {
 
     @Override
     public void init() {
+        super.init();
         player.setGameMode(GameMode.SPECTATOR);
     }
 
     @Override
     public void reset() {
+        super.reset();
         player.setGameMode(GameMode.ADVENTURE);
     }
 

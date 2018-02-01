@@ -44,10 +44,9 @@ public abstract class Power {
     }
 
     private void update() {
-        if (!isUsing()) {
-            this.tickable.stopTask();
-            this.onStopUse();
-        } else
+        if (!isUsing())
+            this.stopUse();
+        else
             this.onUpdate();
     }
 

@@ -44,7 +44,6 @@ public class PowerCartersSpark extends Power {
     @Override
     public void reset() {
         this.progression.reset();
-
         super.reset();
     }
 
