@@ -1,9 +1,7 @@
 package deadbycube.player.killer;
 
-import deadbycube.game.DeadByCubeGame;
-import deadbycube.game.attack.KillerAttackManager;
-import deadbycube.player.killer.power.Power;
 import deadbycube.player.PlayerActionHandler;
+import deadbycube.player.killer.power.Power;
 
 public class KillerActionHandler extends PlayerActionHandler<KillerPlayer> {
 
@@ -13,10 +11,6 @@ public class KillerActionHandler extends PlayerActionHandler<KillerPlayer> {
 
     @Override
     public void attack() {
-        DeadByCubeGame game = player.getPlugin().getGame();
-        KillerAttackManager killerAttackManager = game.getAttackManager().getKillerAttackManager(player);
-        if (killerAttackManager.canAttack())
-            killerAttackManager.attack();
     }
 
     @Override

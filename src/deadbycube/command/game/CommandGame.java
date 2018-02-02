@@ -16,7 +16,7 @@ public class CommandGame extends Command {
 
     @FunctionInfo(name = "start", requiredArgs = 0)
     private void start(CommandSender commandSender) throws CommandExecutionException {
-        if (plugin.getStatus() == GameStatus.IN_GAME)
+        if (plugin.getHandler().getStatus() == GameStatus.IN_GAME)
             throw new CommandExecutionException("The game is already started");
         this.plugin.startGame();
 
@@ -25,7 +25,7 @@ public class CommandGame extends Command {
 
     @FunctionInfo(name = "stop", requiredArgs = 0)
     private void stop(CommandSender commandSender) throws CommandExecutionException {
-        if (plugin.getStatus() != GameStatus.IN_GAME)
+        if (plugin.getHandler().getStatus() != GameStatus.IN_GAME)
             throw new CommandExecutionException("The game isn't started");
         this.plugin.stopGame();
     }

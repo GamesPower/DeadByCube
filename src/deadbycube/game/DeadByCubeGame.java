@@ -1,7 +1,9 @@
 package deadbycube.game;
 
 import deadbycube.DeadByCube;
-import deadbycube.game.attack.AttackManager;
+import deadbycube.DeadByCubeHandler;
+import deadbycube.listener.ingame.InGameEntityListener;
+import deadbycube.listener.ingame.InGamePlayerListener;
 import deadbycube.player.DeadByCubePlayer;
 import deadbycube.player.PlayerList;
 import deadbycube.player.PlayerType;
@@ -9,31 +11,37 @@ import deadbycube.player.killer.KillerPlayer;
 import deadbycube.player.spectator.SpectatorPlayer;
 import deadbycube.player.survivor.SurvivorPlayer;
 import deadbycube.player.survivor.heartbeat.HeartbeatManager;
-import deadbycube.util.Tickable;
 import deadbycube.world.DeadByCubeWorld;
 import deadbycube.world.generator.DeadByCubeWorldGenerator;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.bukkit.event.HandlerList;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.scheduler.BukkitScheduler;
 
 import java.util.List;
 
 
-public class DeadByCubeGame {
+public class DeadByCubeGame implements DeadByCubeHandler {
 
     private final DeadByCube plugin;
     private final DeadByCubeWorld world;
-    private final AttackManager attackManager;
+
+    private final InGameEntityListener entityListener;
+    private final InGamePlayerListener playerListener;
 
     public DeadByCubeGame(DeadByCube plugin) {
         this.plugin = plugin;
         this.world = new DeadByCubeWorldGenerator(plugin).generate();
-        this.attackManager = new AttackManager(this);
+
+        this.entityListener = new InGameEntityListener(plugin);
+        this.playerListener = new InGamePlayerListener(plugin);
     }
 
-    public void start() {
+    @Override
+    public void init() {
         World world = this.world.getWorld();
 
         PlayerList playerList = plugin.getPlayerList();
@@ -56,13 +64,21 @@ public class DeadByCubeGame {
 
             deadByCubePlayer.init();
         }
+
+        PluginManager pluginManager = plugin.getServer().getPluginManager();
+        pluginManager.registerEvents(entityListener, plugin);
+        pluginManager.registerEvents(playerListener, plugin);
     }
 
-    public void stop() {
+    @Override
+    public void reset() {
         BukkitScheduler scheduler = plugin.getServer().getScheduler();
         scheduler.cancelTasks(plugin);
 
-        Location spawnLocation = plugin.getLobbyWorld().getSpawnLocation();
+        HandlerList.unregisterAll(entityListener);
+        HandlerList.unregisterAll(playerListener);
+
+        Location spawnLocation = plugin.getHandler().getWorld().getSpawnLocation();
         PlayerList playerList = plugin.getPlayerList();
         for (Player player : Bukkit.getOnlinePlayers()) {
             playerList.resetPlayer(player);
@@ -77,7 +93,14 @@ public class DeadByCubeGame {
         this.world.unload();
     }
 
-    public AttackManager getAttackManager() {
-        return attackManager;
+    @Override
+    public GameStatus getStatus() {
+        return GameStatus.IN_GAME;
     }
+
+    @Override
+    public World getWorld() {
+        return world.getWorld();
+    }
+
 }

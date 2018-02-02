@@ -1,8 +1,9 @@
-package deadbycube.eventhandler;
+package deadbycube.listener.ingame;
 
 import deadbycube.DeadByCube;
 import deadbycube.interaction.InteractionActionBinding;
 import deadbycube.interaction.PlayerInteractionManager;
+import deadbycube.listener.DeadByCubeListener;
 import deadbycube.player.DeadByCubePlayer;
 import deadbycube.player.PlayerList;
 import deadbycube.player.PlayerType;
@@ -10,24 +11,19 @@ import deadbycube.player.spectator.SpectatorPlayer;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.*;
 
-public class InGameEventHandler extends EventHandler {
+public class InGamePlayerListener extends DeadByCubeListener {
 
-    public InGameEventHandler(DeadByCube plugin) {
+    public InGamePlayerListener(DeadByCube plugin) {
         super(plugin);
     }
 
-    @Override
-    public void onEntityDamage(EntityDamageEvent event) {
-        if (event.getEntityType() == EntityType.PLAYER) event.setCancelled(true);
-    }
-
-    @Override
-    public void onPlayerJoin(PlayerJoinEvent event) {
+    @EventHandler
+    private void onPlayerJoin(PlayerJoinEvent event) {
         event.setJoinMessage(null);
 
         Player player = event.getPlayer();
@@ -37,8 +33,8 @@ public class InGameEventHandler extends EventHandler {
         spectator.init();
     }
 
-    @Override
-    public void onPlayerQuit(PlayerQuitEvent event) {
+    @EventHandler
+    private void onPlayerQuit(PlayerQuitEvent event) {
         event.setQuitMessage(null);
 
         PlayerList playerList = plugin.getPlayerList();
@@ -51,8 +47,8 @@ public class InGameEventHandler extends EventHandler {
         // TODO Check the game requirements (at least 1 killer and 1 survivor)
     }
 
-    @Override
-    public void onPlayerMove(PlayerMoveEvent event) {
+    @EventHandler
+    private void onPlayerMove(PlayerMoveEvent event) {
         Player player = event.getPlayer();
 
         DeadByCubePlayer deadByCubePlayer = plugin.getPlayerList().getPlayer(player);
@@ -85,21 +81,22 @@ public class InGameEventHandler extends EventHandler {
 
     }
 
-    @Override
-    public void onPlayerToggleSprint(PlayerToggleSprintEvent event) {
+    @EventHandler
+    private void onPlayerToggleSprint(PlayerToggleSprintEvent event) {
         if (event.isSprinting() && plugin.getPlayerList().getPlayer(event.getPlayer()).getType() == PlayerType.KILLER)
             event.setCancelled(true);
     }
 
-    @Override
-    public void onPlayerToggleSneak(PlayerToggleSneakEvent event) {
+    @EventHandler
+    private void onPlayerToggleSneak(PlayerToggleSneakEvent event) {
         DeadByCubePlayer deadByCubePlayer = plugin.getPlayerList().getPlayer(event.getPlayer());
-        deadByCubePlayer.getInteractionManager().dispatch(InteractionActionBinding.SNEAK);
+        PlayerInteractionManager interactionManager = deadByCubePlayer.getInteractionManager();
+        interactionManager.dispatch(InteractionActionBinding.SNEAK);
         event.setCancelled(true);
     }
 
-    @Override
-    public void onPlayerInteract(PlayerInteractEvent event) {
+    @EventHandler
+    private void onPlayerInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();
 
         PlayerList playerList = plugin.getPlayerList();
@@ -118,17 +115,22 @@ public class InGameEventHandler extends EventHandler {
         }
     }
 
-    @Override
-    public void onPlayerSwapHandItems(PlayerSwapHandItemsEvent event) {
+    @EventHandler
+    private void onPlayerSwapHandItems(PlayerSwapHandItemsEvent event) {
         DeadByCubePlayer deadByCubePlayer = plugin.getPlayerList().getPlayer(event.getPlayer());
         deadByCubePlayer.getInteractionManager().dispatch(InteractionActionBinding.SWAP_HANDS);
         event.setCancelled(true);
     }
 
-    @Override
-    public void onPlayerDropItem(PlayerDropItemEvent event) {
+    @EventHandler
+    private void onPlayerDropItem(PlayerDropItemEvent event) {
         DeadByCubePlayer deadByCubePlayer = plugin.getPlayerList().getPlayer(event.getPlayer());
         deadByCubePlayer.getInteractionManager().dispatch(InteractionActionBinding.DROP);
+        event.setCancelled(true);
+    }
+
+    @EventHandler
+    private void onFoodLevelChange(FoodLevelChangeEvent event) {
         event.setCancelled(true);
     }
 

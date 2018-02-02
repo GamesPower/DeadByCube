@@ -64,7 +64,7 @@ public class CommandRole extends Command {
     }
 
     private void checkIfInGame() throws CommandExecutionException {
-        if (plugin.getStatus() == GameStatus.IN_GAME)
+        if (plugin.getHandler().getStatus() == GameStatus.IN_GAME)
             throw new CommandExecutionException("You can't change a role in game");
     }
 

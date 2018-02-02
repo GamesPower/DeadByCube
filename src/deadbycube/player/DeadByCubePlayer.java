@@ -35,6 +35,7 @@ public abstract class DeadByCubePlayer {
     }
 
     public void init() {
+        this.interactionManager.init();
     }
 
     public void reset() {

@@ -13,30 +13,28 @@ import java.util.HashMap;
 
 public class PlayerInteractionManager {
 
-    private final DeadByCubePlayer deadByCubePlayer;
     private final ArrayList<Interaction> availableInteractionList = new ArrayList<>();
+    private final DeadByCubePlayer deadByCubePlayer;
+    private final Tickable tickable;
 
     private HashMap<InteractionActionBinding, Interaction> interactionMap = new HashMap<>();
-    private Interaction currentInteraction;
     private boolean updated = true;
     private int lastUpdate = 0;
 
     public PlayerInteractionManager(DeadByCubePlayer deadByCubePlayer) {
         this.deadByCubePlayer = deadByCubePlayer;
-        Tickable tickable = new Tickable(this::updateDisplay);
+        this.tickable = new Tickable(this::updateDisplay);
+    }
+
+    public void init() {
         tickable.startTask();
     }
 
     public void dispatch(InteractionActionBinding actionBinding) {
-        if (currentInteraction != null)
-            return;
-
         Interaction interaction = interactionMap.get(actionBinding);
         if (interaction != null) {
             System.out.print("Start interacting: ");
             System.out.println("interaction = " + interaction);
-            this.currentInteraction = interaction;
-            this.currentInteraction.startInteract(deadByCubePlayer);
         }
     }
 
@@ -53,6 +51,7 @@ public class PlayerInteractionManager {
 
     private void updateDisplay() {
         if (lastUpdate-- == 0 || updated) {
+            System.out.println("Sending update");
             createDisplay().send(deadByCubePlayer.getPlayer());
             this.lastUpdate = 40;
             this.updated = false;
@@ -82,6 +81,7 @@ public class PlayerInteractionManager {
 
     public void registerInteraction(Interaction interaction) {
         this.availableInteractionList.add(interaction);
+        this.update();
     }
 
 }

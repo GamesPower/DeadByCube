@@ -2,21 +2,14 @@ package deadbycube;
 
 import deadbycube.audio.WorldAudioManager;
 import deadbycube.command.CommandManager;
-import deadbycube.eventhandler.EventHandler;
-import deadbycube.eventhandler.InGameEventHandler;
-import deadbycube.eventhandler.LobbyEventHandler;
 import deadbycube.game.DeadByCubeGame;
 import deadbycube.game.GameStatus;
-import deadbycube.listener.EntityListener;
-import deadbycube.listener.PlayerListener;
+import deadbycube.lobby.DeadByCubeLobby;
 import deadbycube.player.PlayerList;
 import deadbycube.structure.StructureManager;
 import deadbycube.util.NMSUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.World;
-import org.bukkit.event.HandlerList;
+import org.bukkit.Server;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class DeadByCube extends JavaPlugin {
@@ -35,10 +28,8 @@ public class DeadByCube extends JavaPlugin {
     private final CommandManager commandManager = new CommandManager(this);
     private final StructureManager structureManager = new StructureManager(this);
     private final WorldAudioManager audioManager = new WorldAudioManager(this);
-    private World lobbyWorld;
 
-    private DeadByCubeGame game;
-    private EventHandler eventHandler;
+    private DeadByCubeHandler handler;
 
     @Override
     public void onEnable() {
@@ -46,12 +37,10 @@ public class DeadByCube extends JavaPlugin {
 
         this.saveDefaultConfig();
 
-        this.lobbyWorld = Bukkit.getWorld(getConfig().getString("world.lobby.name", Bukkit.getWorlds().get(0).getName()));
-
-        this.eventHandler = new LobbyEventHandler(this);
-
-        this.registerListeners();
         this.commandManager.registerCommands();
+
+        this.handler = new DeadByCubeLobby(this);
+        this.handler.init();
 
         /* LOBBY SNOW GENERATOR
 
@@ -78,35 +67,26 @@ public class DeadByCube extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        if (getStatus() == GameStatus.IN_GAME)
-            this.stopGame();
+        if (handler.getStatus() == GameStatus.IN_GAME) {
+            Server server = getServer();
+            server.unloadWorld(handler.getWorld(), false);
+        }
         this.saveConfig();
     }
 
-    private void registerListeners() {
-        PluginManager pluginManager = getServer().getPluginManager();
-        pluginManager.registerEvents(new PlayerListener(this), this);
-        pluginManager.registerEvents(new EntityListener(this), this);
-    }
-
     public void startGame() {
-        this.eventHandler = new InGameEventHandler(this);
-        this.game = new DeadByCubeGame(this);
-        this.game.start();
+        this.setHandler(new DeadByCubeGame(this));
     }
 
     public void stopGame() {
-        this.eventHandler = new LobbyEventHandler(this);
-        this.game.stop();
-        this.game = null;
+        this.setHandler(new DeadByCubeLobby(this));
     }
 
-    public GameStatus getStatus() {
-        return game == null ? GameStatus.LOBBY : GameStatus.IN_GAME;
-    }
-
-    public EventHandler getEventHandler() {
-        return eventHandler;
+    private void setHandler(DeadByCubeHandler handler) {
+        DeadByCubeHandler lastHandler = this.handler;
+        this.handler = handler;
+        lastHandler.reset();
+        this.handler.init();
     }
 
     public StructureManager getStructureManager() {
@@ -117,15 +97,12 @@ public class DeadByCube extends JavaPlugin {
         return audioManager;
     }
 
-    public World getLobbyWorld() {
-        return lobbyWorld;
-    }
-
-    public DeadByCubeGame getGame() {
-        return game;
-    }
-
     public PlayerList getPlayerList() {
         return playerList;
     }
+
+    public DeadByCubeHandler getHandler() {
+        return handler;
+    }
+
 }
