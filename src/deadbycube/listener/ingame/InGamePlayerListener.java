@@ -53,7 +53,7 @@ public class InGamePlayerListener extends DeadByCubeListener {
 
         DeadByCubePlayer deadByCubePlayer = plugin.getPlayerList().getPlayer(player);
         PlayerInteractionManager interactionManager = deadByCubePlayer.getInteractionManager();
-        interactionManager.update();
+        interactionManager.updateInteractions();
 
         Location from = event.getFrom();
         Location to = event.getTo();
@@ -90,8 +90,13 @@ public class InGamePlayerListener extends DeadByCubeListener {
     @EventHandler
     private void onPlayerToggleSneak(PlayerToggleSneakEvent event) {
         DeadByCubePlayer deadByCubePlayer = plugin.getPlayerList().getPlayer(event.getPlayer());
-        PlayerInteractionManager interactionManager = deadByCubePlayer.getInteractionManager();
-        interactionManager.dispatch(InteractionActionBinding.SNEAK);
+        deadByCubePlayer.setSneaking(event.isSneaking());
+
+        if (event.isSneaking()) {
+            PlayerInteractionManager interactionManager = deadByCubePlayer.getInteractionManager();
+            interactionManager.dispatch(InteractionActionBinding.SNEAK);
+        }
+
         event.setCancelled(true);
     }
 
@@ -104,12 +109,10 @@ public class InGamePlayerListener extends DeadByCubeListener {
         switch (event.getAction()) {
             case LEFT_CLICK_AIR:
             case LEFT_CLICK_BLOCK:
-                deadByCubePlayer.getActionHandler().attack();
                 deadByCubePlayer.getInteractionManager().dispatch(InteractionActionBinding.ATTACK);
                 break;
             case RIGHT_CLICK_AIR:
             case RIGHT_CLICK_BLOCK:
-                deadByCubePlayer.getActionHandler().interact();
                 deadByCubePlayer.getInteractionManager().dispatch(InteractionActionBinding.USE);
                 break;
         }
@@ -124,8 +127,6 @@ public class InGamePlayerListener extends DeadByCubeListener {
 
     @EventHandler
     private void onPlayerDropItem(PlayerDropItemEvent event) {
-        DeadByCubePlayer deadByCubePlayer = plugin.getPlayerList().getPlayer(event.getPlayer());
-        deadByCubePlayer.getInteractionManager().dispatch(InteractionActionBinding.DROP);
         event.setCancelled(true);
     }
 

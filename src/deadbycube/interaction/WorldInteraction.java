@@ -6,7 +6,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
-public class WorldInteraction extends Interaction {
+public abstract class WorldInteraction extends Interaction {
 
     private final Location location;
     private final double distance;

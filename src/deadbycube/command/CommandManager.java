@@ -33,7 +33,6 @@ public class CommandManager {
         this.register(new CommandStructure(this));
         this.register(new CommandRole(this));
         this.register(new CommandHeartbeat(this));
-        this.register(new CommandInteraction(this));
         this.register(new CommandDebug(this));
     }
 

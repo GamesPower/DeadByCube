@@ -11,17 +11,16 @@ public abstract class DeadByCubePlayer {
     protected final DeadByCube plugin;
     protected final Player player;
 
-    private final PlayerActionHandler actionHandler;
     private final PlayerAudioManager audioManager;
     private final PlayerInteractionManager interactionManager;
-
     private final MagicalValue walkSpeed;
+
+    private boolean sneaking;
 
     protected DeadByCubePlayer(DeadByCube plugin, Player player) {
         this.plugin = plugin;
         this.player = player;
 
-        this.actionHandler = createActionHandler();
         this.audioManager = new PlayerAudioManager(this);
         this.interactionManager = new PlayerInteractionManager(this);
 
@@ -40,11 +39,21 @@ public abstract class DeadByCubePlayer {
 
     public void reset() {
         this.audioManager.getMusicManager().stopPlaying();
+        this.interactionManager.reset();
+
+        this.setSneaking(false);
+        this.setHidden(false);
     }
 
-    public abstract PlayerActionHandler createActionHandler();
-
     public abstract PlayerType getType();
+
+    public boolean isSneaking() {
+        return sneaking;
+    }
+
+    public void setSneaking(boolean sneaking) {
+        this.sneaking = sneaking;
+    }
 
     public void setHidden(boolean hidden) {
         for (DeadByCubePlayer deadByCubePlayer : plugin.getPlayerList().getPlayers()) {
@@ -55,12 +64,8 @@ public abstract class DeadByCubePlayer {
         }
     }
 
-    public MagicalValue walkSpeed() {
+    public MagicalValue getWalkSpeed() {
         return walkSpeed;
-    }
-
-    public PlayerActionHandler getActionHandler() {
-        return actionHandler;
     }
 
     public PlayerAudioManager getAudioManager() {
@@ -78,5 +83,6 @@ public abstract class DeadByCubePlayer {
     public DeadByCube getPlugin() {
         return plugin;
     }
+
 
 }

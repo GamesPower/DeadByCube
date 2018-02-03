@@ -4,10 +4,10 @@ import deadbycube.DeadByCube;
 import deadbycube.audio.PlayerAudioManager;
 import deadbycube.audio.music.MusicManager;
 import deadbycube.audio.music.MusicRegistry;
-import deadbycube.player.killer.power.Power;
-import deadbycube.player.killer.power.PowerRegistry;
 import deadbycube.player.DeadByCubePlayer;
 import deadbycube.player.PlayerType;
+import deadbycube.player.killer.power.Power;
+import deadbycube.player.killer.power.PowerRegistry;
 import deadbycube.player.survivor.heartbeat.HeartbeatEmitter;
 import deadbycube.util.MagicalValue;
 import deadbycube.util.Tickable;
@@ -47,7 +47,7 @@ public abstract class KillerPlayer extends DeadByCubePlayer implements Heartbeat
     public void init() {
         super.init();
 
-        walkSpeed().setBaseValue(WALK_SPEED);
+        getWalkSpeed().setBaseValue(WALK_SPEED);
         player.setFoodLevel(FOOD_LEVEL);
 
         PlayerAudioManager audioManager = getAudioManager();
@@ -55,12 +55,7 @@ public abstract class KillerPlayer extends DeadByCubePlayer implements Heartbeat
         musicManager.setMusics(MusicRegistry.KILLER_NORMAL);
 
         this.tickable.startTask();
-        this.power.init(false);
-    }
-
-    @Override
-    public final KillerActionHandler createActionHandler() {
-        return new KillerActionHandler(this);
+        this.power.init();
     }
 
     @Override
@@ -87,13 +82,11 @@ public abstract class KillerPlayer extends DeadByCubePlayer implements Heartbeat
     }
 
     public void setPower(PowerRegistry power) {
-        boolean using = false;
         if (this.power != null) {
-            using = this.power.isUsing();
             this.power.reset();
         }
         this.power = power.create(this);
-        this.power.init(using);
+        this.power.init();
     }
 
     public String getName() {

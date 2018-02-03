@@ -25,7 +25,7 @@ public class SurvivorPlayer extends DeadByCubePlayer {
     public void init() {
         super.init();
 
-        this.walkSpeed().setBaseValue(WALK_SPEED);
+        this.getWalkSpeed().setBaseValue(WALK_SPEED);
         player.setFoodLevel(FOOD_LEVEL);
 
         PlayerAudioManager audioManager = getAudioManager();
@@ -33,11 +33,6 @@ public class SurvivorPlayer extends DeadByCubePlayer {
         musicManager.setMusics(MusicRegistry.SURVIVOR_NORMAL);
 
         this.heartbeatManager.init();
-    }
-
-    @Override
-    public SurvivorActionHandler createActionHandler() {
-        return new SurvivorActionHandler(this);
     }
 
     @Override

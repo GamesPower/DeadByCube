@@ -8,8 +8,7 @@ public enum InteractionActionBinding {
     ATTACK(Keybinds.ATTACK),
     USE(Keybinds.USE),
     SWAP_HANDS(Keybinds.SWAP_HANDS),
-    JUMP(Keybinds.JUMP),
-    DROP(Keybinds.DROP);
+    JUMP(Keybinds.JUMP);
 
     private final String key;
 

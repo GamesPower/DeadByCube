@@ -9,27 +9,13 @@ public class PowerHuntingHatchets extends Power {
     }
 
     @Override
-    public void init(boolean using) {
-        super.init(using);
-
+    public void init() {
+        super.init();
         killer.getTerrorRadius().setBaseValue(20);
     }
 
     @Override
-    public boolean canUse() {
-        return true;
-    }
-
-    @Override
-    protected void onUse() {
-    }
-
-    @Override
-    protected void onUpdate() {
-    }
-
-    @Override
-    protected void onStopUse() {
+    public void reset() {
     }
 
 }

@@ -3,7 +3,6 @@ package deadbycube.player.spectator;
 import deadbycube.DeadByCube;
 import deadbycube.player.DeadByCubePlayer;
 import deadbycube.player.PlayerType;
-import deadbycube.player.PlayerActionHandler;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 
@@ -23,11 +22,6 @@ public class SpectatorPlayer extends DeadByCubePlayer {
     public void reset() {
         super.reset();
         player.setGameMode(GameMode.ADVENTURE);
-    }
-
-    @Override
-    public PlayerActionHandler createActionHandler() {
-        return new SpectatorActionHandler(this);
     }
 
     @Override

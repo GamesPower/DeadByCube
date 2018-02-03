@@ -13,8 +13,8 @@ public class PowerEvilWithin2 extends PowerEvilWithin {
     }
 
     @Override
-    public void init(boolean using) {
-        super.init(using);
+    public void init() {
+        super.init();
 
         killer.getTerrorRadius().setBaseValue(16);
     }

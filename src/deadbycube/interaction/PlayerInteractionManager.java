@@ -2,6 +2,7 @@ package deadbycube.interaction;
 
 import deadbycube.player.DeadByCubePlayer;
 import deadbycube.util.ActionBar;
+import deadbycube.util.TextComponentUtil;
 import deadbycube.util.Tickable;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
@@ -18,70 +19,94 @@ public class PlayerInteractionManager {
     private final Tickable tickable;
 
     private HashMap<InteractionActionBinding, Interaction> interactionMap = new HashMap<>();
-    private boolean updated = true;
-    private int lastUpdate = 0;
+
+    private Interaction interaction;
+    private boolean interacting = false;
+
+    private boolean updateDisplay = true;
+    private byte lastDisplayUpdate = 0;
 
     public PlayerInteractionManager(DeadByCubePlayer deadByCubePlayer) {
         this.deadByCubePlayer = deadByCubePlayer;
         this.tickable = new Tickable(this::updateDisplay);
     }
 
+    private void updateDisplay() {
+        if (interacting && (interaction == null || !interaction.isInteracting(deadByCubePlayer))) {
+            this.updateDisplay = true;
+            this.interacting = false;
+        }
+
+        if (--lastDisplayUpdate == 0 || updateDisplay) {
+
+            ActionBar actionBar;
+            if (interacting)
+                actionBar = new ActionBar();
+            else {
+                ArrayList<BaseComponent> baseComponentList = new ArrayList<>();
+                int i = 0;
+                for (Interaction interaction : interactionMap.values()) {
+
+                    baseComponentList.add(TextComponentUtil.create("[", ChatColor.DARK_GRAY));
+                    KeybindComponent keybindComponent = new KeybindComponent(interaction.getActionBinding().getKey());
+                    keybindComponent.setColor(ChatColor.GRAY);
+                    baseComponentList.add(keybindComponent);
+                    baseComponentList.add(TextComponentUtil.create("] ", ChatColor.DARK_GRAY));
+                    baseComponentList.add(TextComponentUtil.create(interaction.getName(), ChatColor.WHITE));
+
+                    if (++i < interactionMap.size())
+                        baseComponentList.add(new TextComponent("    "));
+                }
+                actionBar = new ActionBar(baseComponentList.toArray(new BaseComponent[baseComponentList.size()]));
+            }
+            actionBar.send(deadByCubePlayer.getPlayer());
+
+            this.lastDisplayUpdate = 40;
+            this.updateDisplay = false;
+        }
+    }
+
     public void init() {
         tickable.startTask();
     }
 
+    public void reset() {
+        if (interaction != null && interaction.isInteracting())
+            interaction.stopInteract();
+    }
+
     public void dispatch(InteractionActionBinding actionBinding) {
+        if (interacting)
+            return;
+
         Interaction interaction = interactionMap.get(actionBinding);
         if (interaction != null) {
-            System.out.print("Start interacting: ");
-            System.out.println("interaction = " + interaction);
+            this.interaction = interaction;
+            this.interaction.interact(deadByCubePlayer);
+            this.interacting = true;
+            this.updateDisplay = true;
         }
     }
 
-    public void update() {
+    public void updateInteractions() {
         HashMap<InteractionActionBinding, Interaction> interactionMap = new HashMap<>();
         for (Interaction availableInteraction : availableInteractionList) {
             if (availableInteraction.canInteract(deadByCubePlayer))
                 interactionMap.put(availableInteraction.getActionBinding(), availableInteraction);
         }
 
-        this.updated = !this.interactionMap.equals(interactionMap);
-        this.interactionMap = interactionMap;
-    }
-
-    private void updateDisplay() {
-        if (lastUpdate-- == 0 || updated) {
-            System.out.println("Sending update");
-            createDisplay().send(deadByCubePlayer.getPlayer());
-            this.lastUpdate = 40;
-            this.updated = false;
+        if (!this.interactionMap.equals(interactionMap)) {
+            this.interactionMap = interactionMap;
+            this.updateDisplay = true;
         }
-    }
-
-    private ActionBar createDisplay() {
-        ArrayList<BaseComponent> baseComponentList = new ArrayList<>();
-
-        int i = 0;
-        for (Interaction interaction : interactionMap.values()) {
-            KeybindComponent keybindComponent = new KeybindComponent(interaction.getActionBinding().getKey());
-            keybindComponent.setColor(ChatColor.GRAY);
-            TextComponent spaceComponent = new TextComponent(" ");
-            TextComponent actionComponent = new TextComponent(interaction.getName());
-            actionComponent.setColor(ChatColor.WHITE);
-
-            baseComponentList.add(keybindComponent);
-            baseComponentList.add(spaceComponent);
-            baseComponentList.add(actionComponent);
-
-            if (++i < interactionMap.size())
-                baseComponentList.add(new TextComponent("    "));
-        }
-        return new ActionBar(baseComponentList.toArray(new BaseComponent[baseComponentList.size()]));
     }
 
     public void registerInteraction(Interaction interaction) {
         this.availableInteractionList.add(interaction);
-        this.update();
+    }
+
+    public void unregisterInteraction(Interaction interaction) {
+        this.availableInteractionList.remove(interaction);
     }
 
 }

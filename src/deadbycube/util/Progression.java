@@ -9,7 +9,7 @@ import org.bukkit.boss.BossBar;
 public class Progression {
 
     private final BossBar bossBar;
-    private double maxValue;
+    private double maxValue = 1;
 
     public Progression(String name, BarColor color) {
         this.bossBar = Bukkit.createBossBar(name, color, BarStyle.SOLID);
@@ -29,7 +29,7 @@ public class Progression {
     }
 
     public void setValue(double value) {
-        this.bossBar.setProgress(Math.min(1, (value / maxValue) + ((1 / maxValue) * 0.20)));
+        this.bossBar.setProgress(value / maxValue); //Math.min(1, (value / maxValue) + ((1 / maxValue) * 0.20))
     }
 
     public void setMaxValue(double maxValue) {

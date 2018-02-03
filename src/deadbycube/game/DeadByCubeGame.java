@@ -52,6 +52,7 @@ public class DeadByCubeGame implements DeadByCubeHandler {
             player.setSneaking(false);
 
             DeadByCubePlayer deadByCubePlayer = playerList.getPlayer(player);
+
             if (deadByCubePlayer == null) {
                 deadByCubePlayer = new SpectatorPlayer(plugin, player);
                 playerList.setPlayer(player, deadByCubePlayer);

@@ -32,10 +32,9 @@ public class LobbyPlayerListener extends DeadByCubeListener {
         SpectatorPlayer spectator = new SpectatorPlayer(plugin, player);
         playerList.setPlayer(player, spectator);
 
-
         PlayerAudioManager audioManager = spectator.getAudioManager();
         MusicManager musicManager = audioManager.getMusicManager();
-        musicManager.setMusics(MusicRegistry.LOBBY_WINTER);
+        musicManager.setMusics(MusicRegistry.LOBBY_NORMAL);
     }
 
     @EventHandler

@@ -9,19 +9,7 @@ public class PowerChainsaw extends Power {
     }
 
     @Override
-    public boolean canUse() {
-        return true;
+    public void reset() {
     }
 
-    @Override
-    protected void onUse() {
-    }
-
-    @Override
-    protected void onUpdate() {
-    }
-
-    @Override
-    protected void onStopUse() {
-    }
 }

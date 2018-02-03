@@ -16,7 +16,7 @@ public class MissedAttackRecoveryHandler extends AttackHandler {
     @Override
     public void update(int attackTick) {
         KillerPlayer killer = attackManager.getKiller();
-        MagicalValue walkSpeed = killer.walkSpeed();
+        MagicalValue walkSpeed = killer.getWalkSpeed();
 
         if (attackTick == 0) {
             walkSpeed.addModifier(AttackManager.MISSED_ATTACK_RECOVERY_SPEED_MODIFIER, -.8, MagicalValue.Operation.MULTIPLY);

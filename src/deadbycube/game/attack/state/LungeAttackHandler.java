@@ -34,7 +34,7 @@ public class LungeAttackHandler extends AttackHandler {
             KillerPlayer killer = attackManager.getKiller();
             WorldAudioManager audioManager = killer.getPlugin().getAudioManager();
             audioManager.playSound("killer." + killer.getName() + ".weapon.missed", SoundCategory.MASTER, killer.getPlayer().getLocation());
-            killer.walkSpeed().removeModifier(AttackManager.LUNGE_SPEED_MODIFIER);
+            killer.getWalkSpeed().removeModifier(AttackManager.LUNGE_SPEED_MODIFIER);
 
             attackManager.setHandler(new MissedAttackRecoveryHandler(attackManager));
         }
@@ -45,7 +45,7 @@ public class LungeAttackHandler extends AttackHandler {
         WorldAudioManager audioManager = killer.getPlugin().getAudioManager();
 
         audioManager.playSound("killer." + killer.getName() + ".weapon.arm", SoundCategory.MASTER, killer.getPlayer().getLocation());
-        killer.walkSpeed().addModifier(AttackManager.LUNGE_SPEED_MODIFIER, 1.05, MagicalValue.Operation.MULTIPLY);
+        killer.getWalkSpeed().addModifier(AttackManager.LUNGE_SPEED_MODIFIER, 1.05, MagicalValue.Operation.MULTIPLY);
     }
 
     private void processLunge() {

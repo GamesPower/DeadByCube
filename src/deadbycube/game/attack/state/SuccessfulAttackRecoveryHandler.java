@@ -16,7 +16,7 @@ public class SuccessfulAttackRecoveryHandler extends AttackHandler {
     @Override
     public void update(int attackTick) {
         KillerPlayer killer = attackManager.getKiller();
-        MagicalValue walkSpeed = killer.walkSpeed();
+        MagicalValue walkSpeed = killer.getWalkSpeed();
 
         if (attackTick == 0)
             walkSpeed.addModifier(AttackManager.SUCCESSFUL_ATTACK_RECOVERY_SPEED_MODIFIER, -1.2, MagicalValue.Operation.MULTIPLY);
