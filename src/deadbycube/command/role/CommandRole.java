@@ -8,7 +8,7 @@ import deadbycube.game.GameStatus;
 import deadbycube.player.DeadByCubePlayer;
 import deadbycube.player.PlayerList;
 import deadbycube.player.killer.KillerPlayer;
-import deadbycube.player.killer.KillerRegistry;
+import deadbycube.registry.KillerRegistry;
 import deadbycube.player.survivor.SurvivorPlayer;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.command.CommandSender;

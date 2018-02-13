@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="DeadByCube:jar">
+    <output-path>$PROJECT_DIR$/../Server/plugins</output-path>
+    <root id="archive" name="DeadByCube.jar">
+      <element id="module-output" name="DeadByCube" />
+    </root>
+  </artifact>
+</component>

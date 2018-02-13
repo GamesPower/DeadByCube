@@ -1,7 +1,7 @@
 package deadbycube.player.killer;
 
 import deadbycube.DeadByCube;
-import deadbycube.player.killer.power.PowerRegistry;
+import deadbycube.registry.PowerRegistry;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.entity.Player;

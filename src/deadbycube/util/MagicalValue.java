@@ -26,8 +26,8 @@ public class MagicalValue {
                     case SUBTRACT:
                         this.value -= modifier.value;
                         break;
-                    case MULTIPLY:
-                        this.value += (baseValue * modifier.value);
+                    case PERCENTAGE:
+                        this.value += (baseValue * (modifier.value / 100));
                         break;
                     default:
                         break;
@@ -49,6 +49,7 @@ public class MagicalValue {
     public void forceValue(double forcedValue) {
         this.value = forcedValue;
         this.forced = true;
+        this.updateValue();
     }
 
     public void resetValue() {
@@ -56,13 +57,25 @@ public class MagicalValue {
         this.updateValue();
     }
 
+    public double getValue() {
+        return value;
+    }
+
+    public boolean isLower() {
+        return value < baseValue;
+    }
+
+    public boolean isGreater() {
+        return value > baseValue;
+    }
+
     public void setBaseValue(double baseValue) {
         this.baseValue = baseValue;
         this.updateValue();
     }
 
-    public double getValue() {
-        return value;
+    public enum Operation {
+        ADD, SUBTRACT, PERCENTAGE
     }
 
     class Modifier {
@@ -81,10 +94,6 @@ public class MagicalValue {
             return name;
         }
 
-    }
-
-    public enum Operation {
-        ADD, SUBTRACT, MULTIPLY
     }
 
 }

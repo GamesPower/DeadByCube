@@ -1,50 +1,67 @@
 package deadbycube.player.killer.power.cartersspark.interaction;
 
 import deadbycube.DeadByCube;
-import deadbycube.audio.SoundRegistry;
 import deadbycube.audio.WorldAudioManager;
 import deadbycube.interaction.Interaction;
-import deadbycube.interaction.InteractionActionBinding;
+import deadbycube.player.DeadByCubePlayer;
 import deadbycube.player.killer.KillerPlayer;
 import deadbycube.player.killer.power.cartersspark.PowerCartersSpark;
+import deadbycube.registry.SoundRegistry;
+import deadbycube.util.MagicalValue;
 import deadbycube.util.Progression;
-import org.bukkit.*;
+import deadbycube.util.TickLoop;
+import org.bukkit.Location;
+import org.bukkit.Particle;
+import org.bukkit.SoundCategory;
+import org.bukkit.World;
 import org.bukkit.boss.BarColor;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitScheduler;
 
 public class ShockTherapyInteraction extends Interaction {
 
     private final PowerCartersSpark power;
     private final Progression progression;
 
+    private boolean canInteract = true;
+
     public ShockTherapyInteraction(PowerCartersSpark power) {
-        super(InteractionActionBinding.USE, "shock_therapy");
+        super("shock_therapy");
         this.power = power;
         this.progression = new Progression("shock_therapy", BarColor.WHITE);
     }
 
     @Override
-    public void onInteract() {
-        this.progression.display(power.getKiller());
+    public boolean canInteract(DeadByCubePlayer deadByCubePlayer) {
+        return super.canInteract(deadByCubePlayer) && canInteract;
+    }
+
+    @Override
+    protected void onInteract() {
+        this.progression.display(interactor);
 
         KillerPlayer killer = power.getKiller();
         Player player = killer.getPlayer();
         WorldAudioManager audioManager = killer.getPlugin().getAudioManager();
         Location soundLocation = player.getLocation();
 
-        audioManager.playSound(SoundRegistry.POWER_CARTERS_SPARK_CHARGE, SoundCategory.MASTER, soundLocation, 1, 1);
-        audioManager.playSound(SoundRegistry.POWER_CARTERS_SPARK_CHARGE_BASS, SoundCategory.MASTER, soundLocation, 1, 1);
-        audioManager.playSound(SoundRegistry.POWER_CARTERS_SPARK_CHARGE_HIGH, SoundCategory.MASTER, soundLocation, 1, 1);
-
+        audioManager.playSound(SoundRegistry.POWER_CARTERS_SPARK_CHARGE, SoundCategory.MASTER, soundLocation);
+        audioManager.playSound(SoundRegistry.POWER_CARTERS_SPARK_CHARGE_BASS, SoundCategory.MASTER, soundLocation);
+        audioManager.playSound(SoundRegistry.POWER_CARTERS_SPARK_CHARGE_HIGH, SoundCategory.MASTER, soundLocation);
     }
 
     @Override
-    public void onUpdate(int chargeProgress) {
-        double chargeTime = power.getChargeTime().getValue();
+    protected void onUpdate(int chargeProgress) {
+        MagicalValue chargeTime = power.getChargeTime();
 
         if (chargeProgress % 2 == 0) {
-            this.progression.setMaxValue(chargeTime);
+            if (chargeTime.isLower())
+                this.progression.setColor(BarColor.YELLOW);
+            else if (chargeTime.isGreater())
+                this.progression.setColor(BarColor.RED);
+            else
+                this.progression.setColor(BarColor.WHITE);
+
+            this.progression.setMaxValue(chargeTime.getValue());
             this.progression.setValue(chargeProgress);
         }
 
@@ -56,12 +73,12 @@ public class ShockTherapyInteraction extends Interaction {
         for (int i = 0; i < (chargeProgress / 2); i++)
             world.spawnParticle(Particle.SMOKE_NORMAL, particleLocation, 1, .2, .35, .2, 0);
 
-        if (chargeProgress >= chargeTime)
+        if (chargeProgress >= chargeTime.getValue())
             this.stopInteract();
     }
 
     @Override
-    public void onStopInteract(int chargeProgress) {
+    protected void onStopInteract(int chargeProgress) {
         double chargeTime = power.getChargeTime().getValue();
 
         KillerPlayer killer = power.getKiller();
@@ -71,14 +88,14 @@ public class ShockTherapyInteraction extends Interaction {
             Player player = killer.getPlayer();
 
             Location soundLocation = player.getLocation();
-            audioManager.playSound(SoundRegistry.POWER_CARTERS_SPARK_ATTACK, SoundCategory.MASTER, soundLocation, 1, 1);
-            audioManager.playSound(SoundRegistry.POWER_CARTERS_SPARK_ATTACK_BASS, SoundCategory.MASTER, soundLocation, 1, 1);
-            audioManager.playSound(SoundRegistry.POWER_CARTERS_SPARK_EXPLOSION, SoundCategory.MASTER, soundLocation, 1, 1);
+            audioManager.playSound(SoundRegistry.POWER_CARTERS_SPARK_ATTACK, SoundCategory.MASTER, soundLocation);
+            audioManager.playSound(SoundRegistry.POWER_CARTERS_SPARK_ATTACK_BASS, SoundCategory.MASTER, soundLocation);
+            audioManager.playSound(SoundRegistry.POWER_CARTERS_SPARK_EXPLOSION, SoundCategory.MASTER, soundLocation);
 
-            Server server = plugin.getServer();
-            BukkitScheduler scheduler = server.getScheduler();
-            scheduler.runTaskLater(plugin, power::generateShock, 5);
+            TickLoop.runLater(5, power::generateShock);
+            TickLoop.runLater(30, () -> canInteract = true);
 
+            this.canInteract = false;
         } else {
             audioManager.stopSound(SoundRegistry.POWER_CARTERS_SPARK_CHARGE);
             audioManager.stopSound(SoundRegistry.POWER_CARTERS_SPARK_CHARGE_BASS);
@@ -86,11 +103,11 @@ public class ShockTherapyInteraction extends Interaction {
         }
 
         this.progression.setValue(0);
-        this.progression.reset(deadByCubePlayer);
+        this.progression.reset(interactor);
     }
 
     @Override
     public boolean isInteracting() {
-        return power.getKiller().getPlayer().isHandRaised();
+        return super.isInteracting() && power.getKiller().getPlayer().isHandRaised();
     }
 }

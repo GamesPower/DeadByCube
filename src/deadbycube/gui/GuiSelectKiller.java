@@ -1,12 +1,12 @@
 package deadbycube.gui;
 
 import deadbycube.util.ItemStackBuilder;
-import deadbycube.player.killer.power.PowerRegistry;
+import deadbycube.registry.PowerRegistry;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 
-class GuiSelectKiller extends Gui {
+public class GuiSelectKiller extends Gui {
 
     GuiSelectKiller() {
         super("select_killer", 36);

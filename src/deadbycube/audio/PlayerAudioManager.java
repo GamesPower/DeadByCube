@@ -1,6 +1,5 @@
 package deadbycube.audio;
 
-import deadbycube.audio.music.MusicManager;
 import deadbycube.player.DeadByCubePlayer;
 import org.bukkit.Location;
 import org.bukkit.SoundCategory;
@@ -10,11 +9,9 @@ import java.util.function.Function;
 public class PlayerAudioManager implements AudioManager {
 
     private final DeadByCubePlayer deadByCubePlayer;
-    private final MusicManager musicManager;
 
     public PlayerAudioManager(DeadByCubePlayer deadByCubePlayer) {
         this.deadByCubePlayer = deadByCubePlayer;
-        this.musicManager = new MusicManager(deadByCubePlayer);
     }
 
     @Override
@@ -42,10 +39,6 @@ public class PlayerAudioManager implements AudioManager {
     @Override
     public void stopSound(String sound) {
         deadByCubePlayer.getPlayer().stopSound(sound);
-    }
-
-    public MusicManager getMusicManager() {
-        return musicManager;
     }
 
 }

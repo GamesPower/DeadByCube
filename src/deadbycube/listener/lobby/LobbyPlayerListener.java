@@ -2,8 +2,6 @@ package deadbycube.listener.lobby;
 
 import deadbycube.DeadByCube;
 import deadbycube.audio.PlayerAudioManager;
-import deadbycube.audio.music.MusicManager;
-import deadbycube.audio.music.MusicRegistry;
 import deadbycube.listener.DeadByCubeListener;
 import deadbycube.player.PlayerList;
 import deadbycube.player.spectator.SpectatorPlayer;
@@ -31,10 +29,6 @@ public class LobbyPlayerListener extends DeadByCubeListener {
         PlayerList playerList = plugin.getPlayerList();
         SpectatorPlayer spectator = new SpectatorPlayer(plugin, player);
         playerList.setPlayer(player, spectator);
-
-        PlayerAudioManager audioManager = spectator.getAudioManager();
-        MusicManager musicManager = audioManager.getMusicManager();
-        musicManager.setMusics(MusicRegistry.LOBBY_NORMAL);
     }
 
     @EventHandler

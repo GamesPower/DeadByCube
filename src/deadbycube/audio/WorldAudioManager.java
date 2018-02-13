@@ -3,6 +3,7 @@ package deadbycube.audio;
 import deadbycube.DeadByCube;
 import deadbycube.player.DeadByCubePlayer;
 import deadbycube.player.PlayerType;
+import deadbycube.registry.SoundRegistry;
 import org.bukkit.Location;
 import org.bukkit.SoundCategory;
 

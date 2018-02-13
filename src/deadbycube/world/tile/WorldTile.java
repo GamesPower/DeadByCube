@@ -1,6 +1,6 @@
 package deadbycube.world.tile;
 
-import deadbycube.game.object.WorldObject;
+import deadbycube.world.object.WorldObject;
 
 public class WorldTile {
 

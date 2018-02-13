@@ -29,10 +29,15 @@ public class Progression {
     }
 
     public void setValue(double value) {
-        this.bossBar.setProgress(value / maxValue); //Math.min(1, (value / maxValue) + ((1 / maxValue) * 0.20))
+        this.bossBar.setProgress(Math.max(0, Math.min(1, value / maxValue))); //Math.min(1, (magicalValue / maxValue) + ((1 / maxValue) * 0.20))
     }
 
     public void setMaxValue(double maxValue) {
         this.maxValue = maxValue;
     }
+
+    public void setColor(BarColor color) {
+        this.bossBar.setColor(color);
+    }
+
 }

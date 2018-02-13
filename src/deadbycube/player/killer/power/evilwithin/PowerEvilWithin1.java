@@ -1,17 +1,15 @@
 package deadbycube.player.killer.power.evilwithin;
 
 import deadbycube.audio.WorldAudioManager;
-import deadbycube.audio.SoundRegistry;
 import deadbycube.player.killer.KillerPlayer;
-import deadbycube.player.killer.power.PowerRegistry;
+import deadbycube.registry.PowerRegistry;
+import deadbycube.registry.SoundRegistry;
 import org.bukkit.SoundCategory;
 
 public class PowerEvilWithin1 extends PowerEvilWithin {
 
-    private static final int REQUIRED_STALKED = 100;
-
     public PowerEvilWithin1(KillerPlayer killer) {
-        super(killer, REQUIRED_STALKED);
+        super(killer);
     }
 
     @Override
@@ -19,14 +17,21 @@ public class PowerEvilWithin1 extends PowerEvilWithin {
         super.init();
 
         killer.getTerrorRadius().setBaseValue(8);
-        this.progression.setMaxValue(REQUIRED_STALKED);
+        killer.getWalkSpeed().setBaseValue(KillerPlayer.WALK_SPEED - (KillerPlayer.WALK_SPEED * (11.5 / 100)));
     }
 
     @Override
-    void onNextLevel() {
-        WorldAudioManager audioManager = killer.getPlugin().getAudioManager();
-        audioManager.playSound(SoundRegistry.POWER_EVIL_WITHIN_LEVEL_1, SoundCategory.MASTER);
-        killer.setPower(PowerRegistry.EVIL_WITHIN_2);
+    public void reset() {
+        killer.getWalkSpeed().setBaseValue(KillerPlayer.WALK_SPEED);
+        killer.getTerrorRadius().setBaseValue(KillerPlayer.TERROR_RADIUS);
     }
 
+    @Override
+    public void onStalk(int stalk) {
+        if (stalk == 200) {
+            WorldAudioManager audioManager = killer.getPlugin().getAudioManager();
+            audioManager.playSound(SoundRegistry.POWER_EVIL_WITHIN_LEVEL_1, SoundCategory.MASTER);
+            killer.setPower(PowerRegistry.EVIL_WITHIN_2);
+        }
+    }
 }

@@ -2,7 +2,7 @@ package deadbycube.player;
 
 import deadbycube.DeadByCube;
 import deadbycube.audio.PlayerAudioManager;
-import deadbycube.interaction.PlayerInteractionManager;
+import deadbycube.interaction.InteractionManager;
 import deadbycube.util.MagicalValue;
 import org.bukkit.entity.Player;
 
@@ -11,9 +11,9 @@ public abstract class DeadByCubePlayer {
     protected final DeadByCube plugin;
     protected final Player player;
 
-    private final PlayerAudioManager audioManager;
-    private final PlayerInteractionManager interactionManager;
-    private final MagicalValue walkSpeed;
+    protected final PlayerAudioManager audioManager;
+    protected final InteractionManager interactionManager;
+    protected final MagicalValue walkSpeed;
 
     private boolean sneaking;
 
@@ -22,12 +22,14 @@ public abstract class DeadByCubePlayer {
         this.player = player;
 
         this.audioManager = new PlayerAudioManager(this);
-        this.interactionManager = new PlayerInteractionManager(this);
+        this.interactionManager = new InteractionManager(this);
 
         this.walkSpeed = new MagicalValue(0.2) {
             @Override
             protected void updateValue() {
                 super.updateValue();
+                /*player.sendMessage("Old walkSpeed: " + player.getWalkSpeed());
+                player.sendMessage("New walkSpeed: " + getValue());*/
                 player.setWalkSpeed((float) getValue());
             }
         };
@@ -38,7 +40,6 @@ public abstract class DeadByCubePlayer {
     }
 
     public void reset() {
-        this.audioManager.getMusicManager().stopPlaying();
         this.interactionManager.reset();
 
         this.setSneaking(false);
@@ -72,7 +73,7 @@ public abstract class DeadByCubePlayer {
         return audioManager;
     }
 
-    public PlayerInteractionManager getInteractionManager() {
+    public InteractionManager getInteractionManager() {
         return interactionManager;
     }
 

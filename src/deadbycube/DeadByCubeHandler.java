@@ -7,7 +7,7 @@ public interface DeadByCubeHandler {
 
     void init();
 
-    void reset();
+    void reset(DeadByCubeHandler newHandler);
 
     GameStatus getStatus();
 

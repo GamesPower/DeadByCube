@@ -1,8 +1,8 @@
 package deadbycube.player.killer;
 
 import deadbycube.DeadByCube;
-import deadbycube.audio.SoundRegistry;
-import deadbycube.player.killer.power.PowerRegistry;
+import deadbycube.registry.SoundRegistry;
+import deadbycube.registry.PowerRegistry;
 import org.bukkit.Particle;
 import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
@@ -41,6 +41,6 @@ public class KillerDoctor extends KillerPlayer {
     @Override
     void playBreathSound() {
         super.playBreathSound();
-        plugin.getAudioManager().playSound(SoundRegistry.KILLER_DOCTOR_BREATH_TEETH, SoundCategory.VOICE, player.getLocation(), (float) getBreathVolume().getValue(), 1);
+        plugin.getAudioManager().playSound(SoundRegistry.KILLER_DOCTOR_BREATH_TEETH, SoundCategory.VOICE, player.getLocation(), (float) getBreathVolume().getValue());
     }
 }

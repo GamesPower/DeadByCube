@@ -13,6 +13,11 @@ public class CommandException extends Exception {
         this.initStyle();
     }
 
+    CommandException(BaseComponent error) {
+        this.error = error;
+        this.initStyle();
+    }
+
     CommandException(Throwable cause) {
         super(cause);
         this.error = new TextComponent(cause.getMessage());

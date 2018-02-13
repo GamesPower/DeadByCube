@@ -22,3 +22,6 @@ commands:
   interaction:
     description: Manager interaction
     usage: /interaction
+  generator:
+    description: Generator
+    usage: /generator

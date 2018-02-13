@@ -1,7 +1,9 @@
 package deadbycube.interaction;
 
 import deadbycube.player.DeadByCubePlayer;
+import deadbycube.player.PlayerType;
 import deadbycube.util.MathUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
@@ -11,16 +13,23 @@ public abstract class WorldInteraction extends Interaction {
     private final Location location;
     private final double distance;
     private final double angle;
+    private final PlayerType[] playerTypes;
 
-    public WorldInteraction(InteractionActionBinding actionBinding, String name, Location location, double distance, double angle) {
-        super(actionBinding, name);
+    public WorldInteraction(String name, Location location, double distance, double angle, PlayerType... playerTypes) {
+        super(name);
         this.location = location;
         this.distance = distance;
         this.angle = angle;
+        this.playerTypes = playerTypes;
     }
 
     @Override
     public boolean canInteract(DeadByCubePlayer deadByCubePlayer) {
+        if (!super.canInteract(deadByCubePlayer))
+            return false;
+        if (!ArrayUtils.contains(playerTypes, deadByCubePlayer.getType()))
+            return false;
+
         Player player = deadByCubePlayer.getPlayer();
         Location playerLocation = player.getLocation();
 
@@ -44,6 +53,10 @@ public abstract class WorldInteraction extends Interaction {
 
     public double getAngle() {
         return angle;
+    }
+
+    public PlayerType[] getPlayerTypes() {
+        return playerTypes;
     }
 
 }

@@ -1,6 +1,7 @@
 package deadbycube.audio;
 
 import deadbycube.player.DeadByCubePlayer;
+import deadbycube.registry.SoundRegistry;
 import org.bukkit.Location;
 import org.bukkit.SoundCategory;
 
@@ -28,6 +29,10 @@ public interface AudioManager {
 
     default void playSound(SoundRegistry sound, SoundCategory category, Location location) {
         this.playSound(sound, category, location, 1, 1);
+    }
+
+    default void playSound(SoundRegistry sound, SoundCategory category, Location location, float volume) {
+        this.playSound(sound.getKey(), category, location, volume, 1);
     }
 
     default void playSound(SoundRegistry sound, SoundCategory category, Location location, float volume, float pitch) {

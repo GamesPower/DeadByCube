@@ -1,33 +1,30 @@
 package deadbycube.player.killer.power.evilwithin;
 
+import deadbycube.interaction.InteractionActionBinding;
+import deadbycube.interaction.InteractionManager;
 import deadbycube.player.killer.KillerPlayer;
 import deadbycube.player.killer.power.Power;
-import deadbycube.util.Progression;
-import org.bukkit.boss.BarColor;
+import deadbycube.player.killer.power.evilwithin.interaction.StalkInteraction;
 
-abstract class PowerEvilWithin extends Power {
+public abstract class PowerEvilWithin extends Power {
 
-    final Progression progression;
+    private final StalkInteraction stalkInteraction;
 
-    PowerEvilWithin(KillerPlayer killer, int required) {
+    PowerEvilWithin(KillerPlayer killer) {
         super(killer);
 
-        this.progression = new Progression("power.evil_within.action", BarColor.WHITE);
-        this.progression.setMaxValue(required);
+        this.stalkInteraction = new StalkInteraction(this);
     }
 
     @Override
     public void init() {
         super.init();
 
-        this.progression.display(killer);
+        InteractionManager interactionManager = killer.getInteractionManager();
+        interactionManager.registerInteraction(InteractionActionBinding.SNEAK, stalkInteraction);
+        interactionManager.updateInteractions();
     }
 
-    @Override
-    public void reset() {
-        this.progression.reset();
-    }
-
-    abstract void onNextLevel();
+    public abstract void onStalk(int stalk);
 
 }

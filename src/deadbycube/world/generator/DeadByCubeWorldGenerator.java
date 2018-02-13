@@ -2,7 +2,7 @@ package deadbycube.world.generator;
 
 import deadbycube.DeadByCube;
 import deadbycube.world.DeadByCubeWorld;
-import deadbycube.game.object.WorldObject;
+import deadbycube.world.object.WorldObject;
 import deadbycube.world.tile.WorldTile;
 import org.bukkit.Bukkit;
 import org.bukkit.World;

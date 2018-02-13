@@ -2,7 +2,7 @@ package deadbycube.listener.ingame;
 
 import deadbycube.DeadByCube;
 import deadbycube.interaction.InteractionActionBinding;
-import deadbycube.interaction.PlayerInteractionManager;
+import deadbycube.interaction.InteractionManager;
 import deadbycube.listener.DeadByCubeListener;
 import deadbycube.player.DeadByCubePlayer;
 import deadbycube.player.PlayerList;
@@ -39,9 +39,7 @@ public class InGamePlayerListener extends DeadByCubeListener {
 
         PlayerList playerList = plugin.getPlayerList();
         Player player = event.getPlayer();
-        DeadByCubePlayer deadByCubePlayer = playerList.getPlayer(player);
-        deadByCubePlayer.reset();
-        playerList.removePlayer(player);
+        playerList.resetPlayer(player);
 
         // TODO Call the kill method if he was a survivor
         // TODO Check the game requirements (at least 1 killer and 1 survivor)
@@ -52,7 +50,7 @@ public class InGamePlayerListener extends DeadByCubeListener {
         Player player = event.getPlayer();
 
         DeadByCubePlayer deadByCubePlayer = plugin.getPlayerList().getPlayer(player);
-        PlayerInteractionManager interactionManager = deadByCubePlayer.getInteractionManager();
+        InteractionManager interactionManager = deadByCubePlayer.getInteractionManager();
         interactionManager.updateInteractions();
 
         Location from = event.getFrom();
@@ -93,10 +91,17 @@ public class InGamePlayerListener extends DeadByCubeListener {
         deadByCubePlayer.setSneaking(event.isSneaking());
 
         if (event.isSneaking()) {
-            PlayerInteractionManager interactionManager = deadByCubePlayer.getInteractionManager();
+            InteractionManager interactionManager = deadByCubePlayer.getInteractionManager();
             interactionManager.dispatch(InteractionActionBinding.SNEAK);
         }
 
+        event.setCancelled(true);
+    }
+
+    @EventHandler
+    private void onPlayerAnimation(PlayerAnimationEvent event) {
+        DeadByCubePlayer deadByCubePlayer = plugin.getPlayerList().getPlayer(event.getPlayer());
+        deadByCubePlayer.getInteractionManager().dispatch(InteractionActionBinding.ATTACK);
         event.setCancelled(true);
     }
 

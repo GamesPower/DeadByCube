@@ -5,6 +5,7 @@ import deadbycube.command.exception.CommandException;
 import deadbycube.command.exception.CommandExecutionException;
 import deadbycube.command.exception.CommandSyntaxException;
 import deadbycube.command.node.CommandNode;
+import net.md_5.bungee.api.chat.TranslatableComponent;
 import org.bukkit.command.CommandSender;
 
 import java.lang.reflect.InvocationTargetException;
@@ -40,14 +41,16 @@ public class CommandFunction {
             method.invoke(commandNode, objectList.toArray(new Object[objectList.size()]));
             return true;
         } catch (IllegalAccessException | InvocationTargetException e) {
-            Throwable cause = e.getCause();
+            e.printStackTrace();
+            throw new CommandExecutionException(new TranslatableComponent("commands.generic.exception"));
+            /*Throwable cause = e.getCause();
             if (cause != null) {
                 if (cause instanceof CommandExecutionException)
                     throw (CommandExecutionException) cause;
                 else
                     throw new CommandExecutionException(cause.getMessage());
             } else
-                throw new CommandExecutionException(e.getMessage());
+                throw new CommandExecutionException(e.getMessage());*/
         }
     }
 

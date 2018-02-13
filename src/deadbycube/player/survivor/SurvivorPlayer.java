@@ -1,12 +1,10 @@
 package deadbycube.player.survivor;
 
 import deadbycube.DeadByCube;
-import deadbycube.audio.PlayerAudioManager;
-import deadbycube.audio.music.MusicManager;
-import deadbycube.audio.music.MusicRegistry;
 import deadbycube.player.DeadByCubePlayer;
 import deadbycube.player.PlayerType;
 import deadbycube.player.survivor.heartbeat.HeartbeatManager;
+import deadbycube.util.MagicalValue;
 import org.bukkit.entity.Player;
 
 public class SurvivorPlayer extends DeadByCubePlayer {
@@ -15,6 +13,8 @@ public class SurvivorPlayer extends DeadByCubePlayer {
     private static final double WALK_SPEED = 0.2;
 
     private final HeartbeatManager heartbeatManager;
+
+    private final MagicalValue repairSpeed = new MagicalValue(1);
 
     public SurvivorPlayer(DeadByCube plugin, Player player) {
         super(plugin, player);
@@ -25,12 +25,8 @@ public class SurvivorPlayer extends DeadByCubePlayer {
     public void init() {
         super.init();
 
-        this.getWalkSpeed().setBaseValue(WALK_SPEED);
+        walkSpeed.setBaseValue(WALK_SPEED);
         player.setFoodLevel(FOOD_LEVEL);
-
-        PlayerAudioManager audioManager = getAudioManager();
-        MusicManager musicManager = audioManager.getMusicManager();
-        musicManager.setMusics(MusicRegistry.SURVIVOR_NORMAL);
 
         this.heartbeatManager.init();
     }
@@ -43,4 +39,9 @@ public class SurvivorPlayer extends DeadByCubePlayer {
     public HeartbeatManager getHeartbeatManager() {
         return heartbeatManager;
     }
+
+    public MagicalValue getRepairSpeed() {
+        return repairSpeed;
+    }
+
 }

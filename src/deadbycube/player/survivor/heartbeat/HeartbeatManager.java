@@ -1,9 +1,9 @@
 package deadbycube.player.survivor.heartbeat;
 
 import deadbycube.audio.PlayerAudioManager;
-import deadbycube.audio.SoundRegistry;
 import deadbycube.player.survivor.SurvivorPlayer;
-import deadbycube.util.Tickable;
+import deadbycube.registry.SoundRegistry;
+import deadbycube.util.TickLoop;
 import org.bukkit.Location;
 import org.bukkit.SoundCategory;
 
@@ -12,7 +12,7 @@ import java.util.ArrayList;
 public class HeartbeatManager {
 
     private final SurvivorPlayer survivor;
-    private final Tickable tickable;
+    private final TickLoop tickLoop;
     private final ArrayList<HeartbeatEmitter> heartbeatEmitterList = new ArrayList<>();
 
     private int delay = 0;
@@ -20,7 +20,7 @@ public class HeartbeatManager {
 
     public HeartbeatManager(SurvivorPlayer survivor) {
         this.survivor = survivor;
-        this.tickable = new Tickable(this::update);
+        this.tickLoop = new TickLoop(this::update);
     }
 
     private void update() {
@@ -44,14 +44,14 @@ public class HeartbeatManager {
 
             if (delay > -1) {
                 PlayerAudioManager audioManager = survivor.getAudioManager();
-                audioManager.playSound(SoundRegistry.SURVIVOR_HEARTBEAT, SoundCategory.MASTER, survivorLocation, volume, 1);
+                audioManager.playSound(SoundRegistry.SURVIVOR_HEARTBEAT, SoundCategory.MASTER, survivorLocation, volume);
             } else
                 this.delay = 0;
         }
     }
 
     public void init() {
-        this.tickable.startTask();
+        this.tickLoop.startTask();
     }
 
     public void registerHeartbeatEmitter(HeartbeatEmitter heartbeatEmitter) {

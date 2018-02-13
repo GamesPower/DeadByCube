@@ -1,15 +1,17 @@
 package deadbycube.player.killer.power.cartersspark;
 
 import deadbycube.DeadByCube;
-import deadbycube.audio.SoundRegistry;
 import deadbycube.audio.WorldAudioManager;
-import deadbycube.interaction.PlayerInteractionManager;
+import deadbycube.interaction.InteractionActionBinding;
+import deadbycube.interaction.InteractionManager;
 import deadbycube.player.killer.KillerPlayer;
 import deadbycube.player.killer.power.Power;
 import deadbycube.player.killer.power.cartersspark.interaction.ShockTherapyInteraction;
 import deadbycube.player.killer.power.cartersspark.interaction.SwitchToPunishmentInteraction;
 import deadbycube.player.killer.power.cartersspark.interaction.SwitchToTreatmentInteraction;
+import deadbycube.player.killer.power.cartersspark.madness.MadnessEmitter;
 import deadbycube.player.survivor.SurvivorPlayer;
+import deadbycube.registry.SoundRegistry;
 import deadbycube.util.MagicalValue;
 import deadbycube.util.MathUtils;
 import org.bukkit.*;
@@ -18,19 +20,22 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
-public class PowerCartersSpark extends Power {
+public class PowerCartersSpark extends Power implements MadnessEmitter {
+
+    private static final String TREATMENT_MODIFIER = "power.carters_spark.treatment";
 
     private static final float SHOCK_MIN_DISTANCE = 1.5f;
-    private static final float SHOCK_MAX_DISTANCE = 10f;
+    private static final float SHOCK_MAX_DISTANCE = 12f;
     private static final int SHOCK_ANGLE = 35;
 
     private final SwitchToTreatmentInteraction switchToTreatmentInteraction;
     private final SwitchToPunishmentInteraction switchToPunishmentInteraction;
     private final ShockTherapyInteraction shockTherapyInteraction;
 
-    private final MagicalValue switchToTreatmentTime = new MagicalValue(20);
-    private final MagicalValue switchToPunishmentTime = new MagicalValue(20);
-    private final MagicalValue chargeTime = new MagicalValue(25);
+    private final MagicalValue switchToTreatmentTime = new MagicalValue(10);
+    private final MagicalValue switchToPunishmentTime = new MagicalValue(10);
+    private final MagicalValue chargeTime = new MagicalValue(20);
+    private final MagicalValue madnessMultiplier = new MagicalValue(1);
 
     private CartersSparkMode mode;
 
@@ -40,17 +45,17 @@ public class PowerCartersSpark extends Power {
         this.switchToTreatmentInteraction = new SwitchToTreatmentInteraction(this);
         this.switchToPunishmentInteraction = new SwitchToPunishmentInteraction(this);
         this.shockTherapyInteraction = new ShockTherapyInteraction(this);
-
-        this.setMode(CartersSparkMode.PUNISHMENT);
     }
 
     @Override
     public void init() {
         super.init();
+        this.setMode(CartersSparkMode.PUNISHMENT);
     }
 
     @Override
     public void reset() {
+        killer.getWalkSpeed().removeModifier(TREATMENT_MODIFIER);
     }
 
     public void setMode(CartersSparkMode mode) {
@@ -58,26 +63,33 @@ public class PowerCartersSpark extends Power {
             return;
         this.mode = mode;
 
-        PlayerInteractionManager interactionManager = killer.getInteractionManager();
+        InteractionManager interactionManager = killer.getInteractionManager();
+        MagicalValue walkSpeed = killer.getWalkSpeed();
 
         if (mode == CartersSparkMode.TREATMENT) {
 
-            interactionManager.unregisterInteraction(switchToTreatmentInteraction);
-            interactionManager.registerInteraction(switchToPunishmentInteraction);
-            interactionManager.registerInteraction(shockTherapyInteraction);
+            walkSpeed.addModifier(TREATMENT_MODIFIER, -2, MagicalValue.Operation.PERCENTAGE);
+
+            interactionManager.unregisterInteraction(InteractionActionBinding.ATTACK, killer.getAttackLungeInteraction());
+            interactionManager.unregisterInteraction(InteractionActionBinding.SNEAK, switchToTreatmentInteraction);
+            interactionManager.registerInteraction(InteractionActionBinding.SNEAK, switchToPunishmentInteraction);
+            interactionManager.registerInteraction(InteractionActionBinding.USE, shockTherapyInteraction);
             interactionManager.updateInteractions();
 
         } else if (mode == CartersSparkMode.PUNISHMENT) {
 
-            interactionManager.unregisterInteraction(switchToPunishmentInteraction);
-            interactionManager.unregisterInteraction(shockTherapyInteraction);
-            interactionManager.registerInteraction(switchToTreatmentInteraction);
+            walkSpeed.removeModifier(TREATMENT_MODIFIER);
+
+            interactionManager.unregisterInteraction(InteractionActionBinding.SNEAK, switchToPunishmentInteraction);
+            interactionManager.unregisterInteraction(InteractionActionBinding.USE, shockTherapyInteraction);
+            interactionManager.registerInteraction(InteractionActionBinding.ATTACK, killer.getAttackLungeInteraction());
+            interactionManager.registerInteraction(InteractionActionBinding.SNEAK, switchToTreatmentInteraction);
             interactionManager.updateInteractions();
 
         }
 
         WorldAudioManager audioManager = killer.getPlugin().getAudioManager();
-        audioManager.playSound(SoundRegistry.POWER_CARTERS_SPARK_ATTACK_READY, SoundCategory.MASTER, killer.getLocation(), 1, 1);
+        audioManager.playSound(SoundRegistry.POWER_CARTERS_SPARK_ATTACK_READY, SoundCategory.MASTER, killer.getLocation(), 1);
     }
 
     public void generateShock() {
@@ -112,7 +124,7 @@ public class PowerCartersSpark extends Power {
                             else
                                 soundRegistry = SoundRegistry.POWER_CARTERS_SPARK_ATTACK_GROUND;
 
-                            audioManager.playSound(soundRegistry, SoundCategory.MASTER, groundBlock.getLocation(), .6f, 1);
+                            audioManager.playSound(soundRegistry, SoundCategory.MASTER, groundBlock.getLocation(), .6f);
                         }
                     }
                 }
@@ -154,6 +166,21 @@ public class PowerCartersSpark extends Power {
 
     public MagicalValue getChargeTime() {
         return chargeTime;
+    }
+
+    @Override
+    public MagicalValue getMadnessMultiplier() {
+        return madnessMultiplier;
+    }
+
+    @Override
+    public Location getLocation() {
+        return killer.getLocation();
+    }
+
+    @Override
+    public MagicalValue getRadius() {
+        return killer.getTerrorRadius();
     }
 
 }

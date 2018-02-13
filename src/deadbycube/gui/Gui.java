@@ -6,7 +6,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
 
-class Gui {
+public class Gui {
 
     private final String name;
     private final int size;

@@ -3,6 +3,7 @@ package deadbycube.game;
 import deadbycube.DeadByCube;
 import deadbycube.DeadByCubeHandler;
 import deadbycube.listener.ingame.InGameEntityListener;
+import deadbycube.listener.ingame.InGameInventoryListener;
 import deadbycube.listener.ingame.InGamePlayerListener;
 import deadbycube.player.DeadByCubePlayer;
 import deadbycube.player.PlayerList;
@@ -31,6 +32,7 @@ public class DeadByCubeGame implements DeadByCubeHandler {
 
     private final InGameEntityListener entityListener;
     private final InGamePlayerListener playerListener;
+    private final InGameInventoryListener inventoryListener;
 
     public DeadByCubeGame(DeadByCube plugin) {
         this.plugin = plugin;
@@ -38,6 +40,7 @@ public class DeadByCubeGame implements DeadByCubeHandler {
 
         this.entityListener = new InGameEntityListener(plugin);
         this.playerListener = new InGamePlayerListener(plugin);
+        this.inventoryListener = new InGameInventoryListener(plugin);
     }
 
     @Override
@@ -69,17 +72,19 @@ public class DeadByCubeGame implements DeadByCubeHandler {
         PluginManager pluginManager = plugin.getServer().getPluginManager();
         pluginManager.registerEvents(entityListener, plugin);
         pluginManager.registerEvents(playerListener, plugin);
+        pluginManager.registerEvents(inventoryListener, plugin);
     }
 
     @Override
-    public void reset() {
+    public void reset(DeadByCubeHandler newHandler) {
         BukkitScheduler scheduler = plugin.getServer().getScheduler();
         scheduler.cancelTasks(plugin);
 
         HandlerList.unregisterAll(entityListener);
         HandlerList.unregisterAll(playerListener);
+        HandlerList.unregisterAll(inventoryListener);
 
-        Location spawnLocation = plugin.getHandler().getWorld().getSpawnLocation();
+        Location spawnLocation = newHandler.getWorld().getSpawnLocation();
         PlayerList playerList = plugin.getPlayerList();
         for (Player player : Bukkit.getOnlinePlayers()) {
             playerList.resetPlayer(player);

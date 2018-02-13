@@ -16,7 +16,7 @@ public class DeadByCube extends JavaPlugin {
 
     private static DeadByCube instance;
 
-    public static Plugin getInstance() {
+    public static DeadByCube getInstance() {
         return instance;
     }
 
@@ -83,9 +83,8 @@ public class DeadByCube extends JavaPlugin {
     }
 
     private void setHandler(DeadByCubeHandler handler) {
-        DeadByCubeHandler lastHandler = this.handler;
+        this.handler.reset(handler);
         this.handler = handler;
-        lastHandler.reset();
         this.handler.init();
     }
 

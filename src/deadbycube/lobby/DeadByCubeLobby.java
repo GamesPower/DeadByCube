@@ -37,7 +37,7 @@ public class DeadByCubeLobby implements DeadByCubeHandler {
     }
 
     @Override
-    public void reset() {
+    public void reset(DeadByCubeHandler newHandler) {
         BukkitScheduler scheduler = plugin.getServer().getScheduler();
         scheduler.cancelTasks(plugin);
 

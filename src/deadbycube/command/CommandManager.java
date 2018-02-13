@@ -34,6 +34,7 @@ public class CommandManager {
         this.register(new CommandRole(this));
         this.register(new CommandHeartbeat(this));
         this.register(new CommandDebug(this));
+        this.register(new CommandGenerator(this));
     }
 
     @SuppressWarnings("unchecked")

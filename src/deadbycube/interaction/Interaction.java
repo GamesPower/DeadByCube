@@ -1,21 +1,20 @@
 package deadbycube.interaction;
 
 import deadbycube.player.DeadByCubePlayer;
-import deadbycube.util.Tickable;
+import deadbycube.util.TickLoop;
 
 public abstract class Interaction {
 
-    private final InteractionActionBinding actionBinding;
     private final String name;
-    private final Tickable tickable;
+    private final TickLoop tickLoop;
 
-    protected DeadByCubePlayer deadByCubePlayer;
+    protected DeadByCubePlayer interactor;
+    private boolean interacting = false;
     private int tick = 0;
 
-    public Interaction(InteractionActionBinding actionBinding, String name) {
-        this.actionBinding = actionBinding;
+    public Interaction(String name) {
         this.name = name;
-        this.tickable = new Tickable(this::update);
+        this.tickLoop = new TickLoop(this::update);
     }
 
     private void update() {
@@ -26,42 +25,41 @@ public abstract class Interaction {
     }
 
     public void interact(DeadByCubePlayer deadByCubePlayer) {
-        this.deadByCubePlayer = deadByCubePlayer;
+        this.interacting = true;
+        this.interactor = deadByCubePlayer;
 
         this.onInteract();
-        this.tickable.startTask();
+        this.tickLoop.startTask();
     }
 
-    public boolean isInteracting(DeadByCubePlayer deadByCubePlayer) {
-        return this.deadByCubePlayer == deadByCubePlayer && (this.deadByCubePlayer != null && this.isInteracting());
-    }
-
-    protected void stopInteract() {
-        this.tickable.stopTask();
+    public void stopInteract() {
+        this.tickLoop.stopTask();
+        this.interacting = false;
         this.onStopInteract(tick);
-
-        this.deadByCubePlayer = null;
+        this.interactor = null;
         this.tick = 0;
     }
 
-    public abstract void onInteract();
-
-    public abstract void onUpdate(int tick);
-
-    public abstract void onStopInteract(int tick);
-
-    public abstract boolean isInteracting();
-
     public boolean canInteract(DeadByCubePlayer deadByCubePlayer) {
-        return true;
+        return interactor == null;
+    }
+
+    protected abstract void onInteract();
+
+    protected abstract void onUpdate(int tick);
+
+    protected abstract void onStopInteract(int tick);
+
+    public boolean isInteracting() {
+        return interacting;
+    }
+
+    public DeadByCubePlayer getPlayer() {
+        return interactor;
     }
 
     public String getName() {
         return name;
-    }
-
-    public InteractionActionBinding getActionBinding() {
-        return actionBinding;
     }
 
 }
