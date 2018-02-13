@@ -9,7 +9,6 @@ import deadbycube.player.PlayerList;
 import deadbycube.structure.StructureManager;
 import deadbycube.util.NMSUtils;
 import org.bukkit.Server;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class DeadByCube extends JavaPlugin {

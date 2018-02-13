@@ -1,8 +1,10 @@
 name: DeadByCube
 description: Dead by Daylight like in Minecraft
-main: deadbycube.DeadByCube
-version: 0.1
 author: Fabien
+version: 0.1
+
+main: deadbycube.DeadByCube
+depend: [ProtocolLib]
 commands:
   debug:
     description: debug
