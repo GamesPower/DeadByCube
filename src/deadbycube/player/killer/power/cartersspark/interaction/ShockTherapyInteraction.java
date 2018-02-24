@@ -8,7 +8,7 @@ import deadbycube.player.killer.KillerPlayer;
 import deadbycube.player.killer.power.cartersspark.PowerCartersSpark;
 import deadbycube.registry.SoundRegistry;
 import deadbycube.util.MagicalValue;
-import deadbycube.util.Progression;
+import deadbycube.util.ProgressBar;
 import deadbycube.util.TickLoop;
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -20,14 +20,14 @@ import org.bukkit.entity.Player;
 public class ShockTherapyInteraction extends Interaction {
 
     private final PowerCartersSpark power;
-    private final Progression progression;
+    private final ProgressBar progressBar;
 
     private boolean canInteract = true;
 
     public ShockTherapyInteraction(PowerCartersSpark power) {
         super("shock_therapy");
         this.power = power;
-        this.progression = new Progression("shock_therapy", BarColor.WHITE);
+        this.progressBar = new ProgressBar("shock_therapy", BarColor.WHITE);
     }
 
     @Override
@@ -37,7 +37,7 @@ public class ShockTherapyInteraction extends Interaction {
 
     @Override
     protected void onInteract() {
-        this.progression.display(interactor);
+        this.progressBar.display(interactor.getPlayer());
 
         KillerPlayer killer = power.getKiller();
         Player player = killer.getPlayer();
@@ -54,15 +54,9 @@ public class ShockTherapyInteraction extends Interaction {
         MagicalValue chargeTime = power.getChargeTime();
 
         if (chargeProgress % 2 == 0) {
-            if (chargeTime.isLower())
-                this.progression.setColor(BarColor.YELLOW);
-            else if (chargeTime.isGreater())
-                this.progression.setColor(BarColor.RED);
-            else
-                this.progression.setColor(BarColor.WHITE);
-
-            this.progression.setMaxValue(chargeTime.getValue());
-            this.progression.setValue(chargeProgress);
+            this.progressBar.setColorFromValue(chargeTime);
+            this.progressBar.setMaxValue(chargeTime.getValue());
+            this.progressBar.setValue(chargeProgress);
         }
 
         KillerPlayer killer = power.getKiller();
@@ -102,8 +96,8 @@ public class ShockTherapyInteraction extends Interaction {
             audioManager.stopSound(SoundRegistry.POWER_CARTERS_SPARK_CHARGE_HIGH);
         }
 
-        this.progression.setValue(0);
-        this.progression.reset(interactor);
+        this.progressBar.setValue(0);
+        this.progressBar.reset(interactor.getPlayer());
     }
 
     @Override

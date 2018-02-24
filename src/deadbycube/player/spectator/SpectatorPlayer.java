@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 public class SpectatorPlayer extends DeadByCubePlayer {
 
     public SpectatorPlayer(DeadByCube plugin, Player player) {
-        super(plugin, player);
+        super(plugin, player, "spectator", null);
     }
 
     @Override

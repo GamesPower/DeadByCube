@@ -1,6 +1,7 @@
 package deadbycube.command;
 
 import deadbycube.DeadByCube;
+import deadbycube.command.debug.CommandDebug;
 import deadbycube.command.exception.CommandParseException;
 import deadbycube.command.game.CommandGame;
 import deadbycube.command.role.CommandRole;
@@ -32,7 +33,6 @@ public class CommandManager {
         this.register(new CommandGame(this));
         this.register(new CommandStructure(this));
         this.register(new CommandRole(this));
-        this.register(new CommandHeartbeat(this));
         this.register(new CommandDebug(this));
         this.register(new CommandGenerator(this));
     }

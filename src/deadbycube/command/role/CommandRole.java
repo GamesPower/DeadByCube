@@ -12,6 +12,7 @@ import deadbycube.registry.KillerRegistry;
 import deadbycube.player.survivor.SurvivorPlayer;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ProxiedCommandSender;
 import org.bukkit.entity.Player;
 
 public class CommandRole extends Command {
@@ -32,6 +33,8 @@ public class CommandRole extends Command {
 
     @FunctionInfo(name = "killer", requiredArgs = 1)
     private void killer(CommandSender commandSender, KillerRegistry killerRegistry) throws CommandExecutionException {
+        System.out.println("commandSender = " + commandSender);
+
         this.checkIfInGame();
 
         Player player = getPlayer(commandSender);

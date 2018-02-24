@@ -11,24 +11,28 @@ import deadbycube.util.NMSUtils;
 import org.bukkit.Server;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.IOException;
+
 public class DeadByCube extends JavaPlugin {
 
     private static DeadByCube instance;
-
-    public static DeadByCube getInstance() {
-        return instance;
-    }
-
-    public static int getCurrentTick() {
-        return (int) NMSUtils.getStaticField("MinecraftServer", "currentTick");
-    }
-
     private final PlayerList playerList = new PlayerList();
     private final CommandManager commandManager = new CommandManager(this);
     private final StructureManager structureManager = new StructureManager(this);
     private final WorldAudioManager audioManager = new WorldAudioManager(this);
-
     private DeadByCubeHandler handler;
+
+    public DeadByCube() {
+    }
+
+    public static DeadByCube getInstance() {
+        return instance;
+    }
+    //private final WebSocketServer webSocketServer = new WebSocketServer(this);
+
+    public static int getCurrentTick() {
+        return (int) NMSUtils.getStaticField("MinecraftServer", "currentTick");
+    }
 
     @Override
     public void onEnable() {
@@ -37,6 +41,7 @@ public class DeadByCube extends JavaPlugin {
         this.saveDefaultConfig();
 
         this.commandManager.registerCommands();
+        //this.webSocketServer.bind(getConfig().getInt("websocket.port", 25566));
 
         this.handler = new DeadByCubeLobby(this);
         this.handler.init();
@@ -66,6 +71,8 @@ public class DeadByCube extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        //this.webSocketServer.stop();
+
         if (handler.getStatus() == GameStatus.IN_GAME) {
             Server server = getServer();
             server.unloadWorld(handler.getWorld(), false);
@@ -79,12 +86,6 @@ public class DeadByCube extends JavaPlugin {
 
     public void stopGame() {
         this.setHandler(new DeadByCubeLobby(this));
-    }
-
-    private void setHandler(DeadByCubeHandler handler) {
-        this.handler.reset(handler);
-        this.handler = handler;
-        this.handler.init();
     }
 
     public StructureManager getStructureManager() {
@@ -101,6 +102,12 @@ public class DeadByCube extends JavaPlugin {
 
     public DeadByCubeHandler getHandler() {
         return handler;
+    }
+
+    private void setHandler(DeadByCubeHandler handler) {
+        this.handler.reset(handler);
+        this.handler = handler;
+        this.handler.init();
     }
 
 }

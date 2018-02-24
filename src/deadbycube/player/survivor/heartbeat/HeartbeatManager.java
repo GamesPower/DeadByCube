@@ -54,12 +54,16 @@ public class HeartbeatManager {
         this.tickLoop.startTask();
     }
 
+    public void reset() {
+        this.tickLoop.stopTask();
+    }
+
     public void registerHeartbeatEmitter(HeartbeatEmitter heartbeatEmitter) {
         this.heartbeatEmitterList.add(heartbeatEmitter);
     }
 
-    public void unregisterHeartbeatEmitter(HeartbeatEmitter heartbeatEmitter) {
+    /*public void unregisterHeartbeatEmitter(HeartbeatEmitter heartbeatEmitter) {
         this.heartbeatEmitterList.remove(heartbeatEmitter);
-    }
+    }*/
 
 }

@@ -41,7 +41,7 @@ public abstract class Interaction {
     }
 
     public boolean canInteract(DeadByCubePlayer deadByCubePlayer) {
-        return interactor == null;
+        return !interacting || interactor == deadByCubePlayer;
     }
 
     protected abstract void onInteract();

@@ -20,6 +20,13 @@ public class GuiParser {
         this.guiObject = guiObject;
     }
 
+    public static Gui parse(InputStream inputStream) throws GuiException {
+        JsonElement jsonElement = new JsonParser().parse(new InputStreamReader(inputStream));
+        if (!jsonElement.isJsonObject())
+            throw new GuiException("Invalid gui root");
+        return new GuiParser(jsonElement.getAsJsonObject()).parse();
+    }
+
     private Gui parse() throws GuiException {
         JsonElement idElement = guiObject.get("id");
         JsonElement sizeElement = guiObject.get("size");
@@ -95,21 +102,13 @@ public class GuiParser {
             for (JsonElement flagElement : flagsElement.getAsJsonArray())
                 flagList.add(ItemFlag.valueOf(flagElement.getAsString()));
 
-        return new ItemStackBuilder()
-                .setMaterial(material)
+        return new ItemStackBuilder(material)
                 .setAmount(amount)
                 .setData(data)
                 .setLocalizedName(localizedName)
                 .setUnbreakable(unbreakable)
                 .setFlags(flagList.toArray(new ItemFlag[flagList.size()]))
                 .build();
-    }
-
-    public static Gui parse(InputStream inputStream) throws GuiException {
-        JsonElement jsonElement = new JsonParser().parse(new InputStreamReader(inputStream));
-        if (!jsonElement.isJsonObject())
-            throw new GuiException("Invalid gui root");
-        return new GuiParser(jsonElement.getAsJsonObject()).parse();
     }
 
 }

@@ -20,6 +20,8 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
+import java.util.List;
+
 public class PowerCartersSpark extends Power implements MadnessEmitter {
 
     private static final String TREATMENT_MODIFIER = "power.carters_spark.treatment";
@@ -35,7 +37,9 @@ public class PowerCartersSpark extends Power implements MadnessEmitter {
     private final MagicalValue switchToTreatmentTime = new MagicalValue(10);
     private final MagicalValue switchToPunishmentTime = new MagicalValue(10);
     private final MagicalValue chargeTime = new MagicalValue(20);
-    private final MagicalValue madnessMultiplier = new MagicalValue(1);
+
+    private final MagicalValue staticFieldMultiplier = new MagicalValue(1);
+    private final MagicalValue shockMadness = new MagicalValue(300);
 
     private CartersSparkMode mode;
 
@@ -50,12 +54,13 @@ public class PowerCartersSpark extends Power implements MadnessEmitter {
     @Override
     public void init() {
         super.init();
+
         this.setMode(CartersSparkMode.PUNISHMENT);
     }
 
     @Override
     public void reset() {
-        killer.getWalkSpeed().removeModifier(TREATMENT_MODIFIER);
+        this.setMode(CartersSparkMode.PUNISHMENT);
     }
 
     public void setMode(CartersSparkMode mode) {
@@ -63,8 +68,9 @@ public class PowerCartersSpark extends Power implements MadnessEmitter {
             return;
         this.mode = mode;
 
-        InteractionManager interactionManager = killer.getInteractionManager();
         MagicalValue walkSpeed = killer.getWalkSpeed();
+        InteractionManager interactionManager = killer.getInteractionManager();
+        List<SurvivorPlayer> survivors = killer.getPlugin().getPlayerList().getSurvivors();
 
         if (mode == CartersSparkMode.TREATMENT) {
 
@@ -74,7 +80,8 @@ public class PowerCartersSpark extends Power implements MadnessEmitter {
             interactionManager.unregisterInteraction(InteractionActionBinding.SNEAK, switchToTreatmentInteraction);
             interactionManager.registerInteraction(InteractionActionBinding.SNEAK, switchToPunishmentInteraction);
             interactionManager.registerInteraction(InteractionActionBinding.USE, shockTherapyInteraction);
-            interactionManager.updateInteractions();
+
+            survivors.forEach(survivorPlayer -> survivorPlayer.getMadnessManager().registerMadnessEmitter(this));
 
         } else if (mode == CartersSparkMode.PUNISHMENT) {
 
@@ -84,7 +91,8 @@ public class PowerCartersSpark extends Power implements MadnessEmitter {
             interactionManager.unregisterInteraction(InteractionActionBinding.USE, shockTherapyInteraction);
             interactionManager.registerInteraction(InteractionActionBinding.ATTACK, killer.getAttackLungeInteraction());
             interactionManager.registerInteraction(InteractionActionBinding.SNEAK, switchToTreatmentInteraction);
-            interactionManager.updateInteractions();
+
+            survivors.forEach(survivorPlayer -> survivorPlayer.getMadnessManager().unregisterMadnessEmitter(this));
 
         }
 
@@ -146,7 +154,9 @@ public class PowerCartersSpark extends Power implements MadnessEmitter {
                 if (SHOCK_MIN_DISTANCE < distance && distance < SHOCK_MAX_DISTANCE) {
                     shockedSurvivor++;
 
-                    audioManager.playSound("survivor.dwight.scream.short", SoundCategory.VOICE, survivorPlayer.getLocation());
+                    survivor.getMadnessManager().incrementMadness(shockMadness.getValue());
+
+                    audioManager.playSound("survivor." + survivor.getName() + ".scream.short", SoundCategory.VOICE, survivorPlayer.getLocation());
                     // TODO Increments madness
                 }
             }
@@ -169,8 +179,8 @@ public class PowerCartersSpark extends Power implements MadnessEmitter {
     }
 
     @Override
-    public MagicalValue getMadnessMultiplier() {
-        return madnessMultiplier;
+    public MagicalValue getStaticFieldMultiplier() {
+        return staticFieldMultiplier;
     }
 
     @Override

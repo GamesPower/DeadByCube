@@ -13,6 +13,7 @@ public class MagicalValue {
     public MagicalValue(double baseValue) {
         this.baseValue = baseValue;
         this.value = baseValue;
+        this.updateValue();
     }
 
     protected void updateValue() {
@@ -61,12 +62,8 @@ public class MagicalValue {
         return value;
     }
 
-    public boolean isLower() {
-        return value < baseValue;
-    }
-
-    public boolean isGreater() {
-        return value > baseValue;
+    public double getBaseValue() {
+        return baseValue;
     }
 
     public void setBaseValue(double baseValue) {

@@ -65,15 +65,15 @@ public class DeadByCubeWorldGenerator {
     // add structure (x, z, xSize, zSize)
 
     public DeadByCubeWorld generate() {
-        WorldTile[] worldTiles = new WorldTile[sizeX * sizeZ];
+        /*WorldTile[] worldTiles = new WorldTile[sizeX * sizeZ];
         for (int x = 0; x < sizeX; x++) {
             for (int z = 0; z < sizeZ; z++) {
                 int index = (z * sizeX) + x;
-                worldTiles[index] = new WorldTile(new WorldObject[0]);
+                worldTiles[index] = new WorldTile(new WorldObject[0], hookLocations, chestLocations, pullDownLocations, windowLocations);
             }
-        }
+        }*/
 
-        return new DeadByCubeWorld(world, worldTiles, sizeX, sizeZ);
+        return new DeadByCubeWorld(world, new WorldTile[0], sizeX, sizeZ);
     }
 
     int getSizeX() {

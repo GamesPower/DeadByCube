@@ -58,8 +58,7 @@ public class GuiSelectKiller extends Gui {
     }
 
     private ItemStack createPowerItemStack(PowerRegistry power) {
-        return new ItemStackBuilder()
-                .setMaterial(Material.DIAMOND_HOE)
+        return new ItemStackBuilder(Material.DIAMOND_HOE)
                 .setData((byte) power.ordinal())
                 .setLocalizedName("killer.power." + power.getName())
                 .setUnbreakable(true)

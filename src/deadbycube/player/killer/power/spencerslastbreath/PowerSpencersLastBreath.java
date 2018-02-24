@@ -4,10 +4,10 @@ import deadbycube.interaction.InteractionActionBinding;
 import deadbycube.interaction.InteractionManager;
 import deadbycube.player.killer.KillerPlayer;
 import deadbycube.player.killer.power.Power;
-import deadbycube.player.killer.power.spencerslastbreath.interaction.attack.BlinkAttackLungeInteraction;
 import deadbycube.player.killer.power.spencerslastbreath.interaction.BlinkInteraction;
 import deadbycube.player.killer.power.spencerslastbreath.interaction.BlinkStunInteraction;
 import deadbycube.player.killer.power.spencerslastbreath.interaction.ChargeBlinkInteraction;
+import deadbycube.player.killer.power.spencerslastbreath.interaction.attack.BlinkAttackLungeInteraction;
 import deadbycube.util.MagicalValue;
 import deadbycube.util.MathUtils;
 import deadbycube.util.TickLoop;
@@ -30,6 +30,7 @@ public class PowerSpencersLastBreath extends Power {
     private final MagicalValue blinkMovementSpeed = new MagicalValue(.85);
     private final MagicalValue chainBlinkWindow = new MagicalValue(40);
     private final MagicalValue chainBlink = new MagicalValue(1);
+    private final MagicalValue blinkHitCooldown = new MagicalValue(20);
 
     private int remainingBlinks = 0;
     private BukkitTask blinkStunTask;
@@ -50,7 +51,6 @@ public class PowerSpencersLastBreath extends Power {
 
         InteractionManager interactionManager = killer.getInteractionManager();
         interactionManager.registerInteraction(InteractionActionBinding.USE, chargeBlinkInteraction);
-        interactionManager.updateInteractions();
 
         this.updateRemainingBlinks();
     }
@@ -65,8 +65,6 @@ public class PowerSpencersLastBreath extends Power {
     }
 
     public void blink(int chargeProgress) {
-        if (remainingBlinks == 0)
-            return;
         if (this.blinkStunTask != null)
             this.blinkStunTask.cancel();
 
@@ -90,7 +88,6 @@ public class PowerSpencersLastBreath extends Power {
 
         if (--remainingBlinks == 0)
             interactionManager.unregisterInteraction(InteractionActionBinding.USE, chargeBlinkInteraction);
-        interactionManager.updateInteractions();
     }
 
     public void createStunTask() {
@@ -105,8 +102,8 @@ public class PowerSpencersLastBreath extends Power {
 
         if (remainingBlinks == 0)
             interactionManager.registerInteraction(InteractionActionBinding.USE, chargeBlinkInteraction);
-
         this.remainingBlinks = 0;
+
         if (chargeBlinkInteraction.isInteracting())
             this.chargeBlinkInteraction.stopInteract();
 
@@ -114,7 +111,6 @@ public class PowerSpencersLastBreath extends Power {
 
         interactionManager.unregisterInteraction(InteractionActionBinding.ATTACK, blinkAttackLungeInteraction);
         interactionManager.registerInteraction(InteractionActionBinding.ATTACK, killer.getAttackLungeInteraction());
-        interactionManager.updateInteractions();
     }
 
     public MagicalValue getChargeTime() {
@@ -125,4 +121,7 @@ public class PowerSpencersLastBreath extends Power {
         return blinkMovementSpeed;
     }
 
+    public MagicalValue getBlinkHitCooldown() {
+        return blinkHitCooldown;
+    }
 }

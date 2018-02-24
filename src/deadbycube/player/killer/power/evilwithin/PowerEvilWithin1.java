@@ -4,6 +4,7 @@ import deadbycube.audio.WorldAudioManager;
 import deadbycube.player.killer.KillerPlayer;
 import deadbycube.registry.PowerRegistry;
 import deadbycube.registry.SoundRegistry;
+import deadbycube.util.MagicalValue;
 import org.bukkit.SoundCategory;
 
 public class PowerEvilWithin1 extends PowerEvilWithin {
@@ -17,13 +18,12 @@ public class PowerEvilWithin1 extends PowerEvilWithin {
         super.init();
 
         killer.getTerrorRadius().setBaseValue(8);
+        killer.getLungeDuration().setBaseValue(5);
         killer.getWalkSpeed().setBaseValue(KillerPlayer.WALK_SPEED - (KillerPlayer.WALK_SPEED * (11.5 / 100)));
     }
 
     @Override
     public void reset() {
-        killer.getWalkSpeed().setBaseValue(KillerPlayer.WALK_SPEED);
-        killer.getTerrorRadius().setBaseValue(KillerPlayer.TERROR_RADIUS);
     }
 
     @Override

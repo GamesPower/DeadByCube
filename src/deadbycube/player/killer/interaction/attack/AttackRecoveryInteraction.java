@@ -6,11 +6,10 @@ import deadbycube.util.MagicalValue;
 public class AttackRecoveryInteraction extends Interaction {
 
     private static final String RECOVERY_SPEED_MODIFIER = "attack.recovery";
-    private final int duration;
+    private final MagicalValue duration;
 
-    protected AttackRecoveryInteraction(int duration) {
+    public AttackRecoveryInteraction(MagicalValue duration) {
         super("successful_hit_recovery");
-
         this.duration = duration;
     }
 
@@ -21,7 +20,7 @@ public class AttackRecoveryInteraction extends Interaction {
 
     @Override
     protected void onUpdate(int tick) {
-        if (duration == tick)
+        if (tick >= duration.getValue())
             this.stopInteract();
     }
 

@@ -3,8 +3,12 @@ package deadbycube.player;
 import deadbycube.DeadByCube;
 import deadbycube.audio.PlayerAudioManager;
 import deadbycube.interaction.InteractionManager;
+import deadbycube.registry.SkinRegistry;
 import deadbycube.util.MagicalValue;
+import deadbycube.util.SkinUpdater;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 public abstract class DeadByCubePlayer {
 
@@ -13,13 +17,19 @@ public abstract class DeadByCubePlayer {
 
     protected final PlayerAudioManager audioManager;
     protected final InteractionManager interactionManager;
-    protected final MagicalValue walkSpeed;
 
+    protected final MagicalValue walkSpeed;
+    protected final String name;
+    private final SkinRegistry skin;
+
+    private ItemStack offHandItem;
     private boolean sneaking;
 
-    protected DeadByCubePlayer(DeadByCube plugin, Player player) {
+    protected DeadByCubePlayer(DeadByCube plugin, Player player, String name, SkinRegistry skin) {
         this.plugin = plugin;
         this.player = player;
+        this.name = name;
+        this.skin = skin;
 
         this.audioManager = new PlayerAudioManager(this);
         this.interactionManager = new InteractionManager(this);
@@ -28,25 +38,51 @@ public abstract class DeadByCubePlayer {
             @Override
             protected void updateValue() {
                 super.updateValue();
-                /*player.sendMessage("Old walkSpeed: " + player.getWalkSpeed());
-                player.sendMessage("New walkSpeed: " + getValue());*/
+                //player.sendMessage("Old walkSpeed: " + player.getWalkSpeed());
+                //player.sendMessage("New walkSpeed: " + getValue());
                 player.setWalkSpeed((float) getValue());
             }
         };
     }
 
+    public abstract PlayerType getType();
+
     public void init() {
         this.interactionManager.init();
+        this.player.getInventory().setHeldItemSlot(0);
+
+        if (skin != null)
+            SkinUpdater.setSkin(this, skin.toProperty());
     }
 
     public void reset() {
         this.interactionManager.reset();
-
         this.setSneaking(false);
-        this.setHidden(false);
+        SkinUpdater.resetSkin(this);
     }
 
-    public abstract PlayerType getType();
+    public void setVisible(boolean visible) {
+        Bukkit.getOnlinePlayers().forEach(p -> {
+            if (visible)
+                p.showPlayer(plugin, player);
+            else
+                p.hidePlayer(plugin, player);
+        });
+    }
+
+    public ItemStack getOffHandItem() {
+        return offHandItem;
+    }
+
+    public void setOffHandItem(ItemStack offHandItem) {
+        this.offHandItem = offHandItem;
+        this.player.getInventory().setItemInOffHand(offHandItem);
+    }
+
+    public void setOffHandItemAmount(int amount) {
+        this.offHandItem.setAmount(amount);
+        this.player.getInventory().setItemInOffHand(offHandItem);
+    }
 
     public boolean isSneaking() {
         return sneaking;
@@ -56,13 +92,8 @@ public abstract class DeadByCubePlayer {
         this.sneaking = sneaking;
     }
 
-    public void setHidden(boolean hidden) {
-        for (DeadByCubePlayer deadByCubePlayer : plugin.getPlayerList().getPlayers()) {
-            if (hidden)
-                deadByCubePlayer.getPlayer().hidePlayer(plugin, player);
-            else
-                deadByCubePlayer.getPlayer().showPlayer(plugin, player);
-        }
+    public String getName() {
+        return name;
     }
 
     public MagicalValue getWalkSpeed() {

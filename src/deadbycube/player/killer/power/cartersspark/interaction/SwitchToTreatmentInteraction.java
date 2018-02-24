@@ -4,23 +4,23 @@ import deadbycube.interaction.Interaction;
 import deadbycube.player.killer.power.cartersspark.CartersSparkMode;
 import deadbycube.player.killer.power.cartersspark.PowerCartersSpark;
 import deadbycube.util.MagicalValue;
-import deadbycube.util.Progression;
+import deadbycube.util.ProgressBar;
 import org.bukkit.boss.BarColor;
 
 public class SwitchToTreatmentInteraction extends Interaction {
 
     private final PowerCartersSpark power;
-    private final Progression progression;
+    private final ProgressBar progressBar;
 
     public SwitchToTreatmentInteraction(PowerCartersSpark power) {
         super("switch_to_treatment");
         this.power = power;
-        this.progression = new Progression("switch_to_treatment", BarColor.WHITE);
+        this.progressBar = new ProgressBar("switch_to_treatment", BarColor.WHITE);
     }
 
     @Override
     protected void onInteract() {
-        this.progression.display(power.getKiller());
+        this.progressBar.display(interactor.getPlayer());
     }
 
     @Override
@@ -28,8 +28,9 @@ public class SwitchToTreatmentInteraction extends Interaction {
         MagicalValue switchToTreatmentTime = power.getSwitchToTreatmentTime();
 
         if (switchToTreatmentProgress % 2 == 0) {
-            this.progression.setMaxValue(switchToTreatmentTime.getValue());
-            this.progression.setValue(switchToTreatmentProgress);
+            this.progressBar.setColorFromValue(switchToTreatmentTime);
+            this.progressBar.setMaxValue(switchToTreatmentTime.getValue());
+            this.progressBar.setValue(switchToTreatmentProgress);
         }
 
         if (switchToTreatmentProgress >= switchToTreatmentTime.getValue())
@@ -43,8 +44,8 @@ public class SwitchToTreatmentInteraction extends Interaction {
         if (switchToTreatmentProgress >= switchToTreatmentTime)
             power.setMode(CartersSparkMode.TREATMENT);
 
-        this.progression.setValue(0);
-        this.progression.reset(interactor);
+        this.progressBar.setValue(0);
+        this.progressBar.reset(interactor.getPlayer());
     }
 
     @Override

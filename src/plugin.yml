@@ -2,7 +2,6 @@ name: DeadByCube
 description: Dead by Daylight like in Minecraft
 author: Fabien
 version: 0.1
-
 main: deadbycube.DeadByCube
 depend: [ProtocolLib]
 commands:
@@ -18,12 +17,6 @@ commands:
   structure:
     description: Manage structure
     usage: /structure
-  heartbeat:
-    description: Manage survivor heartbeat
-    usage: /heartbeat
-  interaction:
-    description: Manager interaction
-    usage: /interaction
   generator:
     description: Generator
     usage: /generator

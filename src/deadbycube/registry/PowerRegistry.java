@@ -6,9 +6,11 @@ import deadbycube.player.killer.KillerPlayer;
 import deadbycube.player.killer.power.*;
 import deadbycube.player.killer.power.beartrap.PowerBearTrap;
 import deadbycube.player.killer.power.cartersspark.PowerCartersSpark;
+import deadbycube.player.killer.power.dreammaster.PowerDreamMaster;
 import deadbycube.player.killer.power.evilwithin.PowerEvilWithin1;
 import deadbycube.player.killer.power.evilwithin.PowerEvilWithin2;
 import deadbycube.player.killer.power.evilwithin.PowerEvilWithin3;
+import deadbycube.player.killer.power.huntinghatchets.PowerHuntingHatchets;
 import deadbycube.player.killer.power.invisibilitybell.PowerInvisibilityBell;
 import deadbycube.player.killer.power.spencerslastbreath.PowerSpencersLastBreath;
 

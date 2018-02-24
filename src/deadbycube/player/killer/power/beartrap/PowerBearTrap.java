@@ -11,7 +11,7 @@ public class PowerBearTrap extends Power {
 
     private final SetTrapInteraction setTrapInteraction;
 
-    private final MagicalValue defaultTrapsCount = new MagicalValue(1);
+    private final MagicalValue defaultTrapsCount = new MagicalValue(2);
     private final MagicalValue settingsTime = new MagicalValue(40);
 
     private int trapsCount = 0;
@@ -26,11 +26,11 @@ public class PowerBearTrap extends Power {
     public void init() {
         super.init();
 
-        /*InteractionManager interactionManager = killer.getInteractionManager();
+        InteractionManager interactionManager = killer.getInteractionManager();
         interactionManager.registerInteraction(InteractionActionBinding.USE, setTrapInteraction);
-        interactionManager.updateInteractions();*/
 
         this.trapsCount = (int) defaultTrapsCount.getValue();
+        this.killer.setOffHandItemAmount(trapsCount);
     }
 
     @Override
@@ -38,11 +38,23 @@ public class PowerBearTrap extends Power {
     }
 
     public void addBearTrap() {
+        if(trapsCount == 0) {
+            InteractionManager interactionManager = killer.getInteractionManager();
+            interactionManager.registerInteraction(InteractionActionBinding.USE, setTrapInteraction);
+        }
+
         this.trapsCount++;
+        this.killer.setOffHandItemAmount(trapsCount);
     }
 
     public void removeBearTrap() {
         this.trapsCount--;
+        this.killer.setOffHandItemAmount(trapsCount);
+
+        if(trapsCount == 0) {
+            InteractionManager interactionManager = killer.getInteractionManager();
+            interactionManager.unregisterInteraction(InteractionActionBinding.USE, setTrapInteraction);
+        }
     }
 
     public int getTrapCount() {

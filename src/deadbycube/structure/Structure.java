@@ -16,12 +16,14 @@ public class Structure {
     private final MaterialData[] materialData;
     private final byte sizeX;
     private final byte sizeY;
+    private final byte sizeZ;
 
-    Structure(String name, MaterialData[] materialData, byte sizeX, byte sizeY) {
+    Structure(String name, MaterialData[] materialData, byte sizeX, byte sizeY, byte sizeZ) {
         this.name = name;
         this.materialData = materialData;
         this.sizeX = sizeX;
         this.sizeY = sizeY;
+        this.sizeZ = sizeZ;
     }
 
     public void spawn(Location location, double angle) {
@@ -89,6 +91,10 @@ public class Structure {
 
     byte getSizeY() {
         return sizeY;
+    }
+
+    public byte getSizeZ() {
+        return sizeZ;
     }
 
     @Override

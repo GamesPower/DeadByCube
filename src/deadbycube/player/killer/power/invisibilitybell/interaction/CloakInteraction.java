@@ -7,7 +7,7 @@ import deadbycube.player.killer.power.invisibilitybell.CloakStatus;
 import deadbycube.player.killer.power.invisibilitybell.PowerInvisibilityBell;
 import deadbycube.registry.SoundRegistry;
 import deadbycube.util.MagicalValue;
-import deadbycube.util.Progression;
+import deadbycube.util.ProgressBar;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.SoundCategory;
@@ -18,12 +18,12 @@ import org.bukkit.entity.Player;
 public class CloakInteraction extends Interaction {
 
     private final PowerInvisibilityBell power;
-    private final Progression progression;
+    private final ProgressBar cloakProgressBar;
 
     public CloakInteraction(PowerInvisibilityBell power) {
         super("cloak");
         this.power = power;
-        this.progression = new Progression("cloak", BarColor.WHITE);
+        this.cloakProgressBar = new ProgressBar("cloak", BarColor.WHITE);
     }
 
     @Override
@@ -33,7 +33,7 @@ public class CloakInteraction extends Interaction {
         WorldAudioManager audioManager = killer.getPlugin().getAudioManager();
         audioManager.playSound(SoundRegistry.KILLER_WRAITH_WEAPON_ARM, SoundCategory.MASTER, killerPlayer.getLocation());
 
-        this.progression.display(power.getKiller());
+        this.cloakProgressBar.display(interactor.getPlayer());
     }
 
     @Override
@@ -41,15 +41,9 @@ public class CloakInteraction extends Interaction {
         MagicalValue cloakTime = power.getCloakTime();
 
         if (cloakProgress % 2 == 0) {
-            if (cloakTime.isLower())
-                this.progression.setColor(BarColor.YELLOW);
-            else if (cloakTime.isGreater())
-                this.progression.setColor(BarColor.RED);
-            else
-                this.progression.setColor(BarColor.WHITE);
-
-            this.progression.setMaxValue(cloakTime.getValue());
-            this.progression.setValue(cloakProgress);
+            this.cloakProgressBar.setColorFromValue(cloakTime);
+            this.cloakProgressBar.setMaxValue(cloakTime.getValue());
+            this.cloakProgressBar.setValue(cloakProgress);
         }
 
         KillerPlayer killer = power.getKiller();
@@ -82,8 +76,8 @@ public class CloakInteraction extends Interaction {
         if (cloakProgress >= cloakTime)
             power.setStatus(CloakStatus.CLOAKED);
 
-        this.progression.setValue(0);
-        this.progression.reset(interactor);
+        this.cloakProgressBar.setValue(0);
+        this.cloakProgressBar.reset(interactor.getPlayer());
     }
 
     @Override

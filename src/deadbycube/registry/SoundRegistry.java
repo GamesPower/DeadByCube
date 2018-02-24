@@ -5,12 +5,20 @@ public enum SoundRegistry {
     KILLER_DOCTOR_BREATH_TEETH("killer.doctor.breath.teeth"),
     KILLER_DOCTOR_LAUGH("killer.doctor.laugh"),
 
+    KILLER_HUNTRESS_ATTACK("killer.huntress.attack"),
+    KILLER_HUNTRESS_CHARGE("killer.huntress.charge"),
+    KILLER_HUNTRESS_THROW("killer.huntress.throw"),
+
     KILLER_NURSE_TELEPORT_APPEAR("killer.nurse.teleport.appear"),
     KILLER_NURSE_TELEPORT_CHARGE_FULL("killer.nurse.teleport.charge.full"),
     KILLER_NURSE_TELEPORT_DISAPPEAR("killer.nurse.teleport.disappear"),
     KILLER_NURSE_TELEPORT_CHARGING("killer.nurse.teleport.charging"),
 
     KILLER_WRAITH_WEAPON_ARM("killer.wraith.weapon.arm"),
+
+    OBJECT_GENERATOR_COMPLETED("object.generator.completed"),
+    OBJECT_GENERATOR_COMPLETED_LOOP("object.generator.completed.loop"),
+    OBJECT_GENERATOR_PISTON("object.generator.piston"),
 
     POWER_CARTERS_SPARK_EXPLOSION("power.carters_spark.explosion"),
 
@@ -26,12 +34,22 @@ public enum SoundRegistry {
     POWER_CARTERS_SPARK_CHARGE_ELECTRIC("power.carters_spark.charge.electric"),
     POWER_CARTERS_SPARK_CHARGE_HIGH("power.carters_spark.charge.high"),
 
+    POWER_CARTERS_SPARK_INSANITY_TIER_1("power.carters_spark.insanity.tier.1"),
+    POWER_CARTERS_SPARK_INSANITY_TIER_2("power.carters_spark.insanity.tier.2"),
+    POWER_CARTERS_SPARK_INSANITY_TIER_3("power.carters_spark.insanity.tier.3"),
+    POWER_CARTERS_SPARK_INSANITY_SNAP_OUT_OF_IT("power.carters_spark.insanity.snap_out_of_it"),
+
     POWER_EVIL_WITHIN_LEVEL_1("power.evil_within.level_1"),
     POWER_EVIL_WITHIN_LEVEL_2("power.evil_within.level_2"),
     POWER_EVIL_WITHIN_LEVEL_3("power.evil_within.level_3"),
     POWER_EVIL_WITHIN_STALK_OFF("power.evil_within.stalk.off"),
     POWER_EVIL_WITHIN_STALK_ON("power.evil_within.stalk.on"),
     POWER_EVIL_WITHIN_STALK_WARNING("power.evil_within.stalk.warning"),
+
+    POWER_HUNTING_HATCHETS_CUE("power.hunting_hatchets.cue"),
+    POWER_HUNTING_HATCHETS_THROW("power.hunting_hatchets.throw"),
+    POWER_HUNTING_HATCHETS_THROW_LOOP("power.hunting_hatchets.throw.loop"),
+    POWER_HUNTING_HATCHETS_THROW_CANCEL("power.hunting_hatchets.throw.cancel"),
 
     POWER_INVISIBILITY_BELL_BELL_IRON("power.invisibility_bell.bell.iron"),
     POWER_INVISIBILITY_BELL_BELL_RING("power.invisibility_bell.bell.ring"),

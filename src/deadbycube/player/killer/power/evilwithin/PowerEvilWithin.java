@@ -21,8 +21,7 @@ public abstract class PowerEvilWithin extends Power {
         super.init();
 
         InteractionManager interactionManager = killer.getInteractionManager();
-        interactionManager.registerInteraction(InteractionActionBinding.SNEAK, stalkInteraction);
-        interactionManager.updateInteractions();
+        interactionManager.registerInteraction(InteractionActionBinding.USE, stalkInteraction);
     }
 
     public abstract void onStalk(int stalk);

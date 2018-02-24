@@ -99,10 +99,17 @@ public class InGamePlayerListener extends DeadByCubeListener {
     }
 
     @EventHandler
-    private void onPlayerAnimation(PlayerAnimationEvent event) {
-        DeadByCubePlayer deadByCubePlayer = plugin.getPlayerList().getPlayer(event.getPlayer());
-        deadByCubePlayer.getInteractionManager().dispatch(InteractionActionBinding.ATTACK);
+    private void onPlayerItemHeld(PlayerItemHeldEvent event) {
         event.setCancelled(true);
+    }
+
+    @EventHandler
+    private void onPlayerAnimation(PlayerAnimationEvent event) {
+        if (event.getAnimationType() == PlayerAnimationType.ARM_SWING) {
+            DeadByCubePlayer deadByCubePlayer = plugin.getPlayerList().getPlayer(event.getPlayer());
+            deadByCubePlayer.getInteractionManager().dispatch(InteractionActionBinding.ATTACK);
+            event.setCancelled(true);
+        }
     }
 
     @EventHandler

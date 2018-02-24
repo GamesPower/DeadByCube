@@ -9,6 +9,6 @@ public interface MadnessEmitter {
 
     MagicalValue getRadius();
 
-    MagicalValue getMadnessMultiplier();
+    MagicalValue getStaticFieldMultiplier();
 
 }

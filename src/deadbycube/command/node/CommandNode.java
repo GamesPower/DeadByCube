@@ -8,6 +8,7 @@ import deadbycube.command.function.FunctionInfo;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ProxiedCommandSender;
 import org.bukkit.entity.Player;
 
 import java.lang.reflect.Method;
@@ -37,7 +38,7 @@ public abstract class CommandNode {
                     throw new IllegalArgumentException("Invalid command function player parameter");
 
                 for (int i = 1; i < parameterTypes.length; i++) {
-                    if(!commandManager.isValidValue(parameterTypes[i]))
+                    if (!commandManager.isValidValue(parameterTypes[i]))
                         throw new IllegalArgumentException("Invalid command parameter: " + parameterTypes[i].getName());
                 }
 
@@ -53,6 +54,8 @@ public abstract class CommandNode {
     }
 
     protected Player getPlayer(CommandSender commandSender) throws CommandExecutionException {
+        if(commandSender instanceof ProxiedCommandSender)
+            return getPlayer(((ProxiedCommandSender)commandSender).getCallee());
         if (!(commandSender instanceof Player))
             throw new CommandExecutionException("The command executor need to be player");
         return (Player) commandSender;

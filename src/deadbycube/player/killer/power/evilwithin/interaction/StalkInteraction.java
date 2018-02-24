@@ -77,6 +77,6 @@ public class StalkInteraction extends Interaction {
 
     @Override
     public boolean isInteracting() {
-        return super.isInteracting() && interactor.isSneaking();
+        return super.isInteracting() && interactor.getPlayer().isHandRaised();
     }
 }

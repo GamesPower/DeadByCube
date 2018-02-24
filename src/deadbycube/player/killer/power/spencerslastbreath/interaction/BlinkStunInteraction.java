@@ -42,7 +42,7 @@ public class BlinkStunInteraction extends Interaction {
 
         float pitch = playerLocation.getPitch();
         if (pitch < 70) {
-            playerLocation.setPitch(pitch + Math.max(8, Math.abs(70 - pitch) / 5));
+            playerLocation.setPitch(tick * 20);
             player.teleport(playerLocation);
         }
 

@@ -17,8 +17,8 @@ public class PowerInvisibilityBell extends Power {
 
     private static final String CLOAKED_MODIFIER = "power.invisibility_bell.cloaked";
 
-    private static final double CLOAK_SPEED_BONUS = 11;
-    private static final double CLOAK_BREATH_REDUCTION = -70;
+    private static final double CLOAK_SPEED_BONUS = 12;
+    private static final double CLOAK_BREATH_REDUCTION = -80;
     private static final int WHOOSH_DISTANCE = 40;
 
     private final CloakInteraction cloakInteraction;
@@ -42,7 +42,7 @@ public class PowerInvisibilityBell extends Power {
 
         // Set status to cloaked
         this.status = CloakStatus.CLOAKED;
-        this.killer.setHidden(true);
+        this.killer.setVisible(false);
         this.killer.getTerrorRadius().forceValue(0d);
         this.killer.getBreathVolume().addModifier(PowerInvisibilityBell.CLOAKED_MODIFIER, PowerInvisibilityBell.CLOAK_BREATH_REDUCTION, MagicalValue.Operation.PERCENTAGE);
         this.killer.getWalkSpeed().addModifier(PowerInvisibilityBell.CLOAKED_MODIFIER, PowerInvisibilityBell.CLOAK_SPEED_BONUS, MagicalValue.Operation.PERCENTAGE);
@@ -51,11 +51,11 @@ public class PowerInvisibilityBell extends Power {
         InteractionManager interactionManager = killer.getInteractionManager();
         interactionManager.unregisterInteraction(InteractionActionBinding.ATTACK, killer.getAttackLungeInteraction());
         interactionManager.registerInteraction(InteractionActionBinding.USE, uncloakInteraction);
-        interactionManager.updateInteractions();
     }
 
     @Override
     public void reset() {
+        this.killer.setVisible(true);
         killer.getBreathVolume().removeModifier(CLOAKED_MODIFIER);
         killer.getWalkSpeed().removeModifier(CLOAKED_MODIFIER);
     }
@@ -73,7 +73,7 @@ public class PowerInvisibilityBell extends Power {
         if (status == CloakStatus.CLOAKED) {
 
             audioManager.playSound(SoundRegistry.POWER_INVISIBILITY_BELL_INVISIBLE, SoundCategory.MASTER, killerLocation, 15, 1, deadByCubePlayer -> deadByCubePlayer.getPlayer().getLocation().distance(killerLocation) < WHOOSH_DISTANCE);
-            killer.setHidden(true);
+            killer.setVisible(false);
             killer.getTerrorRadius().forceValue(0d);
             killer.getBreathVolume().addModifier(CLOAKED_MODIFIER, CLOAK_BREATH_REDUCTION, MagicalValue.Operation.PERCENTAGE);
             killer.getWalkSpeed().addModifier(CLOAKED_MODIFIER, CLOAK_SPEED_BONUS, MagicalValue.Operation.PERCENTAGE);
@@ -81,12 +81,11 @@ public class PowerInvisibilityBell extends Power {
             interactionManager.unregisterInteraction(InteractionActionBinding.ATTACK, killer.getAttackLungeInteraction());
             interactionManager.unregisterInteraction(InteractionActionBinding.USE, cloakInteraction);
             interactionManager.registerInteraction(InteractionActionBinding.USE, uncloakInteraction);
-            interactionManager.updateInteractions();
 
         } else if (status == CloakStatus.UNCLOAKED) {
 
             audioManager.playSound(SoundRegistry.POWER_INVISIBILITY_BELL_VISIBLE, SoundCategory.MASTER, killerLocation, 15, 1, deadByCubePlayer -> deadByCubePlayer.getPlayer().getLocation().distance(killerLocation) < WHOOSH_DISTANCE);
-            killer.setHidden(false);
+            killer.setVisible(true);
             killer.getTerrorRadius().resetValue();
             killer.getBreathVolume().removeModifier(CLOAKED_MODIFIER);
             killer.getWalkSpeed().removeModifier(CLOAKED_MODIFIER);
@@ -94,7 +93,6 @@ public class PowerInvisibilityBell extends Power {
             interactionManager.unregisterInteraction(InteractionActionBinding.USE, uncloakInteraction);
             interactionManager.registerInteraction(InteractionActionBinding.ATTACK, killer.getAttackLungeInteraction());
             interactionManager.registerInteraction(InteractionActionBinding.USE, cloakInteraction);
-            interactionManager.updateInteractions();
 
         }
     }

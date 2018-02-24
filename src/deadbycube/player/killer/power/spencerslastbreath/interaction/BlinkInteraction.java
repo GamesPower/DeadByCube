@@ -2,16 +2,12 @@ package deadbycube.player.killer.power.spencerslastbreath.interaction;
 
 import deadbycube.audio.AudioManager;
 import deadbycube.interaction.Interaction;
-import deadbycube.interaction.InteractionActionBinding;
-import deadbycube.interaction.InteractionManager;
-import deadbycube.player.killer.KillerPlayer;
 import deadbycube.player.killer.power.spencerslastbreath.PowerSpencersLastBreath;
 import deadbycube.registry.SoundRegistry;
 import org.bukkit.*;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-import org.bukkit.material.Attachable;
 import org.bukkit.material.MaterialData;
 import org.bukkit.util.Vector;
 
@@ -37,14 +33,15 @@ public class BlinkInteraction extends Interaction {
         World world = interactor.getPlugin().getHandler().getWorld();
 
         Location playerLocation = player.getLocation();
-        this.armorStand = (ArmorStand) world.spawnEntity(playerLocation, EntityType.ARMOR_STAND);
+        this.originalLocation = playerLocation;
+        this.blinkDistance = destinationLocation.distance(playerLocation);
+        this.direction = destinationLocation.subtract(playerLocation.clone()).toVector().normalize();
+
+        this.armorStand = (ArmorStand) world.spawnEntity(playerLocation.setDirection(direction), EntityType.ARMOR_STAND);
         this.armorStand.setVisible(false);
         this.armorStand.setInvulnerable(true);
         this.armorStand.setGravity(false);
 
-        this.originalLocation = playerLocation;
-        this.blinkDistance = destinationLocation.distance(playerLocation);
-        this.direction = destinationLocation.subtract(playerLocation.clone()).toVector().normalize();
 
         player.setGameMode(GameMode.SPECTATOR);
         player.setSpectatorTarget(armorStand);
@@ -80,8 +77,8 @@ public class BlinkInteraction extends Interaction {
         Player player = interactor.getPlayer();
 
         AudioManager audioManager = interactor.getPlugin().getAudioManager();
-        audioManager.playSound(SoundRegistry.POWER_SPENCERS_LAST_BREATH_APPEAR, SoundCategory.MASTER, player.getLocation(), .5f);
-        audioManager.playSound(SoundRegistry.KILLER_NURSE_TELEPORT_APPEAR, SoundCategory.MASTER, player.getLocation(), 1);
+        audioManager.playSound(SoundRegistry.POWER_SPENCERS_LAST_BREATH_APPEAR, SoundCategory.MASTER, player.getLocation(), 15);
+        audioManager.playSound(SoundRegistry.KILLER_NURSE_TELEPORT_APPEAR, SoundCategory.MASTER, player.getLocation(), 15);
 
         player.setSpectatorTarget(null);
         player.setGameMode(GameMode.ADVENTURE);

@@ -1,6 +1,5 @@
 package deadbycube.util;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -8,7 +7,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 public class ItemStackBuilder {
 
-    private Material material = Material.STONE;
+    private Material material;
     private int amount = 1;
     private byte data = 0;
     private short damage = 0;
@@ -17,6 +16,10 @@ public class ItemStackBuilder {
     private boolean unbreakable = false;
 
     private ItemFlag[] flags = {};
+
+    public ItemStackBuilder(Material material) {
+        this.material = material;
+    }
 
     public ItemStackBuilder setMaterial(Material material) {
         this.material = material;

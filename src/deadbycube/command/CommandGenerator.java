@@ -35,12 +35,12 @@ class CommandGenerator extends Command {
         survivors.forEach(survivorPlayer -> {
             InteractionManager interactionManager = survivorPlayer.getInteractionManager();
             for (RepairInteraction repairInteraction : generatorObject.getRepairInteractions())
-                interactionManager.registerInteraction(InteractionActionBinding.USE, repairInteraction);
+                interactionManager.registerInteraction(InteractionActionBinding.ATTACK, repairInteraction);
         });
         killers.forEach(killerPlayer -> {
             InteractionManager interactionManager = killerPlayer.getInteractionManager();
             for (BreakInteraction breakInteraction : generatorObject.getBreakInteractions())
-                interactionManager.registerInteraction(InteractionActionBinding.USE, breakInteraction);
+                interactionManager.registerInteraction(InteractionActionBinding.ATTACK, breakInteraction);
         });
 
     }

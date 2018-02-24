@@ -51,6 +51,7 @@ public class DeadByCubeGame implements DeadByCubeHandler {
         List<KillerPlayer> killerList = playerList.getKillers();
         for (Player player : Bukkit.getOnlinePlayers()) {
             player.teleport(world.getSpawnLocation());
+
             player.setSprinting(false);
             player.setSneaking(false);
 
@@ -61,7 +62,6 @@ public class DeadByCubeGame implements DeadByCubeHandler {
                 playerList.setPlayer(player, deadByCubePlayer);
             } else if (deadByCubePlayer.getType() == PlayerType.SURVIVOR) {
                 SurvivorPlayer survivor = (SurvivorPlayer) deadByCubePlayer;
-
                 HeartbeatManager heartbeatManager = survivor.getHeartbeatManager();
                 killerList.forEach(heartbeatManager::registerHeartbeatEmitter);
             }

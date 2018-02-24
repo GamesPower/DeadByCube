@@ -4,10 +4,15 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.BlockStateMeta;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.material.MaterialData;
 import org.bukkit.plugin.Plugin;
 
 import java.io.*;
+import java.util.Map;
 import java.util.logging.Level;
 
 public class StructureManager {
@@ -29,9 +34,9 @@ public class StructureManager {
 
         DataInputStream in = new DataInputStream(new FileInputStream(structureFile));
 
-
         byte sizeX = in.readByte();
         byte sizeY = in.readByte();
+        byte sizeZ = in.readByte();
         int size = in.readInt();
         MaterialData[] materialData = new MaterialData[size];
         for (int i = 0; i < size; i++) {
@@ -43,7 +48,7 @@ public class StructureManager {
 
         in.close();
 
-        return new Structure(name, materialData, sizeX, sizeY);
+        return new Structure(name, materialData, sizeX, sizeY, sizeZ);
     }
 
     public void save(Structure structure) throws IOException {
@@ -53,9 +58,11 @@ public class StructureManager {
 
         DataOutputStream out = new DataOutputStream(new FileOutputStream(structureFile));
 
-        MaterialData[] materialData = structure.getMaterialData();
         out.writeByte(structure.getSizeX());
         out.writeByte(structure.getSizeY());
+        out.writeByte(structure.getSizeZ());
+
+        MaterialData[] materialData = structure.getMaterialData();
         out.writeInt(materialData.length);
         for (MaterialData data : materialData) {
             out.writeUTF(data.getItemType().name());
@@ -83,7 +90,7 @@ public class StructureManager {
             }
         }
 
-        return new Structure(name, materialData, sizeX, sizeY);
+        return new Structure(name, materialData, sizeX, sizeY, sizeZ);
     }
 
 }

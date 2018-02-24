@@ -13,16 +13,14 @@ public class GuiSelectRole extends Gui {
     }
 
     private void build() {
-        set(12, new GuiButton(new ItemStackBuilder()
-                .setMaterial(Material.GOLD_HOE)
+        set(12, new GuiButton(new ItemStackBuilder(Material.GOLD_HOE)
                 .setData((byte) 0)
                 .setLocalizedName("role.killer.name")
                 .setUnbreakable(true)
                 .setFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_UNBREAKABLE)
                 .build()
                 , (plugin, player) -> player.closeInventory()));
-        set(14, new GuiButton(new ItemStackBuilder()
-                .setMaterial(Material.GOLD_HOE)
+        set(14, new GuiButton(new ItemStackBuilder(Material.GOLD_HOE)
                 .setData((byte) 1)
                 .setLocalizedName("role.survivor.name")
                 .setUnbreakable(true)

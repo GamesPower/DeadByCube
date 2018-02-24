@@ -15,12 +15,8 @@ public class InGameEntityListener extends DeadByCubeListener {
 
     @EventHandler
     public void onEntityDamage(EntityDamageEvent event) {
-        if (event.getEntityType() == EntityType.PLAYER) event.setCancelled(true);
-    }
-
-    @EventHandler
-    private void onEntityShootBow(EntityShootBowEvent event) {
-        event.setCancelled(true);
+        if (event.getEntityType() == EntityType.PLAYER)
+            event.setCancelled(true);
     }
 
 }

@@ -5,8 +5,6 @@ import deadbycube.registry.PowerRegistry;
 import deadbycube.util.ItemStackBuilder;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemFlag;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
 
 public abstract class Power {
 
@@ -17,21 +15,12 @@ public abstract class Power {
     }
 
     public void init() {
-        PlayerInventory inventory = killer.getPlayer().getInventory();
-        ItemStack itemInOffHand = inventory.getItemInOffHand();
-        if (itemInOffHand.getType() == Material.BOW) {
-            itemInOffHand.setDurability((short) PowerRegistry.getID(this));
-        } else {
-            inventory.setItemInOffHand(
-                    new ItemStackBuilder()
-                            .setMaterial(Material.BOW)
-                            .setData((byte) PowerRegistry.getID(this))
-                            .setFlags(ItemFlag.HIDE_UNBREAKABLE, ItemFlag.HIDE_ATTRIBUTES)
-                            .setUnbreakable(true)
-                            .build()
-            );
-        }
-        inventory.setItem(9, new ItemStackBuilder().setMaterial(Material.ARROW).build());
+        killer.setOffHandItem(new ItemStackBuilder(Material.SHIELD)
+                .setData((byte) PowerRegistry.getID(this))
+                .setFlags(ItemFlag.HIDE_UNBREAKABLE, ItemFlag.HIDE_ATTRIBUTES)
+                .setUnbreakable(true)
+                .build()
+        );
     }
 
     public abstract void reset();

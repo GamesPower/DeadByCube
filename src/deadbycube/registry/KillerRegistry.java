@@ -2,6 +2,7 @@ package deadbycube.registry;
 
 import deadbycube.DeadByCube;
 import deadbycube.player.killer.*;
+import deadbycube.player.killer.huntress.KillerHuntress;
 import org.bukkit.entity.Player;
 
 import java.lang.reflect.InvocationTargetException;
@@ -9,10 +10,12 @@ import java.lang.reflect.InvocationTargetException;
 public enum KillerRegistry {
 
     DOCTOR(KillerDoctor.class),
+    HUNTRESS(KillerHuntress.class),
     NURSE(KillerNurse.class),
     SHAPE(KillerShape.class),
     TRAPPER(KillerTrapper.class),
-    WRAITH(KillerWraith.class);
+    WRAITH(KillerWraith.class),
+    NIGHTMARE(KillerNightmare.class);
 
     private final Class<? extends KillerPlayer> killerClass;
 
